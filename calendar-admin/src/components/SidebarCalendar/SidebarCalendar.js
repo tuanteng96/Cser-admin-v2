@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { components } from "react-select";
 import AsyncSelect from "react-select/async";
+import Select from "react-select";
 // import DatePicker from "react-datepicker";
 import { Field, Form, Formik, useFormikContext } from "formik";
 import CalendarCrud from "../../App/modules/Calendar/_redux/CalendarCrud";
@@ -60,29 +61,43 @@ const StatusArr = [
   },
 ];
 
-// const StatusServiceArr = [
-//   {
-//     value: "",
-//     label: "Đang thực hiện",
-//     color: "#1BC5BD",
-//   },
-//   {
-//     value: "",
-//     label: "Đã hoàn thành",
-//     color: "#B5B5C3",
-//   },
-// ];
 
-// const AdvancedArr = [
-//   {
-//     value: "",
-//     label: "Hiện thị các buổi đặt lịch",
-//   },
-//   {
-//     value: "",
-//     label: "Hiện thị các buổi làm dịch vụ",
-//   },
-// ];
+const StatusMembers = [
+  {
+    value: "KHACH_CU",
+    label: "Khách cũ",
+  },
+  {
+    value: "KHACH_VANG_LAI_CO_TK",
+    label: "Khách vãng lai ( Có tài khoản )",
+  },
+  {
+    value: "KHACH_MOI",
+    label: "Khách vãng lai ( Khách mới )",
+  },
+];
+
+const StatusBooks = [
+  {
+    value: "DA_CHON",
+    label: "Đã chọn nhân viên",
+  },
+  {
+    value: "CHUA_CHON",
+    label: "Chưa chọn nhân viên",
+  }
+];
+
+const StatusAtHome = [
+  {
+    value: "TAI_NHA",
+    label: "Tại nhà",
+  },
+  {
+    value: "TAI_SPA",
+    label: "Tại Spa",
+  },
+];
 
 const CustomOptionStaff = ({ children, ...props }) => {
   const { Thumbnail, label } = props.data;
@@ -320,6 +335,60 @@ function SidebarCalendar({
                 />
               </div>
               <div className="form-group form-group-ezs">
+                <label className="mb-1">Loại khách hàng</label>
+                <Select
+                  className="select-control"
+                  classNamePrefix="select"
+                  isLoading={false}
+                  isClearable
+                  isSearchable
+                  //menuIsOpen={true}
+                  name="StatusMember"
+                  placeholder="Chọn loại khách hàng"
+                  options={StatusMembers}
+                  value={values.StatusMember}
+                  onChange={(option) =>
+                    setFieldValue("StatusMember", option, false)
+                  }
+                />
+              </div>
+              <div className="form-group form-group-ezs">
+                <label className="mb-1">Loại lịch</label>
+                <Select
+                  className="select-control"
+                  classNamePrefix="select"
+                  isLoading={false}
+                  isClearable
+                  isSearchable
+                  //menuIsOpen={true}
+                  name="StatusBook"
+                  placeholder="Chọn loại"
+                  options={StatusBooks}
+                  value={values.StatusBook}
+                  onChange={(option) =>
+                    setFieldValue("StatusBook", option, false)
+                  }
+                />
+              </div>
+              <div className="form-group form-group-ezs">
+                <label className="mb-1">Thực hiện</label>
+                <Select
+                  className="select-control"
+                  classNamePrefix="select"
+                  isLoading={false}
+                  isClearable
+                  isSearchable
+                  //menuIsOpen={true}
+                  name="StatusAtHome"
+                  placeholder="Chọn loại thực hiện"
+                  options={StatusAtHome}
+                  value={values.StatusAtHome}
+                  onChange={(option) =>
+                    setFieldValue("StatusAtHome", option, false)
+                  }
+                />
+              </div>
+              <div className="form-group form-group-ezs">
                 <label className="mb-1">Trạng thái đặt lịch</label>
                 {StatusArr &&
                   StatusArr.map((item, index) => (
@@ -331,39 +400,8 @@ function SidebarCalendar({
                       key={index}
                     />
                   ))}
-                {/* <Select
-                  menuPlacement="top"
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  name="Status"
-                  value={values.Status}
-                  onChange={(option) =>
-                    setFieldValue("Status", option ? option : null, false)
-                  }
-                  onBlur={handleBlur}
-                  placeholder="Chọn trạng thái"
-                  components={{ Option: CustomOption }}
-                  options={StatusArr}
-                /> */}
               </div>
-              {/* <div className="form-group form-group-ezs">
-                <label className="mb-1">Trạng thái buổi dịch vụ</label>
-                <Select
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="color"
-                  placeholder="Chọn trạng thái dịch vụ"
-                  components={{ Option: CustomOption }}
-                  options={StatusServiceArr}
-                />
-              </div>
+              {/* 
               <div className="form-group form-group-ezs">
                 <label className="mb-1">Nâng cao</label>
                 <Select

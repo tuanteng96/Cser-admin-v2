@@ -26,9 +26,22 @@
                 //use this for scheduler fix:  padding: 0.0rem 0.2rem 0.0rem 0.2rem;
             }
         }
+        .fc-timegrid-axis {
+            .fc-timegrid-axis-frame {
+                height: 100%;
+                position: relative;
+                &::after {
+                    content: 'GMT+07';
+                    position: absolute;
+                    font-size: 11px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+            }
+        }
         // Header
         th.fc-col-header-cell {
-            padding: $head-space-y $head-space-x;
+            padding: $head-space-x $head-space-x;
             font-size: 1rem;
             font-weight: 500;
         }
@@ -463,8 +476,24 @@
             a,
             span {
                 color: $text-muted;
-                font-weight: 700;
                 font-size: 14px;
+                &:hover {
+                    text-decoration: none;
+                }
+                .date-mm {
+                    font-size: 12px;
+                    line-height: 18px;
+                    color: #70757a;
+                }
+                .date-dd {
+                    color: #3c4043;
+                    font-size: 18px;
+                    font-weight: 500;
+                    transition: all .3s ease;
+                    &:hover {
+                        background-color: #f1f3f4;
+                    }
+                }
             }
         }
         // List heading

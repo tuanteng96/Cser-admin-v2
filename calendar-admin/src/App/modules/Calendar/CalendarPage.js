@@ -53,7 +53,8 @@ const viLocales = {
 };
 
 const getStatusClss = (Status, item) => {
-  const isAuto = item?.Desc && item.Desc.toUpperCase().indexOf("TỰ ĐỘNG ĐẶT LỊCH");
+  const isAuto =
+    item?.Desc && item.Desc.toUpperCase().indexOf("TỰ ĐỘNG ĐẶT LỊCH");
   if (Status === "XAC_NHAN") {
     if (isAuto !== "" && isAuto > -1) return "primary1";
     return "primary";
@@ -84,7 +85,13 @@ function CalendarPage(props) {
   });
   const [isFilter, setIsFilter] = useState(false);
   const [filters, setFilters] = useState({
-    Status: ["XAC_NHAN", "XAC_NHAN_TU_DONG", "CHUA_XAC_NHAN", "DANG_THUC_HIEN", "THUC_HIEN_XONG"],
+    Status: [
+      "XAC_NHAN",
+      "XAC_NHAN_TU_DONG",
+      "CHUA_XAC_NHAN",
+      "DANG_THUC_HIEN",
+      "THUC_HIEN_XONG",
+    ],
   });
   const [initialValue, setInitialValue] = useState({});
   const [Events, setEvents] = useState([]);
@@ -169,7 +176,7 @@ function CalendarPage(props) {
       BookDate: moment(values.BookDate).format("YYYY-MM-DD HH:mm"),
       Status: values.Status ? values.Status : "XAC_NHAN",
       IsAnonymous: values.MemberID?.PassersBy || false,
-    }
+    };
 
     if (values?.MemberID?.isCreate) {
       objBooking.FullName = values.MemberID?.text;
@@ -184,11 +191,11 @@ function CalendarPage(props) {
         const objCreate = {
           member: {
             MobilePhone: values.MemberID?.suffix,
-            FullName: values.MemberID?.text
-          }
-        }
-        const newMember = await CalendarCrud.createMember(objCreate)
-        objBooking.MemberID = newMember?.data?.member?.ID || 0
+            FullName: values.MemberID?.text,
+          },
+        };
+        const newMember = await CalendarCrud.createMember(objCreate);
+        objBooking.MemberID = newMember?.data?.member?.ID || 0;
       }
 
       const dataPost = {
@@ -218,58 +225,75 @@ function CalendarPage(props) {
   };
 
   const onFinish = async (values) => {
-    console.log(values)
-    // setBtnLoading((prevState) => ({
-    //   ...prevState,
-    //   isBtnBooking: true,
-    // }));
+    setBtnLoading((prevState) => ({
+      ...prevState,
+      isBtnBooking: true,
+    }));
 
-    // const objBooking = {
-    //   ...values,
-    //   MemberID: values.MemberID.value,
-    //   RootIdS: values.RootIdS.map((item) => item.value).toString(),
-    //   UserServiceIDs:
-    //     values.UserServiceIDs && values.UserServiceIDs.length > 0
-    //       ? values.UserServiceIDs.map((item) => item.value).toString()
-    //       : "",
-    //   BookDate: moment(values.BookDate).format("YYYY-MM-DD HH:mm"),
-    //   Status: "KHACH_DEN",
-    // }
+    const objBooking = {
+      ...values,
+      MemberID: values.MemberID.value,
+      RootIdS: values.RootIdS.map((item) => item.value).toString(),
+      UserServiceIDs:
+        values.UserServiceIDs && values.UserServiceIDs.length > 0
+          ? values.UserServiceIDs.map((item) => item.value).toString()
+          : "",
+      BookDate: moment(values.BookDate).format("YYYY-MM-DD HH:mm"),
+      Status: "KHACH_DEN",
+    };
 
-    // const CurrentStockID = Cookies.get("StockID");
-    // const u_id_z4aDf2 = Cookies.get("u_id_z4aDf2");
+    const CurrentStockID = Cookies.get("StockID");
+    const u_id_z4aDf2 = Cookies.get("u_id_z4aDf2");
 
-    // try {
-    //   const dataPost = {
-    //     booking: [objBooking],
-    //   };
-    //   await CalendarCrud.postBooking(dataPost, {
-    //     CurrentStockID,
-    //     u_id_z4aDf2,
-    //   });
-    //   getBooking(() => {
-    //     window.top.location.href = `/admin/?mdl=store&act=sell#${values?.MemberID?.label === "Khách vãng lai"
-    //       ? "goto:member"
-    //       : `mp:${values?.MemberID?.value}`
-    //       }`;
-    //     toast.success(getTextToast(values.Status), {
-    //       position: toast.POSITION.TOP_RIGHT,
-    //       autoClose: 1500,
-    //     });
-    //     setBtnLoading((prevState) => ({
-    //       ...prevState,
-    //       isBtnBooking: false,
-    //     }));
-    //     onHideModal();
-    //   });
-    // } catch (error) {
-    //   setBtnLoading((prevState) => ({
-    //     ...prevState,
-    //     isBtnBooking: false,
-    //   }));
-    // }
+    try {
+      if (values.IsMemberCurrent.IsAnonymous) {
+        if (!values?.IsMemberCurrent?.MemberPhone) {
+          const objCreate = {
+            member: {
+              MobilePhone: values?.IsMemberCurrent?.MemberCreate?.Phone,
+              FullName: values?.IsMemberCurrent?.MemberCreate?.FullName,
+            },
+          };
+          const newMember = await CalendarCrud.createMember(objCreate);
+          objBooking.MemberID = newMember?.data?.member?.ID;
+        } else {
+          objBooking.MemberID = values?.IsMemberCurrent?.MemberPhone.ID;
+        }
+      }
 
-  }
+      var bodyFormCheckIn = new FormData();
+      bodyFormCheckIn.append("cmd", "checkin");
+      bodyFormCheckIn.append("mid", objBooking.MemberID);
+      bodyFormCheckIn.append("desc", "");
+      await CalendarCrud.checkinMember(bodyFormCheckIn);
+
+      const dataPost = {
+        booking: [objBooking],
+      };
+      await CalendarCrud.postBooking(dataPost, {
+        CurrentStockID,
+        u_id_z4aDf2,
+      });
+      getBooking(() => {
+        window.top.location.href = `/admin/?mdl=store&act=sell#mp:${objBooking.MemberID}`;
+        toast.success(getTextToast(values.Status), {
+          position: toast.POSITION.TOP_RIGHT,
+          autoClose: 1500,
+        });
+        setBtnLoading((prevState) => ({
+          ...prevState,
+          isBtnBooking: false,
+        }));
+        onHideModal();
+      });
+    } catch (error) {
+      console.log(error);
+      setBtnLoading((prevState) => ({
+        ...prevState,
+        isBtnBooking: false,
+      }));
+    }
+  };
 
   const onDeleteBooking = async (values) => {
     setBtnLoading((prevState) => ({
@@ -324,11 +348,11 @@ function CalendarPage(props) {
 
   const checkStar = (item) => {
     if (item?.Member?.MobilePhone !== "0000000000") return "";
-    if (item?.Member?.MobilePhone === "0000000000" && item?.IsNew) return "**"
+    if (item?.Member?.MobilePhone === "0000000000" && item?.IsNew) return "**";
     else {
-      return "*"
+      return "*";
     }
-  }
+  };
 
   const getBooking = (fn) => {
     !loading && setLoading(true);
@@ -348,54 +372,62 @@ function CalendarPage(props) {
         filters.UserServiceIDs && Array.isArray(filters.UserServiceIDs)
           ? filters.UserServiceIDs.map((item) => item.value).toString()
           : "",
+      StatusMember: filters?.StatusMember ? filters?.StatusMember.value : "",
+      StatusBook: filters?.StatusBook ? filters?.StatusBook.value : "",
+      StatusAtHome: filters?.StatusAtHome ? filters?.StatusAtHome.value : "",
     };
+
     CalendarCrud.getBooking(newFilters)
       .then(({ data }) => {
         const dataBooks =
           data.books && Array.isArray(data.books)
             ? data.books
-              .map((item) => ({
-                ...item,
-                start: item.BookDate,
-                title: item.RootTitles,
-                className: `fc-event-solid-${getStatusClss(
-                  item.Status,
-                  item
-                )}`,
-                resourceIds:
-                  item.UserServices &&
+                .map((item) => ({
+                  ...item,
+                  start: item.BookDate,
+                  title: item.RootTitles,
+                  className: `fc-event-solid-${getStatusClss(
+                    item.Status,
+                    item
+                  )}`,
+                  resourceIds:
+                    item.UserServices &&
                     Array.isArray(item.UserServices) &&
                     item.UserServices.length > 0
-                    ? item.UserServices.map((item) => item.ID)
-                    : [],
-                MemberCurrent: {
-                  FullName: item?.FullName || item?.Member?.FullName,
-                  MobilePhone: item?.Phone || item?.Member?.MobilePhone,
-                },
-                Star: checkStar(item)
-              }))
-              .filter((item) => item.Status !== "TU_CHOI")
+                      ? item.UserServices.map((item) => item.ID)
+                      : [],
+                  MemberCurrent: {
+                    FullName: item?.IsAnonymous
+                      ? item?.FullName
+                      : item?.Member?.FullName,
+                    MobilePhone: item?.IsAnonymous
+                      ? item?.Phone
+                      : item?.Member?.MobilePhone,
+                  },
+                  Star: checkStar(item),
+                }))
+                .filter((item) => item.Status !== "TU_CHOI")
             : [];
         const dataBooksAuto =
           data.osList && Array.isArray(data.osList)
             ? data.osList.map((item) => ({
-              ...item,
-              AtHome: false,
-              Member: item.member,
-              MemberCurrent: {
-                FullName: item?.member?.FullName,
-                MobilePhone: item?.member?.MobilePhone,
-              },
-              start: item.os.BookDate,
-              BookDate: item.os.BookDate,
-              title: item.os.Title,
-              RootTitles: item.os.ProdService2 || item.os.ProdService,
-              className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
-              resourceIds:
-                item.staffs && Array.isArray(item.staffs)
-                  ? item.staffs.map((staf) => staf.ID)
-                  : [],
-            }))
+                ...item,
+                AtHome: false,
+                Member: item.member,
+                MemberCurrent: {
+                  FullName: item?.member?.FullName,
+                  MobilePhone: item?.member?.MobilePhone,
+                },
+                start: item.os.BookDate,
+                BookDate: item.os.BookDate,
+                title: item.os.Title,
+                RootTitles: item.os.ProdService2 || item.os.ProdService,
+                className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
+                resourceIds:
+                  item.staffs && Array.isArray(item.staffs)
+                    ? item.staffs.map((staf) => staf.ID)
+                    : [],
+              }))
             : [];
         setEvents([...dataBooks, ...dataBooksAuto]);
         setLoading(false);
@@ -423,7 +455,7 @@ function CalendarPage(props) {
               themeSystem="unthemed"
               locale={viLocales}
               initialDate={TODAY}
-              initialView={width > 991 ? initialView : "timeGridDay"}
+              initialView={width > 991 ? initialView : "timeGridWeek"} //timeGridDay
               schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
               aspectRatio="3"
               editable={false}
@@ -436,6 +468,31 @@ function CalendarPage(props) {
                 },
                 timeGridWeek: {
                   eventMaxStack: 2,
+                  slotLabelContent: ({ date, text }) => {
+                    return (
+                      <span className="font-size-xs font-weight-bold font-number">
+                        {text} {moment(date).format("A")}
+                      </span>
+                    );
+                  },
+                  dayHeaderContent: ({ date, isToday, ...arg }) => {
+                    return (
+                      <div className="font-number">
+                        <div className="date-mm">
+                          {moment(date).format("ddd")}
+                        </div>
+                        <div
+                          className={`w-40px h-40px d-flex align-items-center justify-content-center rounded-circle date-dd ${isToday &&
+                            "bg-primary text-white"}`}
+                        >
+                          {moment(date).format("DD")}
+                        </div>
+                      </div>
+                    );
+                  },
+                  nowIndicator: true,
+                  now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
+                  scrollTime: moment(new Date()).format("HH:mm"),
                 },
                 timeGridDay: {
                   eventMaxStack: 8,
@@ -513,18 +570,22 @@ function CalendarPage(props) {
                   Object.keys(extendedProps).length > 0
                 ) {
                   italicEl.innerHTML = `<div class="fc-title">
-                    <div><span class="fullname">${extendedProps.AtHome
-                      ? `<i class="fas fa-home text-white font-size-xs"></i>`
-                      : ""
-                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${extendedProps.MemberCurrent.FullName
-                    }</span><span class="d-none d-md-inline"> - ${extendedProps.MemberCurrent?.MobilePhone
-                    }</span></div>
+                    <div><span class="fullname">${
+                      extendedProps.AtHome
+                        ? `<i class="fas fa-home text-white font-size-xs"></i>`
+                        : ""
+                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${
+                    extendedProps.MemberCurrent.FullName
+                  }</span><span class="d-none d-md-inline"> - ${
+                    extendedProps.MemberCurrent?.MobilePhone
+                  }</span></div>
                     <div class="d-flex">
                       <div class="w-45px">${moment(
-                      extendedProps.BookDate
-                    ).format("HH:mm")} - </div>
-                      <div class="flex-1 text-truncate">${extendedProps.RootTitles
-                    }</div>
+                        extendedProps.BookDate
+                      ).format("HH:mm")} - </div>
+                      <div class="flex-1 text-truncate">${
+                        extendedProps.RootTitles
+                      }</div>
                     </div>
                   </div>`;
                 } else {
@@ -546,6 +607,7 @@ function CalendarPage(props) {
                 //Set View Calendar
                 setInitialView(view.type);
               }}
+              viewDidMount={(view) => {}}
               datesSet={({ view, start, end, ...dgs }) => {
                 const newFilters = {
                   ...filters,

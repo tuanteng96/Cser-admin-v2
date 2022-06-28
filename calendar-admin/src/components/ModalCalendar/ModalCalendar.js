@@ -104,6 +104,7 @@ function ModalCalendar({
             label: item.FullName,
           })),
           AtHome: initialValue.AtHome,
+          IsMemberCurrent: getIsMember(initialValue),
         }));
       } else {
         setInitialValues((prevState) => ({
@@ -117,6 +118,24 @@ function ModalCalendar({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [show, initialValue]);
+
+  const getIsMember = (member) => {
+    const objMember = {
+      IsAnonymous: false,
+    };
+    if (member?.Member?.MobilePhone === "0000000000") {
+      objMember.IsAnonymous = true;
+      objMember.MemberCreate = {
+        FullName: member?.FullName,
+        Phone: member?.Phone,
+      };
+      objMember.MemberPhone = member?.MemberPhone;
+    }
+    else {
+      objMember.MemberID = member?.Member?.ID;
+    }
+    return objMember;
+  }
 
   const loadOptionsCustomer = (inputValue, callback) => {
     setTimeout(async () => {
@@ -574,7 +593,7 @@ function ModalCalendar({
                   setFieldValue("MemberID", {
                     label: valuesCreate.PassersBy ? "Khách vãng lai" : valuesCreate.FullName,
                     text: valuesCreate.FullName,
-                    value: valuesCreate.PassersBy ? 16638 : null,
+                    value: valuesCreate.PassersBy ? 0 : null,
                     suffix: valuesCreate.Phone,
                     isCreate: true,
                     PassersBy: valuesCreate.PassersBy

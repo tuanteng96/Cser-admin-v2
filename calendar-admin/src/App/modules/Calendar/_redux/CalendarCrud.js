@@ -21,12 +21,19 @@ const deleteBooking = (data, { CurrentStockID, u_id_z4aDf2 }) => {
     return axiosClient.post(`${POST_BOOKING_URL}&CurrentStockID=${CurrentStockID}&u_id_z4aDf2=${u_id_z4aDf2}`, JSON.stringify(data));
 };
 
-const getBooking = ({ MemberID, From, To, StockID, Status, UserServiceIDs }) => {
-    return axiosClient.get(`/api/v3/mbookadmin?cmd=getbooks&memberid=${MemberID}&from=${From}&to=${To}&stockid=${StockID}&status=${Status}&UserServiceIDs=${UserServiceIDs}`);
+const getBooking = ({ MemberID, From, To, StockID, Status, UserServiceIDs, StatusMember, StatusBook, StatusAtHome }) => {
+    return axiosClient.get(`/api/v3/mbookadmin?cmd=getbooks&memberid=${MemberID}&from=${From}&to=${To}&stockid=${StockID}&status=${Status}&UserServiceIDs=${UserServiceIDs}&StatusMember=${StatusMember}&StatusBook=${StatusBook}&StatusAtHome=${StatusAtHome}`);
 }
 
 const createMember = (data) => {
     return axiosClient.post("/api/v3/member23?cmd=add", JSON.stringify(data))
+}
+const checkinMember = (data) => {
+    return axiosClient.post("/services/preview.aspx?cmd=checkin", data, {
+        headers: {
+            "Authorization": `Bearer ${window.top?.Info?.token}`,
+        }
+    })
 }
 
 const CalendarCrud = {
@@ -36,6 +43,7 @@ const CalendarCrud = {
     postBooking,
     deleteBooking,
     getBooking,
-    createMember
+    createMember,
+    checkinMember
 };
 export default CalendarCrud;
