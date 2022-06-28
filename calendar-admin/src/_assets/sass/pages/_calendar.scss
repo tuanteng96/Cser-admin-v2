@@ -5,11 +5,11 @@
         height: 100%;
     }
     &__sidebar {
-        width: 295px;
+        width: 248px;
     }
     &__content {
-        width: calc(100% - 295px);
-        padding-left: 20px;
+        width: calc(100% - 248px);
+        padding-left: 30px;
     }
     .sidebar-bg {
         position: fixed;

@@ -33,9 +33,116 @@
                 &::after {
                     content: 'GMT+07';
                     position: absolute;
-                    font-size: 11px;
-                    left: 50%;
-                    transform: translateX(-50%);
+                    font-size: 10px;
+                    left: 0;
+                    bottom: 5px;
+                    font-weight: 400;
+                    color: #70757a;
+                }
+            }
+        }
+        .fc-timeGridDay-view {
+            .fc-col-header {
+                .fc-scrollgrid-sync-inner {
+                    text-align: left;
+                    .fc-col-header-cell-cushion  {
+                        padding: 0 15px;
+                    }
+                    .date-dd {
+                        font-size: 25px;
+                        &:hover {
+                            background: transparent;
+                        }
+                    }
+                }
+            }
+            .fc-day-today {
+                background-color: #fff !important;
+            }
+        }
+        .fc-timeGridWeek-view, .fc-timeGridDay-view {
+            .fc-col-header {
+                > thead {
+                    > tr {
+                        th {
+                            position: relative;
+                            &:first-child {
+                                border-bottom: 1px solid #fff;
+                                &:after {
+                                    content: "";
+                                    position: absolute;
+                                    bottom: -1px;
+                                    right: 0;
+                                    background: #dadce0;
+                                    width: 12px;
+                                    height: 1px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .fc-scrollgrid-liquid {
+                border: 0 !important;
+            }
+            .fc-timegrid-slot.fc-timegrid-slot-minor {
+                &:first-child {
+                    border-top: 0;
+                }
+            }
+            th.fc-col-header-cell {
+                border-left: 0px;
+                border-right: 1px solid #fff;
+                position: relative;
+                &:before {
+                    content: "";
+                    position: absolute;
+                    bottom: 0;
+                    right: -1px;
+                    background: #dadce0;
+                    width: 1px;
+                    height: 20px;
+                }
+            }
+            .fc-scrollgrid-section-header {
+                th {
+                    border-right: 1px solid #fff;
+                    position: relative;
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        bottom: 0;
+                        right: -1px;
+                        background: #dadce0;
+                        width: 1px;
+                        height: 20px;
+                    }
+                }
+            }
+            .fc-timegrid-slots {
+                > table {
+                    > tbody {
+                        tr {
+                            &:first-child {
+                                .fc-timegrid-slot-label {
+                                    display: none;
+                                }
+                            }
+                            > .fc-timegrid-slot-label {
+                                position: relative;
+                            }
+                            .gird-time {
+                                position: absolute;
+                                left: 0;
+                                top: -8px;
+                                width: calc(100% - 12px);
+                                background: #fff;
+                                padding-right: 8px;
+                                font-weight: 400;
+                                color: #70757a;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -484,11 +591,12 @@
                     font-size: 12px;
                     line-height: 18px;
                     color: #70757a;
+                    font-weight: 400;
                 }
                 .date-dd {
                     color: #3c4043;
                     font-size: 18px;
-                    font-weight: 500;
+                    font-weight: 400;
                     transition: all .3s ease;
                     &:hover {
                         background-color: #f1f3f4;

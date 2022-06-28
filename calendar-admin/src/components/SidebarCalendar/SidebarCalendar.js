@@ -274,7 +274,7 @@ function SidebarCalendar({
                 />
               </div> */}
               <div className="form-group form-group-ezs">
-                <label className="mb-1">Khách hàng</label>
+                {/* <label className="mb-1">Khách hàng</label> */}
                 <AsyncSelect
                   menuPlacement="top"
                   isMulti
@@ -304,7 +304,7 @@ function SidebarCalendar({
                 />
               </div>
               <div className="form-group form-group-ezs">
-                <label className="mb-1">Nhân viên</label>
+                {/* <label className="mb-1">Nhân viên</label> */}
                 <AsyncSelect
                   menuPlacement="top"
                   key={CrStockID}
@@ -335,7 +335,7 @@ function SidebarCalendar({
                 />
               </div>
               <div className="form-group form-group-ezs">
-                <label className="mb-1">Loại khách hàng</label>
+                {/* <label className="mb-1">Loại khách hàng</label> */}
                 <Select
                   className="select-control"
                   classNamePrefix="select"
@@ -353,7 +353,7 @@ function SidebarCalendar({
                 />
               </div>
               <div className="form-group form-group-ezs">
-                <label className="mb-1">Loại lịch</label>
+                {/* <label className="mb-1">Loại lịch</label> */}
                 <Select
                   className="select-control"
                   classNamePrefix="select"
@@ -371,7 +371,7 @@ function SidebarCalendar({
                 />
               </div>
               <div className="form-group form-group-ezs">
-                <label className="mb-1">Thực hiện</label>
+                {/* <label className="mb-1">Thực hiện</label> */}
                 <Select
                   className="select-control"
                   classNamePrefix="select"

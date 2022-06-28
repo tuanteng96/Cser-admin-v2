@@ -382,52 +382,52 @@ function CalendarPage(props) {
         const dataBooks =
           data.books && Array.isArray(data.books)
             ? data.books
-                .map((item) => ({
-                  ...item,
-                  start: item.BookDate,
-                  title: item.RootTitles,
-                  className: `fc-event-solid-${getStatusClss(
-                    item.Status,
-                    item
-                  )}`,
-                  resourceIds:
-                    item.UserServices &&
+              .map((item) => ({
+                ...item,
+                start: item.BookDate,
+                title: item.RootTitles,
+                className: `fc-event-solid-${getStatusClss(
+                  item.Status,
+                  item
+                )}`,
+                resourceIds:
+                  item.UserServices &&
                     Array.isArray(item.UserServices) &&
                     item.UserServices.length > 0
-                      ? item.UserServices.map((item) => item.ID)
-                      : [],
-                  MemberCurrent: {
-                    FullName: item?.IsAnonymous
-                      ? item?.FullName
-                      : item?.Member?.FullName,
-                    MobilePhone: item?.IsAnonymous
-                      ? item?.Phone
-                      : item?.Member?.MobilePhone,
-                  },
-                  Star: checkStar(item),
-                }))
-                .filter((item) => item.Status !== "TU_CHOI")
+                    ? item.UserServices.map((item) => item.ID)
+                    : [],
+                MemberCurrent: {
+                  FullName: item?.IsAnonymous
+                    ? item?.FullName
+                    : item?.Member?.FullName,
+                  MobilePhone: item?.IsAnonymous
+                    ? item?.Phone
+                    : item?.Member?.MobilePhone,
+                },
+                Star: checkStar(item),
+              }))
+              .filter((item) => item.Status !== "TU_CHOI")
             : [];
         const dataBooksAuto =
           data.osList && Array.isArray(data.osList)
             ? data.osList.map((item) => ({
-                ...item,
-                AtHome: false,
-                Member: item.member,
-                MemberCurrent: {
-                  FullName: item?.member?.FullName,
-                  MobilePhone: item?.member?.MobilePhone,
-                },
-                start: item.os.BookDate,
-                BookDate: item.os.BookDate,
-                title: item.os.Title,
-                RootTitles: item.os.ProdService2 || item.os.ProdService,
-                className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
-                resourceIds:
-                  item.staffs && Array.isArray(item.staffs)
-                    ? item.staffs.map((staf) => staf.ID)
-                    : [],
-              }))
+              ...item,
+              AtHome: false,
+              Member: item.member,
+              MemberCurrent: {
+                FullName: item?.member?.FullName,
+                MobilePhone: item?.member?.MobilePhone,
+              },
+              start: item.os.BookDate,
+              BookDate: item.os.BookDate,
+              title: item.os.Title,
+              RootTitles: item.os.ProdService2 || item.os.ProdService,
+              className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
+              resourceIds:
+                item.staffs && Array.isArray(item.staffs)
+                  ? item.staffs.map((staf) => staf.ID)
+                  : [],
+            }))
             : [];
         setEvents([...dataBooks, ...dataBooksAuto]);
         setLoading(false);
@@ -470,15 +470,20 @@ function CalendarPage(props) {
                   eventMaxStack: 2,
                   slotLabelContent: ({ date, text }) => {
                     return (
-                      <span className="font-size-xs font-weight-bold font-number">
-                        {text} {moment(date).format("A")}
-                      </span>
+                      <>
+                        <span className="font-size-min gird-time font-number">
+                          {text} {moment(date).format("A")}
+                        </span>
+                        <span className="font-size-min font-number w-55px d-block"></span>
+                      </>
+
                     );
                   },
                   dayHeaderContent: ({ date, isToday, ...arg }) => {
                     return (
                       <div className="font-number">
-                        <div className="date-mm">
+                        <div className={`date-mm ${isToday &&
+                          "text-primary"}`}>
                           {moment(date).format("ddd")}
                         </div>
                         <div
@@ -496,6 +501,31 @@ function CalendarPage(props) {
                 },
                 timeGridDay: {
                   eventMaxStack: 8,
+                  slotLabelContent: ({ date, text }) => {
+                    return (
+                      <>
+                        <span className="font-size-min gird-time font-number">
+                          {text} {moment(date).format("A")}
+                        </span>
+                        <span className="font-size-min font-number w-55px d-block"></span>
+                      </>
+
+                    );
+                  },
+                  dayHeaderContent: ({ date, isToday, ...arg }) => {
+                    return (
+                      <div className="font-number">
+                        <div className={`date-mm text-center`}>
+                          {moment(date).format("ddd")}
+                        </div>
+                        <div
+                          className={`w-40px h-40px d-flex align-items-center justify-content-center rounded-circle date-dd`}
+                        >
+                          {moment(date).format("DD")}
+                        </div>
+                      </div>
+                    );
+                  },
                   nowIndicator: true,
                   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
                   scrollTime: moment(new Date()).format("HH:mm"),
@@ -570,22 +600,18 @@ function CalendarPage(props) {
                   Object.keys(extendedProps).length > 0
                 ) {
                   italicEl.innerHTML = `<div class="fc-title">
-                    <div><span class="fullname">${
-                      extendedProps.AtHome
-                        ? `<i class="fas fa-home text-white font-size-xs"></i>`
-                        : ""
-                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${
-                    extendedProps.MemberCurrent.FullName
-                  }</span><span class="d-none d-md-inline"> - ${
-                    extendedProps.MemberCurrent?.MobilePhone
-                  }</span></div>
+                    <div><span class="fullname">${extendedProps.AtHome
+                      ? `<i class="fas fa-home text-white font-size-xs"></i>`
+                      : ""
+                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${extendedProps.MemberCurrent.FullName
+                    }</span><span class="d-none d-md-inline"> - ${extendedProps.MemberCurrent?.MobilePhone
+                    }</span></div>
                     <div class="d-flex">
                       <div class="w-45px">${moment(
-                        extendedProps.BookDate
-                      ).format("HH:mm")} - </div>
-                      <div class="flex-1 text-truncate">${
-                        extendedProps.RootTitles
-                      }</div>
+                      extendedProps.BookDate
+                    ).format("HH:mm")} - </div>
+                      <div class="flex-1 text-truncate">${extendedProps.RootTitles
+                    }</div>
                     </div>
                   </div>`;
                 } else {
@@ -607,7 +633,7 @@ function CalendarPage(props) {
                 //Set View Calendar
                 setInitialView(view.type);
               }}
-              viewDidMount={(view) => {}}
+              viewDidMount={(view) => { }}
               datesSet={({ view, start, end, ...dgs }) => {
                 const newFilters = {
                   ...filters,
