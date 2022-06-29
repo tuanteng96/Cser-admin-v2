@@ -110,7 +110,7 @@ function ModalCalendar({
         setInitialValues((prevState) => ({
           ...prevState,
           StockID: AuthCrStockID,
-          BookDate: new Date(),
+          BookDate: initialValue?.BookDate ? initialValue.BookDate : new Date(),
         }));
       }
     } else {

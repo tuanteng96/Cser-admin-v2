@@ -61,7 +61,6 @@ const StatusArr = [
   },
 ];
 
-
 const StatusMembers = [
   {
     value: "KHACH_CU",
@@ -85,7 +84,7 @@ const StatusBooks = [
   {
     value: "CHUA_CHON",
     label: "Chưa chọn nhân viên",
-  }
+  },
 ];
 
 const StatusAtHome = [
@@ -110,6 +109,21 @@ const CustomOptionStaff = ({ children, ...props }) => {
         {children}
       </div>
     </components.Option>
+  );
+};
+
+const Control = ({ children, ...props }) => {
+  // @ts-ignore
+  const { classIcon } = props.selectProps;
+
+  return (
+    <components.Control {...props}>
+      <i
+        className={classIcon}
+        style={{ fontSize: "15px", color: "#5f6368", padding: "0 0 0 10px" }}
+      ></i>
+      {children}
+    </components.Control>
   );
 };
 
@@ -141,7 +155,7 @@ const ValueChangeListener = () => {
 const CheckBox = (props) => (
   <Field name={props.name}>
     {({ field, form }) => (
-      <label className="checkbox mt-2">
+      <label className={`checkbox ${!props.isMargin && "mt-2"}`}>
         <input
           {...field}
           value={props.value}
@@ -273,133 +287,139 @@ function SidebarCalendar({
                   disabled={true}
                 />
               </div> */}
-              <div className="form-group form-group-ezs">
+              <div className="form-group form-group-ezs mb-0 mt-12px">
                 {/* <label className="mb-1">Khách hàng</label> */}
-                <AsyncSelect
-                  menuPlacement="top"
-                  isMulti
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="MemberID"
-                  value={values.MemberID}
-                  onChange={(option) =>
-                    setFieldValue("MemberID", option, false)
-                  }
-                  placeholder="Chọn khách hàng"
-                  components={{
-                    Option: CustomOptionStaff,
-                  }}
-                  cacheOptions
-                  loadOptions={loadOptionsCustomer}
-                  defaultOptions
-                  noOptionsMessage={({ inputValue }) =>
-                    !inputValue
-                      ? "Không có khách hàng"
-                      : "Không tìm thấy khách hàng"
-                  }
-                />
+                <div className="px-10px">
+                  <AsyncSelect
+                    classIcon="far fa-user-alt"
+                    menuPlacement="top"
+                    isMulti
+                    className="select-control mb-8px"
+                    classNamePrefix="select"
+                    isLoading={false}
+                    isClearable
+                    isSearchable
+                    //menuIsOpen={true}
+                    name="MemberID"
+                    value={values.MemberID}
+                    onChange={(option) =>
+                      setFieldValue("MemberID", option, false)
+                    }
+                    placeholder="Chọn khách hàng"
+                    components={{
+                      Option: CustomOptionStaff,
+                      Control,
+                    }}
+                    cacheOptions
+                    loadOptions={loadOptionsCustomer}
+                    defaultOptions
+                    noOptionsMessage={({ inputValue }) =>
+                      !inputValue
+                        ? "Không có khách hàng"
+                        : "Không tìm thấy khách hàng"
+                    }
+                  />
+                  <AsyncSelect
+                    classIcon="far fa-user-cog"
+                    menuPlacement="top"
+                    key={CrStockID}
+                    isMulti
+                    className="select-control mb-8px"
+                    classNamePrefix="select"
+                    isLoading={false}
+                    isClearable
+                    isSearchable
+                    //menuIsOpen={true}
+                    name="UserServiceIDs"
+                    value={values.UserServiceIDs}
+                    onChange={(option) =>
+                      setFieldValue("UserServiceIDs", option, false)
+                    }
+                    placeholder="Chọn nhân viên"
+                    components={{
+                      Option: CustomOptionStaff,
+                      Control,
+                    }}
+                    cacheOptions
+                    loadOptions={loadOptionsStaff}
+                    defaultOptions
+                    noOptionsMessage={({ inputValue }) =>
+                      !inputValue
+                        ? "Không có nhân viên"
+                        : "Không tìm thấy nhân viên"
+                    }
+                  />
+                </div>
               </div>
-              <div className="form-group form-group-ezs">
-                {/* <label className="mb-1">Nhân viên</label> */}
-                <AsyncSelect
-                  menuPlacement="top"
-                  key={CrStockID}
-                  isMulti
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="UserServiceIDs"
-                  value={values.UserServiceIDs}
-                  onChange={(option) =>
-                    setFieldValue("UserServiceIDs", option, false)
-                  }
-                  placeholder="Chọn nhân viên"
-                  components={{
-                    Option: CustomOptionStaff,
-                  }}
-                  cacheOptions
-                  loadOptions={loadOptionsStaff}
-                  defaultOptions
-                  noOptionsMessage={({ inputValue }) =>
-                    !inputValue
-                      ? "Không có nhân viên"
-                      : "Không tìm thấy nhân viên"
-                  }
-                />
+              <div className="form-group form-group-ezs mb-0">
+                <label className="form-group-action mb-0">
+                  Nâng cao <i className="far fa-angle-down"></i>
+                </label>
+                <div className="px-10px py-8px">
+                  <Select
+                    className="select-control mb-8px"
+                    classNamePrefix="select"
+                    isLoading={false}
+                    isClearable
+                    isSearchable
+                    //menuIsOpen={true}
+                    name="StatusMember"
+                    placeholder="Chọn loại khách hàng"
+                    options={StatusMembers}
+                    value={values.StatusMember}
+                    onChange={(option) =>
+                      setFieldValue("StatusMember", option, false)
+                    }
+                  />
+                  <Select
+                    className="select-control mb-8px"
+                    classNamePrefix="select"
+                    isLoading={false}
+                    isClearable
+                    isSearchable
+                    //menuIsOpen={true}
+                    name="StatusBook"
+                    placeholder="Chọn loại"
+                    options={StatusBooks}
+                    value={values.StatusBook}
+                    onChange={(option) =>
+                      setFieldValue("StatusBook", option, false)
+                    }
+                  />
+                  <Select
+                    className="select-control"
+                    classNamePrefix="select"
+                    isLoading={false}
+                    isClearable
+                    isSearchable
+                    //menuIsOpen={true}
+                    name="StatusAtHome"
+                    placeholder="Chọn loại thực hiện"
+                    options={StatusAtHome}
+                    value={values.StatusAtHome}
+                    onChange={(option) =>
+                      setFieldValue("StatusAtHome", option, false)
+                    }
+                  />
+                </div>
               </div>
-              <div className="form-group form-group-ezs">
-                {/* <label className="mb-1">Loại khách hàng</label> */}
-                <Select
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="StatusMember"
-                  placeholder="Chọn loại khách hàng"
-                  options={StatusMembers}
-                  value={values.StatusMember}
-                  onChange={(option) =>
-                    setFieldValue("StatusMember", option, false)
-                  }
-                />
-              </div>
-              <div className="form-group form-group-ezs">
-                {/* <label className="mb-1">Loại lịch</label> */}
-                <Select
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="StatusBook"
-                  placeholder="Chọn loại"
-                  options={StatusBooks}
-                  value={values.StatusBook}
-                  onChange={(option) =>
-                    setFieldValue("StatusBook", option, false)
-                  }
-                />
-              </div>
-              <div className="form-group form-group-ezs">
-                {/* <label className="mb-1">Thực hiện</label> */}
-                <Select
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="StatusAtHome"
-                  placeholder="Chọn loại thực hiện"
-                  options={StatusAtHome}
-                  value={values.StatusAtHome}
-                  onChange={(option) =>
-                    setFieldValue("StatusAtHome", option, false)
-                  }
-                />
-              </div>
-              <div className="form-group form-group-ezs">
-                <label className="mb-1">Trạng thái đặt lịch</label>
-                {StatusArr &&
-                  StatusArr.map((item, index) => (
-                    <CheckBox
-                      name="Status"
-                      label={item.label}
-                      value={item.value}
-                      color={item.color}
-                      key={index}
-                    />
-                  ))}
+              <div className="form-group form-group-ezs mb-0">
+                <label className="form-group-action mb-0">
+                  Trạng thái đặt lịch <i className="far fa-angle-down"></i>
+                </label>
+                <div className="px-10px py-8px">
+                  {StatusArr &&
+                    StatusArr.map((item, index) => (
+                      <CheckBox
+                        isMargin={index === 0}
+                        name="Status"
+                        label={item.label}
+                        value={item.value}
+                        color={item.color}
+                        key={index}
+                      />
+                    ))}
+                </div>
               </div>
               {/* 
               <div className="form-group form-group-ezs">

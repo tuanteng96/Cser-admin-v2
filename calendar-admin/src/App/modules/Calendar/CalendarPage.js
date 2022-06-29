@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -101,6 +101,8 @@ function CalendarPage(props) {
   const { AuthCrStockID } = useSelector(({ Auth }) => ({
     AuthCrStockID: Auth.CrStockID,
   }));
+
+  const calendarRef = useRef("");
 
   //Get Staff Full
   useEffect(() => {
@@ -382,52 +384,52 @@ function CalendarPage(props) {
         const dataBooks =
           data.books && Array.isArray(data.books)
             ? data.books
-              .map((item) => ({
-                ...item,
-                start: item.BookDate,
-                title: item.RootTitles,
-                className: `fc-event-solid-${getStatusClss(
-                  item.Status,
-                  item
-                )}`,
-                resourceIds:
-                  item.UserServices &&
+                .map((item) => ({
+                  ...item,
+                  start: item.BookDate,
+                  title: item.RootTitles,
+                  className: `fc-event-solid-${getStatusClss(
+                    item.Status,
+                    item
+                  )}`,
+                  resourceIds:
+                    item.UserServices &&
                     Array.isArray(item.UserServices) &&
                     item.UserServices.length > 0
-                    ? item.UserServices.map((item) => item.ID)
-                    : [],
-                MemberCurrent: {
-                  FullName: item?.IsAnonymous
-                    ? item?.FullName
-                    : item?.Member?.FullName,
-                  MobilePhone: item?.IsAnonymous
-                    ? item?.Phone
-                    : item?.Member?.MobilePhone,
-                },
-                Star: checkStar(item),
-              }))
-              .filter((item) => item.Status !== "TU_CHOI")
+                      ? item.UserServices.map((item) => item.ID)
+                      : [],
+                  MemberCurrent: {
+                    FullName: item?.IsAnonymous
+                      ? item?.FullName
+                      : item?.Member?.FullName,
+                    MobilePhone: item?.IsAnonymous
+                      ? item?.Phone
+                      : item?.Member?.MobilePhone,
+                  },
+                  Star: checkStar(item),
+                }))
+                .filter((item) => item.Status !== "TU_CHOI")
             : [];
         const dataBooksAuto =
           data.osList && Array.isArray(data.osList)
             ? data.osList.map((item) => ({
-              ...item,
-              AtHome: false,
-              Member: item.member,
-              MemberCurrent: {
-                FullName: item?.member?.FullName,
-                MobilePhone: item?.member?.MobilePhone,
-              },
-              start: item.os.BookDate,
-              BookDate: item.os.BookDate,
-              title: item.os.Title,
-              RootTitles: item.os.ProdService2 || item.os.ProdService,
-              className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
-              resourceIds:
-                item.staffs && Array.isArray(item.staffs)
-                  ? item.staffs.map((staf) => staf.ID)
-                  : [],
-            }))
+                ...item,
+                AtHome: false,
+                Member: item.member,
+                MemberCurrent: {
+                  FullName: item?.member?.FullName,
+                  MobilePhone: item?.member?.MobilePhone,
+                },
+                start: item.os.BookDate,
+                BookDate: item.os.BookDate,
+                title: item.os.Title,
+                RootTitles: item.os.ProdService2 || item.os.ProdService,
+                className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
+                resourceIds:
+                  item.staffs && Array.isArray(item.staffs)
+                    ? item.staffs.map((staf) => staf.ID)
+                    : [],
+              }))
             : [];
         setEvents([...dataBooks, ...dataBooksAuto]);
         setLoading(false);
@@ -435,6 +437,27 @@ function CalendarPage(props) {
       })
       .catch((error) => console.log(error));
   };
+
+  const GenerateName = (name) => {
+    if (width > 767) {
+      return name;
+    }
+    const newName = name.split(" ");
+    const stringName = [];
+    for (var key in newName) {
+      if (Number(key) !== newName.length - 1) {
+        stringName.push(newName[key].charAt(0));
+      } else {
+        stringName.push(newName[key]);
+      }
+    }
+    return stringName.join(".");
+  };
+
+  // const someMethod = () => {
+  //   let calendarApi = calendarRef.current.getApi()
+  //   calendarApi.changeView("dayGridDay");
+  // }
 
   return (
     <div className="ezs-calendar">
@@ -452,10 +475,11 @@ function CalendarPage(props) {
           />
           <div className="ezs-calendar__content">
             <FullCalendar
+              ref={calendarRef}
               themeSystem="unthemed"
               locale={viLocales}
               initialDate={TODAY}
-              initialView={width > 991 ? initialView : "timeGridWeek"} //timeGridDay
+              initialView={width > 991 ? initialView : "timeGridDay"} //timeGridDay
               schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
               aspectRatio="3"
               editable={false}
@@ -465,6 +489,10 @@ function CalendarPage(props) {
               views={{
                 dayGridMonth: {
                   dayMaxEvents: 2,
+                  dateClick: ({ date }) => {
+                    setInitialValue({ ...initialValue, BookDate: date });
+                    onOpenModal();
+                  },
                 },
                 timeGridWeek: {
                   eventMaxStack: 2,
@@ -476,14 +504,12 @@ function CalendarPage(props) {
                         </span>
                         <span className="font-size-min font-number w-55px d-block"></span>
                       </>
-
                     );
                   },
                   dayHeaderContent: ({ date, isToday, ...arg }) => {
                     return (
                       <div className="font-number">
-                        <div className={`date-mm ${isToday &&
-                          "text-primary"}`}>
+                        <div className={`date-mm ${isToday && "text-primary"}`}>
                           {moment(date).format("ddd")}
                         </div>
                         <div
@@ -498,6 +524,10 @@ function CalendarPage(props) {
                   nowIndicator: true,
                   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
                   scrollTime: moment(new Date()).format("HH:mm"),
+                  dateClick: ({ date }) => {
+                    setInitialValue({ ...initialValue, BookDate: date });
+                    onOpenModal();
+                  },
                 },
                 timeGridDay: {
                   eventMaxStack: 8,
@@ -509,7 +539,6 @@ function CalendarPage(props) {
                         </span>
                         <span className="font-size-min font-number w-55px d-block"></span>
                       </>
-
                     );
                   },
                   dayHeaderContent: ({ date, isToday, ...arg }) => {
@@ -530,6 +559,10 @@ function CalendarPage(props) {
                   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
                   scrollTime: moment(new Date()).format("HH:mm"),
                   slotMinWidth: "50",
+                  dateClick: ({ date }) => {
+                    setInitialValue({ ...initialValue, BookDate: date });
+                    onOpenModal();
+                  },
                 },
                 // resourceTimeGridDay: {
                 //   type: "resourceTimeline",
@@ -547,8 +580,26 @@ function CalendarPage(props) {
                   nowIndicator: true,
                   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
                   scrollTime: moment(new Date()).format("HH:mm"),
-                  resourceAreaWidth: "160px",
-                  slotMinWidth: "50",
+                  resourceAreaWidth: width > 767 ? "180px" : "70px",
+                  slotMinWidth: width > 767 ? "90px" : "35px",
+                  dateClick: ({ date }) => {
+                    setInitialValue({ ...initialValue, BookDate: date });
+                    onOpenModal();
+                  },
+                  resourceLabelDidMount: ({ el, fieldValue, ...arg }) => {
+                    el.querySelector(
+                      ".fc-datagrid-cell-main"
+                    ).innerHTML = `<span class="text-capitalize">${GenerateName(
+                      fieldValue
+                    )}</span>`;
+                  },
+                  slotLabelDidMount: ({ text, date, el, ...arg }) => {
+                    el.querySelector(
+                      ".fc-timeline-slot-cushion"
+                    ).innerHTML = `<span class="gird-time font-number">
+                        ${text} ${moment(date).format("A")}
+                      </span>`;
+                  },
                   //duration: { days: 4 },
                 },
               }}
@@ -590,30 +641,47 @@ function CalendarPage(props) {
                 onOpenModal();
               }}
               eventContent={(arg) => {
-                const { event } = arg;
+                const { event, view } = arg;
                 const { extendedProps } = event._def;
                 let italicEl = document.createElement("div");
                 italicEl.classList.add("fc-content");
-
                 if (
                   typeof extendedProps !== "object" ||
                   Object.keys(extendedProps).length > 0
                 ) {
-                  italicEl.innerHTML = `<div class="fc-title">
-                    <div><span class="fullname">${extendedProps.AtHome
-                      ? `<i class="fas fa-home text-white font-size-xs"></i>`
-                      : ""
-                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${extendedProps.MemberCurrent.FullName
-                    }</span><span class="d-none d-md-inline"> - ${extendedProps.MemberCurrent?.MobilePhone
+                  if (view.type !== "listWeek") {
+                    italicEl.innerHTML = `<div class="fc-title">
+                    <div><span class="fullname">${
+                      extendedProps.AtHome
+                        ? `<i class="fas fa-home text-white font-size-xs"></i>`
+                        : ""
+                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${
+                      extendedProps.MemberCurrent.FullName
+                    }</span><span class="d-none d-md-inline"> - ${
+                      extendedProps.MemberCurrent?.MobilePhone
                     }</span></div>
                     <div class="d-flex">
                       <div class="w-45px">${moment(
-                      extendedProps.BookDate
-                    ).format("HH:mm")} - </div>
-                      <div class="flex-1 text-truncate">${extendedProps.RootTitles
-                    }</div>
+                        extendedProps.BookDate
+                      ).format("HH:mm")} </div>
+                      <div class="flex-1 text-truncate">- ${
+                        extendedProps.RootTitles
+                      }</div>
                     </div>
                   </div>`;
+                  } else {
+                    italicEl.innerHTML = `<div class="fc-title">
+                    <div><span class="fullname">${
+                      extendedProps.AtHome
+                        ? `<i class="fas fa-home font-size-xs"></i>`
+                        : ""
+                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${
+                      extendedProps.MemberCurrent.FullName
+                    }</span><span class="d-none d-md-inline"> - ${
+                      extendedProps.MemberCurrent?.MobilePhone
+                    }</span><span> - ${extendedProps.RootTitles}</span></div>
+                  </div>`;
+                  }
                 } else {
                   italicEl.innerHTML = `<div class="fc-title">
                     Không có lịch
@@ -624,6 +692,24 @@ function CalendarPage(props) {
                   domNodes: arrayOfDomNodes,
                 };
               }}
+              dayHeaderDidMount={(arg) => {
+                const { view, el, isToday, date } = arg;
+                if (view.type === "listWeek") {
+                  el.querySelector(".fc-list-day-text").innerHTML = `
+                    <div class="d-flex align-items-center">
+                      <span class="font-number text-date ${isToday &&
+                        "bg-primary text-white"}">${moment(date).format(
+                    "DD"
+                  )}</span>
+                      <span class="font-number text-date-full pl-2">THG ${moment(
+                        date
+                      ).format("MM")}, ${moment(date).format("ddd")}</span>
+                    </div>
+                  `;
+                  el.querySelector(".fc-list-day-side-text").innerHTML = "";
+                }
+                console.log(arg);
+              }}
               dayCellDidMount={(info) => {
                 //info.el.innerHTML = "Test";
                 //const elmParent = info.el;
@@ -633,7 +719,7 @@ function CalendarPage(props) {
                 //Set View Calendar
                 setInitialView(view.type);
               }}
-              viewDidMount={(view) => { }}
+              viewDidMount={(view) => {}}
               datesSet={({ view, start, end, ...dgs }) => {
                 const newFilters = {
                   ...filters,

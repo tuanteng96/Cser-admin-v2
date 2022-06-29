@@ -45,7 +45,7 @@
             .fc-col-header {
                 .fc-scrollgrid-sync-inner {
                     text-align: left;
-                    .fc-col-header-cell-cushion  {
+                    .fc-col-header-cell-cushion {
                         padding: 0 15px;
                     }
                     .date-dd {
@@ -60,10 +60,11 @@
                 background-color: #fff !important;
             }
         }
-        .fc-timeGridWeek-view, .fc-timeGridDay-view {
+        .fc-timeGridWeek-view,
+        .fc-timeGridDay-view {
             .fc-col-header {
-                > thead {
-                    > tr {
+                >thead {
+                    >tr {
                         th {
                             position: relative;
                             &:first-child {
@@ -120,15 +121,15 @@
                 }
             }
             .fc-timegrid-slots {
-                > table {
-                    > tbody {
+                >table {
+                    >tbody {
                         tr {
                             &:first-child {
                                 .fc-timegrid-slot-label {
                                     display: none;
                                 }
                             }
-                            > .fc-timegrid-slot-label {
+                            >.fc-timegrid-slot-label {
                                 position: relative;
                             }
                             .gird-time {
@@ -144,6 +145,180 @@
                         }
                     }
                 }
+            }
+        }
+        .fc-dayGridMonth-view {
+            th.fc-col-header-cell {
+                padding: 0;
+                >.fc-scrollgrid-sync-inner {
+                    display: flex;
+                    height: 100%;
+                    align-items: end;
+                    justify-content: center;
+                    a {
+                        padding: 5px 0;
+                        color: #70757a;
+                        font-size: 11px;
+                        font-weight: 500;
+                        line-height: 20px;
+                        text-transform: uppercase;
+                        font-family: $font-number;
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+            .fc-daygrid-day-frame {
+                .fc-daygrid-day-number {
+                    font-family: $font-number;
+                    width: 30px;
+                    height: 30px;
+                    text-align: center;
+                    line-height: 30px;
+                    border-radius: 100%;
+                    font-size: 12px;
+                    transition: all .2s ease;
+                    &:hover {
+                        text-decoration: none;
+                        background-color: #f1f3f4;
+                    }
+                }
+            }
+            .fc-day-today {
+                background-color: #fff !important;
+                .fc-daygrid-day-frame {
+                    .fc-daygrid-day-number {
+                        background-color: $primary;
+                        color: $white;
+                    }
+                }
+            }
+        }
+        .fc-listWeek-view {
+            .fc-list-day-cushion {
+                background: #fff;
+                .fc-list-day-text:hover {
+                    text-decoration: none;
+                }
+                .text-date {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 100%;
+                    font-weight: 600;
+                    color: #3c4043;
+                    font-size: 18px;
+                    &:hover {
+                        background-color: #f1f3f4;
+                    }
+                }
+                .text-date-full {
+                    font-weight: 500;
+                    font-size: 11px;
+                    color: #70757a;
+                }
+            }
+            .fc-list-event {
+                background: #fff !important;
+                .fc-list-event-time {
+                    color: #3c4043;
+                    font-family: $font-number;
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+                .fc-content {
+                    .fc-title {
+                        color: #3c4043 !important;
+                        padding-top: 5px;
+                        font-weight: 500;
+                        i {
+                            color: #3c4043 !important;
+                        }
+                        @media (max-width: 767px) {
+                            font-size: 13px !important;
+                        }
+                    }
+                }
+                .fc-list-event-time {
+                    padding-top: 18px !important;
+                }
+            }
+            .fc-list-event-dot {
+                border: 7px solid var(--fc-event-border-color, #3788d8);
+                border-radius: 100%;
+                margin-top: 7px !important;
+            }
+        }
+        .fc-resource-timeline {
+            .fc-scrollgrid-liquid {
+                >tbody {
+                    .fc-scrollgrid-section {
+                        >td:first-child {
+                            .fc-scroller-liquid-absolute {
+                                overflow-x: hidden !important;
+                            }
+                            .fc-datagrid-cell-frame {
+                                height: 90px !important;
+                                @media (max-width: 767px) {
+                                    height: 80px !important;
+                                }
+                                .fc-datagrid-cell-cushion {
+                                    height: 100%;
+                                    display: flex;
+                                    flex-direction: column;
+                                    justify-content: center;
+                                    .fc-datagrid-cell-main {
+                                        font-size: 13px;
+                                        font-weight: 600;
+                                        overflow: hidden;
+                                        white-space: nowrap;
+                                        text-overflow: ellipsis;
+                                        @media (max-width: 767px) {
+                                            font-size: 12px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                .fc-timeline-slot-cushion {
+                    width: 100%;
+                    padding: 0;
+                    &:hover {
+                        text-decoration: none;
+                    }
+                    span {
+                        color: #70757a;
+                        font-weight: 500;
+                        font-size: 12px;
+                    }
+                }
+            }
+            .fc-timeline-body {
+                >.fc-scrollgrid-sync-table {
+                    tr {
+                        td {
+                            @media (max-width: 767px) {
+                                height: 80px !important;
+                            }
+                            height: 90px !important;
+                            .fc-timeline-lane-frame {
+                                height: 90px !important;
+                                @media (max-width: 767px) {
+                                    height: 80px !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .fc-scrollgrid-section-header .fc-datagrid-cell-main {
+                color: #70757a !important;
+                font-size: 12px !important;
             }
         }
         // Header
