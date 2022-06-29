@@ -6,6 +6,7 @@
 // Mixins
 @import "./base/mixins";
 @import "./components/mixins";
+@import './vendors/plugins/mixins';
 //@import "vendors/plugins/mixins";
 // Bootstrap mixins
 @import "~bootstrap/scss/_mixins.scss";

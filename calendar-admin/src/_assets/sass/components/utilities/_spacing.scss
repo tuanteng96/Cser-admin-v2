@@ -8,6 +8,9 @@ $spacing-width-height: (24px: 24px);
         $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
         @each $name,
         $value in $heights-and-widths {
+            .p#{$infix}-#{$name} {
+                padding: $value !important;
+            }
             .pt#{$infix}-#{$name} {
                 padding-top: $value !important;
             }
@@ -27,6 +30,9 @@ $spacing-width-height: (24px: 24px);
             }
             .pr#{$infix}-#{$name} {
                 padding-right: $value !important;
+            }
+            .m#{$infix}-#{$name} {
+                padding: $value !important;
             }
             .mt#{$infix}-#{$name} {
                 margin-top: $value !important;

@@ -45,6 +45,7 @@ const viLocales = {
     week: "Tuần",
     day: "Ngày",
     list: "Danh sách",
+    timeGridWeek: "Tuần"
   },
   weekText: "Sm",
   allDayText: "Cả ngày",
@@ -96,7 +97,8 @@ function CalendarPage(props) {
   const [initialValue, setInitialValue] = useState({});
   const [Events, setEvents] = useState([]);
   const [StaffFull, setStaffFull] = useState([]);
-  const [initialView, setInitialView] = useState("dayGridMonth");
+  const [initialView, setInitialView] = useState("timeGridWeek");
+  const [headerTitle, setHeaderTitle] = useState("");
   const { width } = useWindowSize();
   const { AuthCrStockID } = useSelector(({ Auth }) => ({
     AuthCrStockID: Auth.CrStockID,
@@ -128,6 +130,13 @@ function CalendarPage(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
+
+  useEffect(() => {
+    if(calendarRef?.current?.getApi()) {
+      let calendarApi = calendarRef.current.getApi()
+      setHeaderTitle(calendarApi.currentDataManager.data?.viewTitle)
+    }
+  },[calendarRef])
 
   const onRefresh = (callback) => {
     getBooking(() => callback && callback());
@@ -454,15 +463,19 @@ function CalendarPage(props) {
     return stringName.join(".");
   };
 
-  // const someMethod = () => {
-  //   let calendarApi = calendarRef.current.getApi()
-  //   calendarApi.changeView("dayGridDay");
-  // }
+  const someMethod = () => {
+    let calendarApi = calendarRef.current.getApi()
+    console.log(calendarApi)
+    //calendarApi.prev()
+    //calendarApi.changeView("dayGridDay");
+  }
+
+  //console.log(headerTitle)
 
   return (
     <div className="ezs-calendar">
-      <div className="container-fluid h-100 py-3">
-        <div className="d-flex flex-column flex-lg-row h-100">
+      <div className="container-fluid h-100 px-0">
+        <div className="d-flex flex-column flex-xl-row h-100">
           <SidebarCalendar
             filters={filters}
             onOpenModal={onOpenModal}
@@ -472,8 +485,9 @@ function CalendarPage(props) {
             onOpenFilter={onOpenFilter}
             onHideFilter={onHideFilter}
             isFilter={isFilter}
+            headerTitle={headerTitle}
           />
-          <div className="ezs-calendar__content">
+          <div className={`ezs-calendar__content ${loading && "loading"} position-relative`}>
             <FullCalendar
               ref={calendarRef}
               themeSystem="unthemed"
@@ -496,6 +510,7 @@ function CalendarPage(props) {
                 },
                 timeGridWeek: {
                   eventMaxStack: 2,
+                  duration: { days: width > 991 ? 6 : 3 },
                   slotLabelContent: ({ date, text }) => {
                     return (
                       <>
@@ -708,7 +723,6 @@ function CalendarPage(props) {
                   `;
                   el.querySelector(".fc-list-day-side-text").innerHTML = "";
                 }
-                console.log(arg);
               }}
               dayCellDidMount={(info) => {
                 //info.el.innerHTML = "Test";
@@ -719,8 +733,10 @@ function CalendarPage(props) {
                 //Set View Calendar
                 setInitialView(view.type);
               }}
-              viewDidMount={(view) => {}}
-              datesSet={({ view, start, end, ...dgs }) => {
+              // viewDidMount={(arg) => {
+              //   console.log(arg)
+              // }}
+              datesSet={({ view, start, end, ...arg }) => {
                 const newFilters = {
                   ...filters,
                   StockID: AuthCrStockID,

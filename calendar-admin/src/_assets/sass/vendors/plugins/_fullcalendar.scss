@@ -26,6 +26,15 @@
                 //use this for scheduler fix:  padding: 0.0rem 0.2rem 0.0rem 0.2rem;
             }
         }
+        .fc-header-toolbar {
+            .fc-toolbar-chunk {
+                &:nth-child(2) {
+                    @include media-breakpoint-down(lg) {
+                        display: none;
+                    }
+                }
+            }
+        }
         .fc-timegrid-axis {
             .fc-timegrid-axis-frame {
                 height: 100%;
@@ -320,6 +329,23 @@
                 color: #70757a !important;
                 font-size: 12px !important;
             }
+            .fc-resource-timeline-divider {
+                width: 0;
+            }
+            > table {
+                > tbody {
+                    > tr {
+                        td:first-child {
+                            border-right: 0;
+                        }
+                    }
+                }
+            }
+            .fc-scrollgrid-section-header {
+                >th:first-child {
+                    border-right: 0;
+                }
+            }
         }
         // Header
         th.fc-col-header-cell {
@@ -493,7 +519,10 @@
         .fc {
             // toolbar
             .fc-toolbar {
-                margin-bottom: 1.5rem;
+                &.fc-header-toolbar {
+                    margin-bottom: 15px !important;
+                }
+                
                 .fc-left,
                 .fc-right,
                 .fc-center {
@@ -855,9 +884,9 @@
                 &:focus,
                 &:active,
                 &.fc-button-active {
-                    background-color: $primary !important;
-                    color: theme-inverse-color('primary') !important;
-                    border: 1px solid $primary !important;
+                    //background-color: $primary !important;
+                    color: $primary !important;
+                    //border: 1px solid $primary !important;
                     box-shadow: none;
                     text-shadow: none;
                     .fc-icon {
@@ -925,7 +954,7 @@
         .fc {
             .fc-header-toolbar {
                 flex-wrap: wrap;
-                justify-content: center !important;
+                // justify-content: center !important;
                 //flex-direction: column;
                 .fc-toolbar-chunk:first-child {
                     order: 2;
@@ -936,6 +965,7 @@
                     }
                 }
                 .fc-toolbar-chunk:nth-child(2) {
+                    display: none;
                     order: 0;
                     width: 100%;
                     margin-bottom: 8px;
