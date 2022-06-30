@@ -82,7 +82,7 @@ function ModalCreateMember({ show, onHide, onSubmit, initialDefault }) {
                                         autoComplete="off"
                                     ></input>
                                     <div className="d-flex align-items-center justify-content-between mt-4">
-                                        <label className="mr-3">Đặt lịch cho khách vãng lai</label>
+                                        <label className="mr-3">Chưa tạo khách hàng mới, chỉ tạo lịch hẹn</label>
                                         <span className="switch switch-sm switch-icon">
                                             <label>
                                                 <input

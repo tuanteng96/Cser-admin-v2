@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import "../../../_assets/sass/pages/_calendar.scss";
 import CalendarCrud from "./_redux/CalendarCrud";
 import { useWindowSize } from "../../../hooks/useWindowSize";
+import _ from "lodash";
 
 import moment from "moment";
 import "moment/locale/vi";
@@ -298,7 +299,6 @@ function CalendarPage(props) {
         onHideModal();
       });
     } catch (error) {
-      console.log(error);
       setBtnLoading((prevState) => ({
         ...prevState,
         isBtnBooking: false,
@@ -354,7 +354,11 @@ function CalendarPage(props) {
   };
 
   const getFiltersBooking = (values) => {
-    setFilters(values);
+    if (_.isEqual(values, filters)) {
+      getBooking();
+    } else {
+      setFilters(values);
+    }
   };
 
   const checkStar = (item) => {
@@ -396,6 +400,9 @@ function CalendarPage(props) {
                 .map((item) => ({
                   ...item,
                   start: item.BookDate,
+                  end: moment(item.BookDate)
+                    .add(60, "minutes")
+                    .toDate(),
                   title: item.RootTitles,
                   className: `fc-event-solid-${getStatusClss(
                     item.Status,
@@ -408,12 +415,16 @@ function CalendarPage(props) {
                       ? item.UserServices.map((item) => item.ID)
                       : [],
                   MemberCurrent: {
-                    FullName: item?.IsAnonymous
-                      ? item?.FullName
-                      : item?.Member?.FullName,
-                    MobilePhone: item?.IsAnonymous
-                      ? item?.Phone
-                      : item?.Member?.MobilePhone,
+                    FullName:
+                      item?.IsAnonymous ||
+                      item.Member?.MobilePhone === "0000000000"
+                        ? item?.FullName
+                        : item?.Member?.FullName,
+                    MobilePhone:
+                      item?.IsAnonymous ||
+                      item.Member?.MobilePhone === "0000000000"
+                        ? item?.Phone
+                        : item?.Member?.MobilePhone,
                   },
                   Star: checkStar(item),
                 }))
@@ -430,6 +441,9 @@ function CalendarPage(props) {
                   MobilePhone: item?.member?.MobilePhone,
                 },
                 start: item.os.BookDate,
+                end: moment(item.os.BookDate)
+                  .add(60, "minutes")
+                  .toDate(),
                 BookDate: item.os.BookDate,
                 title: item.os.Title,
                 RootTitles: item.os.ProdService2 || item.os.ProdService,
@@ -442,6 +456,7 @@ function CalendarPage(props) {
             : [];
         setEvents([...dataBooks, ...dataBooksAuto]);
         setLoading(false);
+        isFilter && onHideFilter()
         fn && fn();
       })
       .catch((error) => console.log(error));
@@ -449,7 +464,7 @@ function CalendarPage(props) {
 
   const GenerateName = (name) => {
     if (width > 767) {
-      return name;
+      return `<span class="text-capitalize">${name}</span>`;
     }
     const newName = name.split(" ");
     const stringName = [];
@@ -460,17 +475,19 @@ function CalendarPage(props) {
         stringName.push(newName[key]);
       }
     }
-    return stringName.join(".");
+    return `<div class="text-capitalize">${stringName
+      .slice(0, stringName.length - 1)
+      .join(".")}</div><div class="text-capitalize">${
+      stringName[stringName.length - 1]
+    }</div>`;
   };
 
-  const someMethod = () => {
-    let calendarApi = calendarRef.current.getApi()
-    console.log(calendarApi)
-    //calendarApi.prev()
-    //calendarApi.changeView("dayGridDay");
-  }
-
-  //console.log(headerTitle)
+  // const someMethod = () => {
+  //   let calendarApi = calendarRef.current.getApi()
+  //   console.log(calendarApi)
+  //   calendarApi.prev()
+  //   calendarApi.changeView("dayGridDay");
+  // }
 
   return (
     <div className="ezs-calendar">
@@ -487,13 +504,17 @@ function CalendarPage(props) {
             isFilter={isFilter}
             headerTitle={headerTitle}
           />
-          <div className={`ezs-calendar__content ${loading && "loading"} position-relative`}>
+          <div
+            className={`ezs-calendar__content ${loading &&
+              "loading"} position-relative`}
+          >
             <FullCalendar
+              handleWindowResize={true}
               ref={calendarRef}
               themeSystem="unthemed"
               locale={viLocales}
               initialDate={TODAY}
-              initialView={width > 991 ? initialView : "timeGridDay"} //timeGridDay
+              initialView={initialView} //timeGridDay
               schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
               aspectRatio="3"
               editable={false}
@@ -591,12 +612,13 @@ function CalendarPage(props) {
                 resourceTimelineDay: {
                   type: "resourceTimeline",
                   buttonText: "Nhân viên",
-                  resourceAreaHeaderContent: () => "Nhân viên",
+                  resourceAreaHeaderContent: () =>
+                    width > 1200 ? "Nhân viên" : "N.Viên",
                   nowIndicator: true,
                   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
                   scrollTime: moment(new Date()).format("HH:mm"),
                   resourceAreaWidth: width > 767 ? "180px" : "70px",
-                  slotMinWidth: width > 767 ? "90px" : "35px",
+                  slotMinWidth: width > 767 ? "60" : "35",
                   dateClick: ({ date }) => {
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
@@ -604,9 +626,7 @@ function CalendarPage(props) {
                   resourceLabelDidMount: ({ el, fieldValue, ...arg }) => {
                     el.querySelector(
                       ".fc-datagrid-cell-main"
-                    ).innerHTML = `<span class="text-capitalize">${GenerateName(
-                      fieldValue
-                    )}</span>`;
+                    ).innerHTML = `${GenerateName(fieldValue)}`;
                   },
                   slotLabelDidMount: ({ text, date, el, ...arg }) => {
                     el.querySelector(
@@ -724,18 +744,13 @@ function CalendarPage(props) {
                   el.querySelector(".fc-list-day-side-text").innerHTML = "";
                 }
               }}
-              dayCellDidMount={(info) => {
-                //info.el.innerHTML = "Test";
-                //const elmParent = info.el;
-              }}
+              dayCellDidMount={({ el, view }) => {}}
               eventDidMount={(arg) => {
                 const { view } = arg;
                 //Set View Calendar
                 setInitialView(view.type);
               }}
-              // viewDidMount={(arg) => {
-              //   console.log(arg)
-              // }}
+              viewDidMount={({ view, el }) => {}}
               datesSet={({ view, start, end, ...arg }) => {
                 const newFilters = {
                   ...filters,

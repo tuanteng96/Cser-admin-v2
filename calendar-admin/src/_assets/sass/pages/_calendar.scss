@@ -5,7 +5,7 @@
         height: 100%;
     }
     &__sidebar {
-        width: 300px;
+        width: 248px;
         height: 100%;
         .header-sidebar {
             height: 72px;
@@ -18,7 +18,7 @@
         }
     }
     &__content {
-        width: calc(100% - 300px);
+        width: calc(100% - 248px);
         padding: 15px 15px 15px 20px;
         &.loading {
             .fc-view-harness.fc-view-harness-active {
@@ -68,7 +68,6 @@
             visibility: visible;
         }
     }
-    
     .overlay-layer {
         position: absolute;
         top: 0;

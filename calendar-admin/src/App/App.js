@@ -3,21 +3,27 @@ import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import BookingPage from "./modules/Booking/BookingPage";
 import CalendarPage from "./modules/Calendar/CalendarPage";
+import CheckInPage from "./modules/Checkin/CheckInPage";
 
 function App({ store, basename }) {
-  const [isBooking, setIsBooking] = useState(false);
+  const [NameCurrent, setNameCurrent] = useState("");
   useEffect(() => {
     const URL_STRING = window.location.href;
     var URL_NEW = new URL(URL_STRING);
     var IsPop = URL_NEW.searchParams.get("ispop");
+    var IsCheckin = URL_NEW.searchParams.get("ischeckin");
     if (IsPop) {
-      setIsBooking(true);
+      setNameCurrent("POPUP");
+    }
+    if (IsCheckin) {
+      setNameCurrent("CHECKIN");
     }
   }, [])
   return (
     <Provider store={store}>
-      {!isBooking && <CalendarPage />}
-      {isBooking && <BookingPage />}
+      {!NameCurrent && <CalendarPage />}
+      {NameCurrent === "POPUP" && <BookingPage />}
+      {NameCurrent === "CHECKIN" && <CheckInPage />}
       <ToastContainer />
     </Provider>
   );

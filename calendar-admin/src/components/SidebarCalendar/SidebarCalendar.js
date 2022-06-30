@@ -149,13 +149,14 @@ function SidebarCalendar({
         <div className="d-flex justify-content-between align-items-center">
           <Dropdown>
             <Dropdown.Toggle className="btn btn-primary btn-sm h-42px btn-shadow px-15px">
-              {/* Tạo mới */}
-              <i className="fal fa-plus"></i>
+              {width > 1200 ? "Tạo mới" : <i className="fal fa-plus"></i>}
             </Dropdown.Toggle>
 
             <Dropdown.Menu variant="dark">
               <Dropdown.Item href="#">Khách hàng mới</Dropdown.Item>
-              <Dropdown.Item href="#" onClick={onOpenModal}>Đặt lịch mới</Dropdown.Item>
+              <Dropdown.Item href="#" onClick={onOpenModal}>
+                Đặt lịch mới
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           {/* <button
@@ -164,12 +165,14 @@ function SidebarCalendar({
         >
           Tạo đặt lịch mới
         </button> */}
-          <div className="d-xl-none align-items-center font-size-lg font-weight-bolder">{headerTitle}</div>
+          <div className="d-xl-none align-items-center font-size-lg font-weight-bolder">
+            {headerTitle}
+          </div>
           <button
-            className="btn btn-info btn-sm h-42px d-xl-none"
+            className="btn btn-info h-40px d-xl-none w-45px p-0 d-xl-none"
             onClick={onOpenFilter}
           >
-            <i className="far fa-filter p-0"></i>
+            <i className="fas fa-sort-amount-down p-0 font-size-md"></i>
           </button>
         </div>
       </div>
@@ -189,7 +192,7 @@ function SidebarCalendar({
               <PerfectScrollbar
                 options={perfectScrollbarOptions}
                 className="scroll"
-                style={{ position: 'relative' }}
+                style={{ position: "relative" }}
               >
                 <div className="px-15px">
                   {/* <div className={`datepicker-inline ${initialView !== "timeGridDay" ? "disabled" : ""} mb-2`}>
@@ -228,7 +231,7 @@ function SidebarCalendar({
                         onChange={(option) =>
                           setFieldValue("MemberID", option, false)
                         }
-                        placeholder="Chọn khách hàng"
+                        placeholder="Khách hàng"
                         components={{
                           Option: CustomOptionStaff,
                           Control,
@@ -258,7 +261,7 @@ function SidebarCalendar({
                         onChange={(option) =>
                           setFieldValue("UserServiceIDs", option, false)
                         }
-                        placeholder="Chọn nhân viên"
+                        placeholder="Nhân viên"
                         components={{
                           Option: CustomOptionStaff,
                           Control,
@@ -300,15 +303,17 @@ function SidebarCalendar({
                   <div className="d-flex justify-content-between">
                     <button
                       type="submit"
-                      className={`btn btn-primary btn-sm d-block ${loading ? "spinner spinner-white spinner-right" : ""
-                        } w-auto my-0 mr-0 h-auto`}
+                      className={`btn btn-primary btn-sm d-block ${
+                        loading ? "spinner spinner-white spinner-right" : ""
+                      } w-auto my-0 mr-0 h-auto`}
                       disabled={loading}
                     >
                       Lọc ngay
                     </button>
                     <button
-                      type="submit"
+                      type="button"
                       className={`btn btn-secondary w-auto my-0 mr-0 h-auto`}
+                      onClick={onHideFilter}
                     >
                       Đóng
                     </button>
@@ -316,7 +321,6 @@ function SidebarCalendar({
                 </div>
               )}
             </Form>
-
           );
         }}
       </Formik>

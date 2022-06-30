@@ -55,23 +55,27 @@ $color in $theme-text-colors {
 
 // Font sizes
 .font-size-base {
-    font-size: $font-size-base;
+    font-size: $font-size-base !important;
 }
 
 .font-size-sm {
-    font-size: $font-size-sm;
+    font-size: $font-size-sm !important;
 }
 
 .font-size-md {
-    font-size: $font-size-md;
+    font-size: $font-size-md !important;
 }
 
 .font-size-xs {
-    font-size: $font-size-xs;
+    font-size: $font-size-xs !important;
+}
+
+.font-size-minn {
+    font-size: 12px !important;
 }
 
 .font-size-min {
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 .font-size-lg {

@@ -107,6 +107,10 @@ $value in $rounded-width-height {
     border-radius: 50% !important;
 }
 
+.rounded-4px {
+    border-radius: 4px;
+}
+
 // Responsive borders
 @each $breakpoint in map-keys($grid-breakpoints) {
     @include media-breakpoint-up($breakpoint) {
