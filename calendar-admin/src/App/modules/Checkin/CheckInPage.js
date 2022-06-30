@@ -1,9 +1,33 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import Select from "react-select";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CheckIn, filterBy } from "./_redux/CheckinSlice";
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import CheckInFilter from "./CheckInFilter";
+
+const perfectScrollbarOptions = {
+  wheelSpeed: 2,
+  wheelPropagation: false
+}
 
 function CheckInPage(props) {
-  const a = useSelector((state) => state.CheckIn.Test);
+
+  const { ListCheckIn, loading } = useSelector(({ CheckIn }) => ({
+    ListCheckIn: CheckIn.ListFilters ?? CheckIn.ListCheckIn,
+    loading: CheckIn.loading
+  }));
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(CheckIn())
+  }, [dispatch])
+
+  const onFilter = (values) => {
+    dispatch(filterBy(values))
+  }
+
+  // console.log(ListCheckIn)
+  // console.log(loading)
+
   return (
     <div className="w-450px h-100vh shadow d-flex flex-column">
       <div className="shadow">
@@ -16,45 +40,32 @@ function CheckInPage(props) {
           </div>
         </div>
         <div className="py-12px px-15px">
-          <div className="d-flex">
-            <div className="flex-grow-1 position-relative">
-              <input
-                type="text"
-                className="form-control font-size-sm rounded-4px pl-35px"
-                placeholder="Tìm kiếm khách hàng"
-              />
-              <i className="far fa-search font-size-sm position-absolute top-12px left-12px"></i>
-            </div>
-            <div className="w-180px pl-12px">
-              <Select
-                className="select-control"
-                classNamePrefix="select"
-                isLoading={false}
-                isClearable
-                isSearchable
-                //menuIsOpen={true}
-                name="color"
-                placeholder="Chọn"
-                options={[
-                  {
-                    label: "Tất cả",
-                    value: "-1",
-                  },
-                  {
-                    label: "Phát sinh đơn hàng",
-                    value: "0",
-                  },
-                  {
-                    label: "Không phát sinh",
-                    value: "1",
-                  },
-                ]}
-              />
-            </div>
-          </div>
+          <CheckInFilter onSubmit={(values) => onFilter(values)} />
         </div>
       </div>
-      <div className="flex-grow-1">{a}</div>
+      <PerfectScrollbar
+        options={perfectScrollbarOptions}
+        className="scroll flex-grow-1"
+        style={{ position: "relative" }}
+      >
+        {
+          loading && "Đang tải"
+        }
+        {
+          !loading && (
+            <>
+              {
+                ListCheckIn && ListCheckIn.map((item, index) => (
+                  <div className="p-15px border-bottom" key={index}>
+                    <div>{item.FullName}</div>
+                    <div>{item.Phone}</div>
+                  </div>
+                ))
+              }
+            </>
+          )
+        }
+      </PerfectScrollbar>
     </div>
   );
 }

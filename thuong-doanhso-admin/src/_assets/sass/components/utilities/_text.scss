@@ -70,6 +70,10 @@ $color in $theme-text-colors {
     font-size: $font-size-xs;
 }
 
+.font-size-min {
+    font-size: 10px;
+}
+
 .font-size-lg {
     font-size: $font-size-lg;
 }
