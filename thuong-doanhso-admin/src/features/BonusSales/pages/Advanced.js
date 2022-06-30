@@ -89,7 +89,7 @@ function Advanced({ OrderInfo, onSubmit, loading }) {
                                                             }]
                                                         }
                                                         value={item.Type}
-                                                        placeholder="Chọn loại"
+                                                        placeholder="Loại nhân viên"
                                                         noOptionsMessage={() =>
                                                             "Không có lựa chọn"
                                                         }
