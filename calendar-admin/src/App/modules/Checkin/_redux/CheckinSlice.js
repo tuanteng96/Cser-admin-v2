@@ -1,40 +1,14 @@
 import {
     createAsyncThunk,
-    createSlice,
-    current
+    createSlice
 } from '@reduxjs/toolkit'
 import { ConvertViToEn } from '../../../../helpers/TextHelpers';
+import CheckinCrud from './CheckinCrud';
 
-export const CheckIn = createAsyncThunk('/login', async (data, thunkAPI) => {
+export const CheckIn = createAsyncThunk('/login', async(StockID, thunkAPI) => {
     try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        //const response = await authApi.login(data)
-        const response = [{
-                FullName: "Nguyễn Tài Tuấn",
-                Phone: "0971021196",
-                Checkin: "2022-06-03T14:11:39",
-                IsOrder: true
-            },
-            {
-                FullName: "Lê Bảo Ngọc",
-                Phone: "0971021196",
-                Checkin: "2022-06-03T14:11:39",
-                IsOrder: false
-            },
-            {
-                FullName: "Nguyễn Tiến Hùng",
-                Phone: "0971021196",
-                Checkin: "2022-06-03T14:11:39",
-                IsOrder: false
-            },
-            {
-                FullName: "Trương Văn Hướng",
-                Phone: "0971021196",
-                Checkin: "2022-06-03T14:11:39",
-                IsOrder: true
-            }
-        ]
-        return response
+        const { data } = await CheckinCrud.getListCheckIn(StockID)
+        return data.data
     } catch (error) {
         return thunkAPI.rejectWithValue(error)
     }
@@ -53,15 +27,16 @@ export const CheckinSlice = createSlice({
         filterBy: (state, {
             payload
         }) => {
-            const {Key, Type} = payload;
+            const { Key, Type } = payload;
+            let newStateList = [...state.ListCheckIn]
             let newListFilters = []
-            if(Type) {
-
+            if (Type) {
+                newStateList = newStateList.filter(item => Type.value === 0 ? item?.CheckIn?.OrderCheckInID : !item?.CheckIn?.OrderCheckInID)
             }
-            newListFilters = state.ListCheckIn.filter((item => ConvertViToEn(item.FullName).includes(ConvertViToEn(Key))))
+            newListFilters = newStateList.filter((item => ConvertViToEn(item.FullName).includes(ConvertViToEn(Key)) || item.MobilePhone.includes(Key)))
             return {
                 ...state,
-                ListFilters: Key ? newListFilters : null
+                ListFilters: Key || Type ? newListFilters : null
             }
         }
     },

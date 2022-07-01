@@ -153,7 +153,14 @@ function SidebarCalendar({
             </Dropdown.Toggle>
 
             <Dropdown.Menu variant="dark">
-              <Dropdown.Item href="#">Khách hàng mới</Dropdown.Item>
+              <Dropdown.Item href="#" onClick={() => {
+                window.top?.MemberEdit &&
+                  window.top.MemberEdit({
+                    Member: {
+                      ID: 0,
+                    },
+                  });
+              }}>Khách hàng mới</Dropdown.Item>
               <Dropdown.Item href="#" onClick={onOpenModal}>
                 Đặt lịch mới
               </Dropdown.Item>

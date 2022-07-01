@@ -347,10 +347,13 @@
             }
         }
         .fc-resource-timeline {
+            .fc-timeline-event-harness {
+                top: 0 !important;
+            }
             .fc-scrollgrid-liquid {
                 >thead {
                     .fc-scroller {
-                        overflow-y: hidden !important;
+                        //overflow-y: hidden !important;
                     }
                 }
                 >tbody {
@@ -708,7 +711,7 @@
             text-decoration: underline;
         }
         .fc-timegrid-event-harness {
-            height: 56px;
+            min-height: 56px;
             overflow: hidden;
         }
         .fc-timegrid-more-link {

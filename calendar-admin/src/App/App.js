@@ -17,6 +17,9 @@ function App({ store, basename }) {
     }
     if (IsCheckin) {
       setNameCurrent("CHECKIN");
+      window.top &&
+        window.top.SideBarCheckInReady &&
+        window.top.SideBarCheckInReady();
     }
   }, [])
   return (

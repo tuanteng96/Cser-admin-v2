@@ -204,6 +204,7 @@ function CalendarPage(props) {
           member: {
             MobilePhone: values.MemberID?.suffix,
             FullName: values.MemberID?.text,
+            IsAff: 1
           },
         };
         const newMember = await CalendarCrud.createMember(objCreate);
@@ -401,7 +402,7 @@ function CalendarPage(props) {
                   ...item,
                   start: item.BookDate,
                   end: moment(item.BookDate)
-                    .add(60, "minutes")
+                    .add(item.RootMinutes ?? 60, "minutes")
                     .toDate(),
                   title: item.RootTitles,
                   className: `fc-event-solid-${getStatusClss(
@@ -442,7 +443,7 @@ function CalendarPage(props) {
                 },
                 start: item.os.BookDate,
                 end: moment(item.os.BookDate)
-                  .add(60, "minutes")
+                  .add(item.os.RootMinutes ?? 60, "minutes")
                   .toDate(),
                 BookDate: item.os.BookDate,
                 title: item.os.Title,
@@ -488,6 +489,7 @@ function CalendarPage(props) {
   //   calendarApi.prev()
   //   calendarApi.changeView("dayGridDay");
   // }
+  //console.log(Events)
 
   return (
     <div className="ezs-calendar">
