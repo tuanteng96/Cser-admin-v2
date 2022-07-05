@@ -23,35 +23,50 @@ function App() {
   }, []);
 
   return (
-    <div className="iframe-cardmoney">
-      {loading && "Đang tải ..."}
-      {!loading && <React.Fragment>
-        {ListMoneyCard && ListMoneyCard.length > 0 ? (<React.Fragment>
-          <div className="list-moneycard">
-            <div className="table-responsive table-responsive-attr">
-              <table className="table table-bordered">
-                <thead>
-                  <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên thẻ tiền</th>
-                    <th scope="col">Giá trị</th>
-                    <th scope="col">Giá trị chi tiêu</th>
-                    <th scope="col">Còn lại</th>
-                    <th className="text-center">#</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    ListMoneyCard.map((item, index) => (
-                      <ItemCard item={item} key={index} index={index} getMoneyCard={getMoneyCard} />
-                    ))
-                  }
-                </tbody>
-              </table>
+    <div className="iframe-cardmoney h-100">
+      {loading && (
+        <div className="p-15px m-h-100 d-flex align-items-center justify-content-center">
+          Đang tải ...
+        </div>
+      )}
+      {!loading && (
+        <React.Fragment>
+          {ListMoneyCard && ListMoneyCard.length > 0 ? (
+            <React.Fragment>
+              <div className="list-moneycard">
+                <div className="table-responsive table-responsive-attr">
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">STT</th>
+                        <th scope="col">Tên thẻ tiền</th>
+                        <th scope="col">Giá trị</th>
+                        <th scope="col">Giá trị chi tiêu</th>
+                        <th scope="col">Còn lại</th>
+                        <th className="text-center">#</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {ListMoneyCard.map((item, index) => (
+                        <ItemCard
+                          item={item}
+                          key={index}
+                          index={index}
+                          getMoneyCard={getMoneyCard}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </React.Fragment>
+          ) : (
+            <div className="p-15px m-h-100 d-flex align-items-center justify-content-center">
+              Chưa có thẻ tiền
             </div>
-          </div>
-        </React.Fragment>) : "Chưa có thẻ tiền"}
-      </React.Fragment>}
+          )}
+        </React.Fragment>
+      )}
     </div>
   );
 }
