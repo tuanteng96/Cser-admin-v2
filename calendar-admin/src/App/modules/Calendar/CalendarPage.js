@@ -46,7 +46,7 @@ const viLocales = {
     week: "Tuần",
     day: "Ngày",
     list: "Danh sách",
-    timeGridWeek: "Tuần"
+    timeGridWeek: "Tuần",
   },
   weekText: "Sm",
   allDayText: "Cả ngày",
@@ -133,11 +133,11 @@ function CalendarPage(props) {
   }, [filters]);
 
   useEffect(() => {
-    if(calendarRef?.current?.getApi()) {
-      let calendarApi = calendarRef.current.getApi()
-      setHeaderTitle(calendarApi.currentDataManager.data?.viewTitle)
+    if (calendarRef?.current?.getApi()) {
+      let calendarApi = calendarRef.current.getApi();
+      setHeaderTitle(calendarApi.currentDataManager.data?.viewTitle);
     }
-  },[calendarRef])
+  }, [calendarRef]);
 
   const onRefresh = (callback) => {
     getBooking(() => callback && callback());
@@ -204,7 +204,7 @@ function CalendarPage(props) {
           member: {
             MobilePhone: values.MemberID?.suffix,
             FullName: values.MemberID?.text,
-            IsAff: 1
+            IsAff: 1,
           },
         };
         const newMember = await CalendarCrud.createMember(objCreate);
@@ -218,6 +218,13 @@ function CalendarPage(props) {
         CurrentStockID,
         u_id_z4aDf2,
       });
+
+      window.top.bodyEvent &&
+        window.top.bodyEvent("ui_changed", {
+          name: "cld_dat_lich_moi",
+          mid: objBooking.MemberID || 0,
+        });
+
       getBooking(() => {
         toast.success(getTextToast(values.Status), {
           position: toast.POSITION.TOP_RIGHT,
@@ -287,6 +294,11 @@ function CalendarPage(props) {
         CurrentStockID,
         u_id_z4aDf2,
       });
+      window.top.bodyEvent &&
+        window.top.bodyEvent("ui_changed", {
+          name: "cld_thuc_hien_lich",
+          mid: objBooking.MemberID || 0,
+        });
       getBooking(() => {
         window.top.location.href = `/admin/?mdl=store&act=sell#mp:${objBooking.MemberID}`;
         toast.success(getTextToast(values.Status), {
@@ -335,6 +347,11 @@ function CalendarPage(props) {
         CurrentStockID,
         u_id_z4aDf2,
       });
+      window.top.bodyEvent &&
+        window.top.bodyEvent("ui_changed", {
+          name: "cld_huy_lich",
+          mid: values.MemberID.value || 0,
+        });
       getBooking(() => {
         toast.success("Hủy lịch thành công !", {
           position: toast.POSITION.TOP_RIGHT,
@@ -457,7 +474,7 @@ function CalendarPage(props) {
             : [];
         setEvents([...dataBooks, ...dataBooksAuto]);
         setLoading(false);
-        isFilter && onHideFilter()
+        isFilter && onHideFilter();
         fn && fn();
       })
       .catch((error) => console.log(error));
