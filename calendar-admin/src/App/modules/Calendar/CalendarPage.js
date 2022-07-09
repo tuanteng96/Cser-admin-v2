@@ -673,7 +673,7 @@ function CalendarPage(props) {
                 left: "prev,next today",
                 center: "title",
                 right:
-                  "dayGridMonth,timeGridWeek,timeGridDay,listWeek,resourceTimelineDay,resourceTimeGridDay", //resourceTimeGridDay
+                  "dayGridMonth,timeGridWeek,timeGridDay,listWeek,resourceTimelineDay", //resourceTimeGridDay
               }}
               selectable={true}
               selectMirror={true}
@@ -772,15 +772,15 @@ function CalendarPage(props) {
                 setInitialView(view.type);
               }}
               viewDidMount={({ view, el }) => {
-                if (view.type === "resourceTimeGridDay") {
-                  el.querySelectorAll(
-                    ".fc-view>table"
-                  )[0].style.width = `${StaffFull.length * 200}px`;
-                } else {
-                  el.querySelectorAll(
-                    ".fc-view>table"
-                  )[0].style.width = `100%`;
-                }
+                // if (view.type === "resourceTimeGridDay") {
+                //   el.querySelectorAll(
+                //     ".fc-view>table"
+                //   )[0].style.width = `${StaffFull.length * 200}px`;
+                // } else {
+                //   el.querySelectorAll(
+                //     ".fc-view>table"
+                //   )[0].style.width = `100%`;
+                // }
               }}
               datesSet={({ view, start, end, ...arg }) => {
                 const newFilters = {

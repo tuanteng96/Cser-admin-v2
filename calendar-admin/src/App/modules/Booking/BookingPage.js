@@ -241,6 +241,7 @@ function BookingPage() {
                 ...prevState,
                 isBtnBooking: false,
             }));
+            window.top?.bodyEvent && window.top?.bodyEvent('ui_changed', { name: 's_dat_lich', mid: values.MemberID.value });
             window.top.toastr.success('Đặt lịch thành công.', '', { timeOut: 2000 });
             window?.top?.MemberBookInfo && window.top.MemberBookInfo.callback();
         } catch (error) {
@@ -282,6 +283,11 @@ function BookingPage() {
                 ...prevState,
                 isBtnDelete: false,
             }));
+            window.top?.bodyEvent &&
+              window.top?.bodyEvent("ui_changed", {
+                name: "s_huy_lich",
+                mid: values.MemberID.value,
+              });
             window.top.toastr.success('Hủy lịch thành công.', '', { timeOut: 2000 });
             window?.top?.MemberBookInfo && window.top.MemberBookInfo.callback();
         } catch (error) {
