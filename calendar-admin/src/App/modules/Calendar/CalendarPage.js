@@ -619,15 +619,17 @@ function CalendarPage(props) {
                     onOpenModal();
                   },
                 },
-                // resourceTimeGridDay: {
-                //   type: "resourceTimeline",
-                //   buttonText: "Nhân viên",
-                //   resourceAreaHeaderContent: () => "Danh sách nhân viên",
-                //   nowIndicator: true,
-                //   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
-                //   scrollTime: moment(new Date()).format("HH:mm"),
-                //   //duration: { days: 4 },
-                // },
+                resourceTimeGridDay: {
+                  type: "resourceTimeline",
+                  buttonText: "Nhân viên",
+                  resourceAreaHeaderContent: () => "Nhân viên",
+                  nowIndicator: true,
+                  now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
+                  scrollTime: moment(new Date()).format("HH:mm"),
+                  resourceAreaWidth: "300px",
+                  stickyHeaderDates: true,
+                  //duration: { days: 4 },
+                },
                 resourceTimelineDay: {
                   type: "resourceTimeline",
                   buttonText: "Nhân viên",
@@ -671,7 +673,7 @@ function CalendarPage(props) {
                 left: "prev,next today",
                 center: "title",
                 right:
-                  "dayGridMonth,timeGridWeek,timeGridDay,listWeek,resourceTimelineDay", //resourceTimeGridDay
+                  "dayGridMonth,timeGridWeek,timeGridDay,listWeek,resourceTimelineDay,resourceTimeGridDay", //resourceTimeGridDay
               }}
               selectable={true}
               selectMirror={true}
@@ -769,7 +771,17 @@ function CalendarPage(props) {
                 //Set View Calendar
                 setInitialView(view.type);
               }}
-              viewDidMount={({ view, el }) => {}}
+              viewDidMount={({ view, el }) => {
+                if (view.type === "resourceTimeGridDay") {
+                  el.querySelectorAll(
+                    ".fc-view>table"
+                  )[0].style.width = `${StaffFull.length * 200}px`;
+                } else {
+                  el.querySelectorAll(
+                    ".fc-view>table"
+                  )[0].style.width = `100%`;
+                }
+              }}
               datesSet={({ view, start, end, ...arg }) => {
                 const newFilters = {
                   ...filters,
