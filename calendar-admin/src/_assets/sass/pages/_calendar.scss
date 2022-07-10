@@ -1,6 +1,11 @@
 @import "../init";
 .ezs-calendar {
     height: calc(100vh);
+    &.show-calendar-staff {
+        .fc-theme-standard {
+            height: auto;
+        }
+    }
     .fc-theme-standard {
         height: 100%;
     }

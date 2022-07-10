@@ -138,9 +138,9 @@ function CheckInPage(props) {
                   className="p-15px border-bottom d-flex align-items-center"
                   key={index}
                 >
-                  <div className="w-45px">
+                  <div className="w-45px h-45px">
                     <img
-                      className="w-100 rounded-circle"
+                      className="w-100 h-100 object-fit-cover rounded-circle"
                       src={toAbsoluteUser(item.Photo)}
                       alt={item.FullName}
                     />
