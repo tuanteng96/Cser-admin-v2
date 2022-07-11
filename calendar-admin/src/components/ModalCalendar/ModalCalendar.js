@@ -111,6 +111,7 @@ function ModalCalendar({
           ...prevState,
           StockID: AuthCrStockID,
           BookDate: initialValue?.BookDate ? initialValue.BookDate : new Date(),
+          UserServiceIDs: initialValue?.UserServiceIDs || []
         }));
       }
     } else {

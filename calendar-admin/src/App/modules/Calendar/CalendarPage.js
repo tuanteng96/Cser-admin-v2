@@ -15,6 +15,7 @@ import "../../../_assets/sass/pages/_calendar.scss";
 import CalendarCrud from "./_redux/CalendarCrud";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import _ from "lodash";
+import CalendarStaff from "./CalendarStaff";
 
 import moment from "moment";
 import "moment/locale/vi";
@@ -100,12 +101,11 @@ function CalendarPage(props) {
   const [StaffFull, setStaffFull] = useState([]);
   const [initialView, setInitialView] = useState("timeGridWeek");
   const [headerTitle, setHeaderTitle] = useState("");
-  const [IsCalendarStaff, setIsCalendarStaff] = useState(false);
   const { width } = useWindowSize();
   const { AuthCrStockID } = useSelector(({ Auth }) => ({
     AuthCrStockID: Auth.CrStockID,
   }));
-
+  const [elmHeight, setElmHeight] = useState(0);
   const calendarRef = useRef("");
 
   //Get Staff Full
@@ -416,62 +416,62 @@ function CalendarPage(props) {
         const dataBooks =
           data.books && Array.isArray(data.books)
             ? data.books
-              .map((item) => ({
-                ...item,
-                start: item.BookDate,
-                end: moment(item.BookDate)
-                  .add(item.RootMinutes ?? 60, "minutes")
-                  .toDate(),
-                title: item.RootTitles,
-                className: `fc-event-solid-${getStatusClss(
-                  item.Status,
-                  item
-                )}`,
-                resourceIds:
-                  item.UserServices &&
+                .map((item) => ({
+                  ...item,
+                  start: item.BookDate,
+                  end: moment(item.BookDate)
+                    .add(item.RootMinutes ?? 60, "minutes")
+                    .toDate(),
+                  title: item.RootTitles,
+                  className: `fc-event-solid-${getStatusClss(
+                    item.Status,
+                    item
+                  )}`,
+                  resourceIds:
+                    item.UserServices &&
                     Array.isArray(item.UserServices) &&
                     item.UserServices.length > 0
-                    ? item.UserServices.map((item) => item.ID)
-                    : [],
-                MemberCurrent: {
-                  FullName:
-                    item?.IsAnonymous ||
+                      ? item.UserServices.map((item) => item.ID)
+                      : [],
+                  MemberCurrent: {
+                    FullName:
+                      item?.IsAnonymous ||
                       item.Member?.MobilePhone === "0000000000"
-                      ? item?.FullName
-                      : item?.Member?.FullName,
-                  MobilePhone:
-                    item?.IsAnonymous ||
+                        ? item?.FullName
+                        : item?.Member?.FullName,
+                    MobilePhone:
+                      item?.IsAnonymous ||
                       item.Member?.MobilePhone === "0000000000"
-                      ? item?.Phone
-                      : item?.Member?.MobilePhone,
-                },
-                Star: checkStar(item),
-              }))
-              .filter((item) => item.Status !== "TU_CHOI")
+                        ? item?.Phone
+                        : item?.Member?.MobilePhone,
+                  },
+                  Star: checkStar(item),
+                }))
+                .filter((item) => item.Status !== "TU_CHOI")
             : [];
         const dataBooksAuto =
           data.osList && Array.isArray(data.osList)
             ? data.osList.map((item) => ({
-              ...item,
-              AtHome: false,
-              Member: item.member,
-              MemberCurrent: {
-                FullName: item?.member?.FullName,
-                MobilePhone: item?.member?.MobilePhone,
-              },
-              start: item.os.BookDate,
-              end: moment(item.os.BookDate)
-                .add(item.os.RootMinutes ?? 60, "minutes")
-                .toDate(),
-              BookDate: item.os.BookDate,
-              title: item.os.Title,
-              RootTitles: item.os.ProdService2 || item.os.ProdService,
-              className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
-              resourceIds:
-                item.staffs && Array.isArray(item.staffs)
-                  ? item.staffs.map((staf) => staf.ID)
-                  : [],
-            }))
+                ...item,
+                AtHome: false,
+                Member: item.member,
+                MemberCurrent: {
+                  FullName: item?.member?.FullName,
+                  MobilePhone: item?.member?.MobilePhone,
+                },
+                start: item.os.BookDate,
+                end: moment(item.os.BookDate)
+                  .add(item.os.RootMinutes ?? 60, "minutes")
+                  .toDate(),
+                BookDate: item.os.BookDate,
+                title: item.os.Title,
+                RootTitles: item.os.ProdService2 || item.os.ProdService,
+                className: `fc-event-solid-${getStatusClss(item.os.Status)}`,
+                resourceIds:
+                  item.staffs && Array.isArray(item.staffs)
+                    ? item.staffs.map((staf) => staf.ID)
+                    : [],
+              }))
             : [];
         setEvents([...dataBooks, ...dataBooksAuto]);
         setLoading(false);
@@ -496,8 +496,9 @@ function CalendarPage(props) {
     }
     return `<div class="text-capitalize">${stringName
       .slice(0, stringName.length - 1)
-      .join(".")}</div><div class="text-capitalize">${stringName[stringName.length - 1]
-      }</div>`;
+      .join(".")}</div><div class="text-capitalize">${
+      stringName[stringName.length - 1]
+    }</div>`;
   };
 
   // const someMethod = () => {
@@ -509,7 +510,11 @@ function CalendarPage(props) {
   //console.log(Events)
 
   return (
-    <div className={`ezs-calendar ${IsCalendarStaff ? "show-calendar-staff" : ""}`}>
+    <div
+      className={`ezs-calendar ${
+        initialView === "resourceTimelineDay" ? "show-calendar-staff" : ""
+      }`}
+    >
       <div className="container-fluid h-100 px-0">
         <div className="d-flex flex-column flex-xl-row h-100">
           <SidebarCalendar
@@ -540,21 +545,6 @@ function CalendarPage(props) {
               navLinks={true}
               allDaySlot={false}
               firstDay={1}
-              customButtons={{
-                timeGridDayStaff: {
-                  text: 'Nhân viên',
-                  click: function ({target}) {
-                    setIsCalendarStaff(true);
-                    target.classList.add = "fc-button-active";
-                    const elmFc = target.closest(".fc");
-                    const elmWrapElm = target.closest(".fc-button-group");
-                    const buttonElm = elmWrapElm.querySelector(".fc-button-active");
-                    if(buttonElm) buttonElm.classList.remove("fc-button-active");
-                    const elmHarness = elmFc.querySelectorAll(".fc-view-harness")[0];
-                    elmHarness.style.display = "none"
-                  },
-                },
-              }}
               views={{
                 dayGridMonth: {
                   dayMaxEvents: 2,
@@ -688,7 +678,7 @@ function CalendarPage(props) {
                 left: "prev,next today",
                 center: "title",
                 right:
-                  "dayGridMonth,timeGridWeek,timeGridDay,listWeek,resourceTimelineDay,timeGridDayStaff", //resourceTimeGridDay
+                  "dayGridMonth,timeGridWeek,timeGridDay,listWeek,resourceTimelineDay", //resourceTimeGridDay
               }}
               selectable={true}
               selectMirror={true}
@@ -722,28 +712,35 @@ function CalendarPage(props) {
                 ) {
                   if (view.type !== "listWeek") {
                     italicEl.innerHTML = `<div class="fc-title">
-                    <div><span class="fullname">${extendedProps.AtHome
+                    <div><span class="fullname">${
+                      extendedProps.AtHome
                         ? `<i class="fas fa-home text-white font-size-xs"></i>`
                         : ""
-                      } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${extendedProps.MemberCurrent.FullName
-                      }</span><span class="d-none d-md-inline"> - ${extendedProps.MemberCurrent?.MobilePhone
-                      }</span></div>
+                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${
+                      extendedProps.MemberCurrent.FullName
+                    }</span><span class="d-none d-md-inline"> - ${
+                      extendedProps.MemberCurrent?.MobilePhone
+                    }</span></div>
                     <div class="d-flex">
                       <div class="w-45px">${moment(
                         extendedProps.BookDate
                       ).format("HH:mm")} </div>
-                      <div class="flex-1 text-truncate">- ${extendedProps.RootTitles
+                      <div class="flex-1 text-truncate">- ${
+                        extendedProps.RootTitles
                       }</div>
                     </div>
                   </div>`;
                   } else {
                     italicEl.innerHTML = `<div class="fc-title">
-                    <div><span class="fullname">${extendedProps.AtHome
+                    <div><span class="fullname">${
+                      extendedProps.AtHome
                         ? `<i class="fas fa-home font-size-xs"></i>`
                         : ""
-                      } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${extendedProps.MemberCurrent.FullName
-                      }</span><span class="d-none d-md-inline"> - ${extendedProps.MemberCurrent?.MobilePhone
-                      }</span><span> - ${extendedProps.RootTitles}</span></div>
+                    } ${extendedProps.Star ? `(${extendedProps.Star})` : ""} ${
+                      extendedProps.MemberCurrent.FullName
+                    }</span><span class="d-none d-md-inline"> - ${
+                      extendedProps.MemberCurrent?.MobilePhone
+                    }</span><span> - ${extendedProps.RootTitles}</span></div>
                   </div>`;
                   }
                 } else {
@@ -762,18 +759,18 @@ function CalendarPage(props) {
                   el.querySelector(".fc-list-day-text").innerHTML = `
                     <div class="d-flex align-items-center">
                       <span class="font-number text-date ${isToday &&
-                    "bg-primary text-white"}">${moment(date).format(
-                      "DD"
-                    )}</span>
+                        "bg-primary text-white"}">${moment(date).format(
+                    "DD"
+                  )}</span>
                       <span class="font-number text-date-full pl-2">THG ${moment(
-                      date
-                    ).format("MM")}, ${moment(date).format("ddd")}</span>
+                        date
+                      ).format("MM")}, ${moment(date).format("ddd")}</span>
                     </div>
                   `;
                   el.querySelector(".fc-list-day-side-text").innerHTML = "";
                 }
               }}
-              dayCellDidMount={({ el, view }) => { }}
+              dayCellDidMount={({ el, view }) => {}}
               eventDidMount={(arg) => {
                 const { view } = arg;
                 //Set View Calendar
@@ -783,20 +780,12 @@ function CalendarPage(props) {
                 // Create Dom
               }}
               datesSet={({ view, start, end, ...arg }) => {
-                //let calendarApi = document.querySelectorAll(".fc-view-harness");
                 let calendarElm = document.querySelectorAll(".fc-view-harness");
                 const newFilters = {
                   ...filters,
                   StockID: AuthCrStockID,
                 };
-                if(typeof view.type !== 'string') {
-                  setIsCalendarStaff(true);
-                  calendarElm[0].style.display = 'none';
-                }
-                else {
-                  setIsCalendarStaff(false);
-                  calendarElm[0].style.display = 'block';
-                }
+
                 if (view.type === "dayGridMonth") {
                   const monthCurrent = moment(end).subtract(1, "month");
                   const startOfMonth = moment(monthCurrent)
@@ -814,21 +803,48 @@ function CalendarPage(props) {
                     .subtract(1, "days")
                     .format("YYYY-MM-DD");
                 }
-                if (
-                  view.type !== "dayGridMonth" &&
-                  view.type !== "timeGridWeek" &&
-                  view.type !== "listWeek"
-                ) {
+                if (view.type === "timeGridDay") {
                   newFilters.From = moment(start).format("YYYY-MM-DD");
                   newFilters.To = moment(start).format("YYYY-MM-DD");
                 }
+                if (view.type === "resourceTimelineDay") {
+                  newFilters.From = moment(start).format("YYYY-MM-DD");
+                  newFilters.To = moment(start).format("YYYY-MM-DD");
+                }
+                if (view.type === "resourceTimelineDay") {
+                  setElmHeight(calendarElm[0].offsetHeight);
+                  calendarElm[0].style.display = "none";
+                } else {
+                  calendarElm[0].style.display = "block";
+                }
+                setInitialView(view.type);
                 setFilters(newFilters);
               }}
             />
-            {console.log(IsCalendarStaff)}
-            {
-              IsCalendarStaff && ("Đang xây dựng ...")
-            }
+            {initialView === "resourceTimelineDay" && (
+              <CalendarStaff
+                height={elmHeight}
+                resources={StaffFull}
+                events={Events}
+                dateClick={({ BookDate, UserServiceIDs }) => {
+                  setInitialValue({
+                    ...initialValue,
+                    BookDate,
+                    UserServiceIDs,
+                  });
+                  onOpenModal();
+                }}
+                eventClick={(service) => {
+                  if (service.os) {
+                    window?.top?.BANGLICH_BUOI &&
+                      window?.top?.BANGLICH_BUOI(service, onRefresh);
+                    return;
+                  }
+                  setInitialValue(service);
+                  onOpenModal();
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
