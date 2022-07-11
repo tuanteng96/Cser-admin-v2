@@ -72,8 +72,6 @@ function getScrollbarWidth() {
   return scrollbarWidth;
 }
 
-console.log(getScrollbarWidth());
-
 function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
   const [lineTime] = useState(lineTimeArray());
   const [newResources, setNewResources] = useState(resources);
@@ -97,7 +95,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
       serviceStart: service.start,
       serviceEnd: service.end,
     };
-    const { timeStartDay, timeEndDay } = {
+    const { timeStartDay } = {
       timeStartDay: timeStart,
       timeEndDay: timeEnd,
     };
@@ -149,7 +147,9 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
         className="flex-grow-1 calendar-staff d-flex"
       >
         <div className="calendar-staff-time">
-          <div className="time-header border-bottom"></div>
+          <div className="time-header border-bottom">
+            <span>GMT+07</span>
+          </div>
           <ScrollSyncPane>
             <div
               className="time-body"
@@ -194,7 +194,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
                     <div className="staff-slot" key={index}>
                       {lineTime &&
                         lineTime.map((item, idx) => (
-                          <div className="staff-label" key={idx}>
+                          <div className={`staff-label ${lineTime.length - 1 === idx && "border-bottom-0"}`} key={idx}>
                             {item.TimeEvent.map((o, i) => (
                               <div
                                 className="staff-line"
