@@ -5,13 +5,15 @@ import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
 import moment from "moment";
 import "moment/locale/vi";
+import { useWindowSize } from "../../../hooks/useWindowSize";
 moment.locale("vi");
 
 CalendarStaff.propTypes = {
   height: PropTypes.number,
 };
 
-var minWidthCell = 300;
+var minWidthCell = 220;
+var minWidthCellMobile = 135;
 var now = moment();
 var timeStart = now.startOf("day").toString();
 var timeEnd = now.endOf("day").toString();
@@ -75,6 +77,7 @@ function getScrollbarWidth() {
 function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
   const [lineTime] = useState(lineTimeArray());
   const [newResources, setNewResources] = useState(resources);
+  const { width } = useWindowSize();
 
   useEffect(() => {
     setNewResources((prevState) =>
@@ -153,7 +156,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
           <ScrollSyncPane>
             <div
               className="time-body"
-              style={{ paddingBottom: `${getScrollbarWidth()}px` }}
+              style={{ height: `calc(100% - ${getScrollbarWidth()}px - 40px)` }}
             >
               {lineTime &&
                 lineTime.map((item, index) => (
@@ -173,7 +176,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
           <ScrollSyncPane>
             <div
               className="staff-header border-bottom"
-              style={{ paddingRight: `${getScrollbarWidth()}px` }}
+              style={{ width: `calc(100% - ${getScrollbarWidth()}px)` }}
             >
               {resources &&
                 resources.map((item, index) => (
@@ -187,14 +190,21 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
             <div className="staff-body">
               <div
                 className="d-flex"
-                style={{ minWidth: `${newResources.length * minWidthCell}px` }}
+                style={{
+                  minWidth: `${newResources.length *
+                    (width > 767 ? minWidthCell : minWidthCellMobile)}px`,
+                }}
               >
                 {newResources &&
                   newResources.map((staff, index) => (
                     <div className="staff-slot" key={index}>
                       {lineTime &&
                         lineTime.map((item, idx) => (
-                          <div className={`staff-label ${lineTime.length - 1 === idx && "border-bottom-0"}`} key={idx}>
+                          <div
+                            className={`staff-label ${lineTime.length - 1 ===
+                              idx && "border-bottom-0"}`}
+                            key={idx}
+                          >
                             {item.TimeEvent.map((o, i) => (
                               <div
                                 className="staff-line"
@@ -242,7 +252,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
                                 </span>
                               </div>
                               <div className="d-flex">
-                                <div className="w-45px">
+                                <div className="w-35px">
                                   {moment(service.BookDate).format("HH:mm")}{" "}
                                 </div>
                                 <div className="flex-1 text-truncate">

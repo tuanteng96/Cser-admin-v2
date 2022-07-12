@@ -5,9 +5,15 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useState, useEffect } from 'react';
 
+const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
 const MemberSchema = Yup.object().shape({
-    FullName: Yup.string().required("Vui lòng nhập họ tên khách hàng."),
-    Phone: Yup.string().required("Vui lòng nhập số điện thoại khách hàng.")
+  FullName: Yup.string().required("Vui lòng nhập họ tên khách hàng."),
+  Phone: Yup.string()
+    .required("Vui lòng nhập số điện thoại.")
+    .matches(phoneRegExp, "Số điện thoại không hợp lệ.")
+    .min(10, "Số điện thoại không hợ lệ.")
+    .max(11, "Số điện thoại không hợ lệ."),
 });
 
 function ModalCreateMember({ show, onHide, onSubmit, initialDefault }) {

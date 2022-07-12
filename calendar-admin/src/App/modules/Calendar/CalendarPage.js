@@ -209,6 +209,17 @@ function CalendarPage(props) {
           },
         };
         const newMember = await CalendarCrud.createMember(objCreate);
+        if (newMember.data.error) {
+          toast.error(newMember.data.error, {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 1500,
+          });
+          setBtnLoading((prevState) => ({
+            ...prevState,
+            isBtnBooking: false,
+          }));
+          return;
+        }
         objBooking.MemberID = newMember?.data?.member?.ID || 0;
       }
 
@@ -276,6 +287,17 @@ function CalendarPage(props) {
             },
           };
           const newMember = await CalendarCrud.createMember(objCreate);
+          if (newMember.data.error) {
+            toast.error(newMember.data.error, {
+              position: toast.POSITION.TOP_RIGHT,
+              autoClose: 1500,
+            });
+            setBtnLoading((prevState) => ({
+              ...prevState,
+              isBtnBooking: false,
+            }));
+            return;
+          }
           objBooking.MemberID = newMember?.data?.member?.ID;
         } else {
           objBooking.MemberID = values?.IsMemberCurrent?.MemberPhone.ID;
