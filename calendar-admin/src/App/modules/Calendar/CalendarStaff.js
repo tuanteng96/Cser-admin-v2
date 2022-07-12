@@ -256,7 +256,10 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
                                   {moment(service.BookDate).format("HH:mm")}{" "}
                                 </div>
                                 <div className="flex-1 text-truncate">
-                                  - {service.RootTitles}
+                                  -{" "}
+                                  {service.RootMinutes ??
+                                    service?.os?.RootMinutes ??
+                                    60}p - {service.RootTitles}
                                 </div>
                               </div>
                             </div>

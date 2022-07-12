@@ -744,12 +744,13 @@ function CalendarPage(props) {
                       extendedProps.MemberCurrent?.MobilePhone
                     }</span></div>
                     <div class="d-flex">
-                      <div class="w-45px">${moment(
+                      <div class="w-35px">${moment(
                         extendedProps.BookDate
                       ).format("HH:mm")} </div>
-                      <div class="flex-1 text-truncate">- ${
-                        extendedProps.RootTitles
-                      }</div>
+                      <div class="flex-1 text-truncate">- ${extendedProps.RootMinutes ??
+                        extendedProps?.os?.RootMinutes ?? 60}p - ${
+                      extendedProps.RootTitles
+                    }</div>
                     </div>
                   </div>`;
                   } else {
@@ -762,7 +763,10 @@ function CalendarPage(props) {
                       extendedProps.MemberCurrent.FullName
                     }</span><span class="d-none d-md-inline"> - ${
                       extendedProps.MemberCurrent?.MobilePhone
-                    }</span><span> - ${extendedProps.RootTitles}</span></div>
+                    }</span><span> - ${extendedProps.RootMinutes ??
+                      extendedProps?.os?.RootMinutes ?? 60}p - ${
+                      extendedProps.RootTitles
+                    }</span></div>
                   </div>`;
                   }
                 } else {
