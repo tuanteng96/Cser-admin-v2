@@ -203,6 +203,10 @@ $text in $text-decoration-config {
     cursor: not-allowed;
 }
 
+.cursor-no-drop {
+    cursor: no-drop;
+}
+
 // vertical
 .vertical-align-middle {
     vertical-align: middle !important;
@@ -236,4 +240,12 @@ a {
 
 .font-number {
     font-family: $font-number;
+}
+
+.zindex-10 {
+    z-index: 10;
+}
+
+.zindex-9 {
+    z-index: 9;
 }

@@ -112,6 +112,11 @@ $value in $grays {
     background-color: transparent !important;
 }
 
+.bg-stripes {
+    background-image: linear-gradient(45deg, #ddd 25%, transparent 25%, transparent 50%, #ddd 50%, #ddd 75%, transparent 75%, transparent);
+    background-size: 4px 4px;
+}
+
 // Background size
 .bgi-size-length {
     background-size: length;

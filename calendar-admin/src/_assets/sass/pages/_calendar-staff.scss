@@ -25,14 +25,20 @@ $height-grid: 24px;
             height: calc(100% - #{$height-header});
             border-bottom: 1px solid #fff;
             overflow: auto;
+            display: flex;
+            flex-direction: column;
             &::-webkit-scrollbar {
                 display: none;
             }
             .line-body {
                 position: relative;
                 border-bottom: 1px solid $calendar-border-color;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
                 .line-item {
-                    height: $height-grid;
+                    min-height: $height-grid;
+                    flex-grow: 1;
                 }
                 &:last-child {
                     border-bottom: 0;
@@ -71,12 +77,6 @@ $height-grid: 24px;
             }
             .staff-resources {
                 min-width: $width-col;
-                @media (max-width: 767px) {
-                    min-width: $width-col-mobile;
-                    .name {
-                        font-size: 13px;
-                    }
-                }
                 width: 100%;
                 position: relative;
                 display: flex;
@@ -87,6 +87,12 @@ $height-grid: 24px;
                 font-weight: 500;
                 transition: all 0.3s ease;
                 border-right: 1px solid #fff;
+                @media (max-width: 767px) {
+                    min-width: $width-col-mobile;
+                    .name {
+                        font-size: 13px;
+                    }
+                }
                 &::before {
                     content: "";
                     position: absolute;
@@ -97,6 +103,7 @@ $height-grid: 24px;
                     height: 20px;
                 }
                 &:last-child {
+                    border-right: 0;
                     &::before {
                         display: none;
                     }
@@ -112,21 +119,26 @@ $height-grid: 24px;
         }
         .staff-body {
             height: calc(100% - #{$height-header});
-            overflow: auto;
+            overflow: scroll;
             .staff-slot {
                 min-width: $width-col;
-                @media (max-width: 767px) {
-                    min-width: $width-col-mobile;
-                }
                 width: 100%;
                 border-right: 1px solid $calendar-border-color;
                 position: relative;
+                display: flex;
+                flex-direction: column;
+                @media (max-width: 767px) {
+                    min-width: $width-col-mobile;
+                }
                 &:last-child {
                     border-right: 0;
                 }
                 .staff-label {
                     border-bottom: 1px solid $calendar-border-color;
                     position: relative;
+                    flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
                     &:last-child {
                         border-bottom: 0;
                     }
@@ -140,7 +152,8 @@ $height-grid: 24px;
                         left: 0;
                     }
                     .staff-line {
-                        height: $height-grid;
+                        flex-grow: 1;
+                        min-height: $height-grid;
                         cursor: pointer;
                     }
                 }

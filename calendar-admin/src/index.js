@@ -1,15 +1,18 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.scss';
-import App from './App/App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.scss";
+import App from "./App/App";
+import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
+import { SplashScreenProvider } from "./layout/_core/SplashScreen";
 
 const { PUBLIC_URL } = process.env;
 
 ReactDOM.render(
   <React.StrictMode>
-    <App store={store} basename={PUBLIC_URL} />
+    <SplashScreenProvider>
+      <App store={store} basename={PUBLIC_URL} />
+    </SplashScreenProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

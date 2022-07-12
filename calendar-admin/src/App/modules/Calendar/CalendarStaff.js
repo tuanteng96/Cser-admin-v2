@@ -6,6 +6,7 @@ import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import moment from "moment";
 import "moment/locale/vi";
 import { useWindowSize } from "../../../hooks/useWindowSize";
+import { useSelector } from "react-redux";
 moment.locale("vi");
 
 CalendarStaff.propTypes = {
@@ -14,11 +15,27 @@ CalendarStaff.propTypes = {
 
 var minWidthCell = 220;
 var minWidthCellMobile = 135;
-var now = moment();
-var timeStart = now.startOf("day").toString();
-var timeEnd = now.endOf("day").toString();
+var minHeightHeader = 40;
 
-const lineTimeArray = () => {
+const lineTimeArray = (TimeOpen, TimeClose) => {
+  const [hourOpen, minuteOpen, secondsOpen] = TimeOpen.split(":");
+  const [hourClose, minuteClose, secondsClose] = TimeClose.split(":");
+
+  var now = moment();
+  var timeStart = now
+    .set({
+      hour: hourOpen,
+      minute: minuteOpen,
+      second: secondsOpen,
+    })
+    .toString();
+  var timeEnd = now
+    .set({
+      hour: hourClose,
+      minute: minuteClose,
+      second: secondsClose,
+    })
+    .toString();
   const newArr = [
     {
       Time: timeStart,
@@ -50,7 +67,11 @@ const lineTimeArray = () => {
       ],
     });
   }
-  return newArr;
+  return {
+    lineTime: newArr,
+    timeStart,
+    timeEnd,
+  };
 };
 
 function getScrollbarWidth() {
@@ -74,11 +95,21 @@ function getScrollbarWidth() {
   return scrollbarWidth;
 }
 
-function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
-  const [lineTime] = useState(lineTimeArray());
+function CalendarStaff({
+  loading,
+  height,
+  resources,
+  events,
+  dateClick,
+  eventClick,
+}) {
+  const { TimeOpen, TimeClose } = useSelector(({ JsonConfig }) => ({
+    TimeOpen: JsonConfig?.APP?.Working?.TimeOpen || "00:00:00",
+    TimeClose: JsonConfig?.APP?.Working?.TimeClose || "23:59:00",
+  }));
   const [newResources, setNewResources] = useState(resources);
   const { width } = useWindowSize();
-
+  const { lineTime, timeStart, timeEnd } = lineTimeArray(TimeOpen, TimeClose);
   useEffect(() => {
     setNewResources((prevState) =>
       prevState.map((item) => ({
@@ -98,11 +129,11 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
       serviceStart: service.start,
       serviceEnd: service.end,
     };
-    const { timeStartDay } = {
+    const { timeStartDay, timeEndDay } = {
       timeStartDay: timeStart,
       timeEndDay: timeEnd,
     };
-    var TotalSeconds = 24 * 60 * 60;
+    var TotalSeconds = moment(timeEndDay).diff(moment(timeStartDay), "seconds");
     const TotalTimeStart = moment(serviceStart).diff(
       moment(timeStartDay),
       "seconds"
@@ -156,7 +187,9 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
           <ScrollSyncPane>
             <div
               className="time-body"
-              style={{ height: `calc(100% - ${getScrollbarWidth()}px - 40px)` }}
+              style={{
+                height: `calc(100% - ${getScrollbarWidth()}px - ${minHeightHeader}px)`,
+              }}
             >
               {lineTime &&
                 lineTime.map((item, index) => (
@@ -189,7 +222,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
           <ScrollSyncPane>
             <div className="staff-body">
               <div
-                className="d-flex"
+                className="d-flex min-h-100"
                 style={{
                   minWidth: `${newResources.length *
                     (width > 767 ? minWidthCell : minWidthCellMobile)}px`,
@@ -201,8 +234,11 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
                       {lineTime &&
                         lineTime.map((item, idx) => (
                           <div
-                            className={`staff-label ${lineTime.length - 1 ===
-                              idx && "border-bottom-0"}`}
+                            className={`staff-label ${
+                              lineTime.length - 1 === idx
+                                ? "border-bottom-0"
+                                : ""
+                            }`}
                             key={idx}
                           >
                             {item.TimeEvent.map((o, i) => (
@@ -227,7 +263,7 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
                       {staff.Services &&
                         staff.Services.map((service, x) => (
                           <div
-                            className={`fc-event`}
+                            className={`fc-event zindex-10`}
                             style={getStyleEvent(service)}
                             key={x}
                             onClick={() => eventClick(service)}
@@ -259,17 +295,26 @@ function CalendarStaff({ height, resources, events, dateClick, eventClick }) {
                                   -{" "}
                                   {service.RootMinutes ??
                                     service?.os?.RootMinutes ??
-                                    60}p - {service.RootTitles}
+                                    60}
+                                  p - {service.RootTitles}
                                 </div>
                               </div>
                             </div>
                           </div>
                         ))}
+                      <div className="h-100px bg-stripes zindex-9 cursor-no-drop"></div>
                     </div>
                   ))}
               </div>
             </div>
           </ScrollSyncPane>
+        </div>
+        <div
+          className={`overlay-layer bg-dark-o-10 ${
+            loading ? "overlay-block" : ""
+          }`}
+        >
+          <div className="spinner spinner-primary"></div>
         </div>
       </div>
     </ScrollSync>

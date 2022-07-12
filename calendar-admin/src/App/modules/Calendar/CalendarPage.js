@@ -102,12 +102,16 @@ function CalendarPage(props) {
   const [initialView, setInitialView] = useState("timeGridWeek");
   const [headerTitle, setHeaderTitle] = useState("");
   const { width } = useWindowSize();
-  const { AuthCrStockID } = useSelector(({ Auth }) => ({
-    AuthCrStockID: Auth.CrStockID,
-  }));
+  const { AuthCrStockID, TimeOpen, TimeClose } = useSelector(
+    ({ Auth, JsonConfig }) => ({
+      AuthCrStockID: Auth.CrStockID,
+      TimeOpen: JsonConfig?.APP?.Working?.TimeOpen || "00:00:00",
+      TimeClose: JsonConfig?.APP?.Working?.TimeClose || "23:59:00",
+    })
+  );
   const [elmHeight, setElmHeight] = useState(0);
   const calendarRef = useRef("");
-
+  
   //Get Staff Full
   useEffect(() => {
     async function getStaffFull() {
@@ -574,6 +578,8 @@ function CalendarPage(props) {
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
+                  slotMinTime: TimeOpen,
+                  slotMaxTime: TimeClose,
                 },
                 timeGridWeek: {
                   eventMaxStack: 2,
@@ -610,6 +616,8 @@ function CalendarPage(props) {
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
+                  slotMinTime: TimeOpen,
+                  slotMaxTime: TimeClose,
                 },
                 timeGridDay: {
                   eventMaxStack: 8,
@@ -645,6 +653,8 @@ function CalendarPage(props) {
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
+                  slotMinTime: TimeOpen,
+                  slotMaxTime: TimeClose,
                 },
                 resourceTimeGridDay: {
                   type: "resourceTimeline",
@@ -655,7 +665,8 @@ function CalendarPage(props) {
                   scrollTime: moment(new Date()).format("HH:mm"),
                   resourceAreaWidth: "300px",
                   stickyHeaderDates: true,
-                  //duration: { days: 4 },
+                  slotMinTime: TimeOpen,
+                  slotMaxTime: TimeClose,
                 },
                 resourceTimelineDay: {
                   type: "resourceTimeline",
@@ -683,7 +694,8 @@ function CalendarPage(props) {
                         ${text} ${moment(date).format("A")}
                       </span>`;
                   },
-                  //duration: { days: 4 },
+                  slotMinTime: TimeOpen,
+                  slotMaxTime: TimeClose,
                 },
               }}
               plugins={[
@@ -748,9 +760,8 @@ function CalendarPage(props) {
                         extendedProps.BookDate
                       ).format("HH:mm")} </div>
                       <div class="flex-1 text-truncate">- ${extendedProps.RootMinutes ??
-                        extendedProps?.os?.RootMinutes ?? 60}p - ${
-                      extendedProps.RootTitles
-                    }</div>
+                        extendedProps?.os?.RootMinutes ??
+                        60}p - ${extendedProps.RootTitles}</div>
                     </div>
                   </div>`;
                   } else {
@@ -764,9 +775,8 @@ function CalendarPage(props) {
                     }</span><span class="d-none d-md-inline"> - ${
                       extendedProps.MemberCurrent?.MobilePhone
                     }</span><span> - ${extendedProps.RootMinutes ??
-                      extendedProps?.os?.RootMinutes ?? 60}p - ${
-                      extendedProps.RootTitles
-                    }</span></div>
+                      extendedProps?.os?.RootMinutes ??
+                      60}p - ${extendedProps.RootTitles}</span></div>
                   </div>`;
                   }
                 } else {
@@ -849,6 +859,7 @@ function CalendarPage(props) {
             />
             {initialView === "resourceTimelineDay" && (
               <CalendarStaff
+                loading={loading}
                 height={elmHeight}
                 resources={StaffFull}
                 events={Events}
