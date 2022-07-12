@@ -101,6 +101,7 @@ function CalendarPage(props) {
   const [StaffFull, setStaffFull] = useState([]);
   const [initialView, setInitialView] = useState("timeGridWeek");
   const [headerTitle, setHeaderTitle] = useState("");
+  const [StaffOffline, setStaffOffline] = useState([]);
   const { width } = useWindowSize();
   const { AuthCrStockID, TimeOpen, TimeClose } = useSelector(
     ({ Auth, JsonConfig }) => ({
@@ -439,6 +440,7 @@ function CalendarPage(props) {
 
     CalendarCrud.getBooking(newFilters)
       .then(({ data }) => {
+        setStaffOffline(data?.dayOffs ?? [])
         const dataBooks =
           data.books && Array.isArray(data.books)
             ? data.books
@@ -859,6 +861,7 @@ function CalendarPage(props) {
             />
             {initialView === "resourceTimelineDay" && (
               <CalendarStaff
+                StaffOffline={StaffOffline}
                 loading={loading}
                 height={elmHeight}
                 resources={StaffFull}

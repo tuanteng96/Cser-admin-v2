@@ -102,6 +102,7 @@ function CalendarStaff({
   events,
   dateClick,
   eventClick,
+  StaffOffline
 }) {
   const { TimeOpen, TimeClose } = useSelector(({ JsonConfig }) => ({
     TimeOpen: JsonConfig?.APP?.Working?.TimeOpen || "00:00:00",
@@ -174,6 +175,37 @@ function CalendarStaff({
     }
   };
 
+  const RenderStaffOff = ({ id }) => {
+    const ListOffCurrent = StaffOffline.filter(item => item.UserID === id);
+    if (ListOffCurrent.length === 0) {
+      return "";
+    }
+    return ListOffCurrent.map((item, index) => (
+      <div className="w-100 bg-stripes zindex-9 cursor-no-drop position-absolute left-0" style={getStyleOff(item)} key={index}></div>
+    ))
+  }
+
+  const getStyleOff = ({ From, To }) => {
+    const { timeStartDay, timeEndDay } = {
+      timeStartDay: timeStart,
+      timeEndDay: timeEnd,
+    };
+    var TotalSeconds = moment(timeEndDay).diff(moment(timeStartDay), "seconds");
+    const TotalTimeStart = moment(From).diff(
+      moment(timeStartDay),
+      "seconds"
+    ); // Số phút từ 00 => Thời gian bắt đầu dịch vụ
+    const TotalTimeOff = moment(To).diff(
+      moment(From),
+      "seconds"
+    );
+    const styles = {
+      top: `${(TotalTimeStart / TotalSeconds) * 100}%`,
+      height: `${(TotalTimeOff / TotalSeconds) * 100}%`,
+    };
+    return styles;
+  }
+
   return (
     <ScrollSync>
       <div
@@ -234,11 +266,10 @@ function CalendarStaff({
                       {lineTime &&
                         lineTime.map((item, idx) => (
                           <div
-                            className={`staff-label ${
-                              lineTime.length - 1 === idx
-                                ? "border-bottom-0"
-                                : ""
-                            }`}
+                            className={`staff-label ${lineTime.length - 1 === idx
+                              ? "border-bottom-0"
+                              : ""
+                              }`}
                             key={idx}
                           >
                             {item.TimeEvent.map((o, i) => (
@@ -302,7 +333,7 @@ function CalendarStaff({
                             </div>
                           </div>
                         ))}
-                      <div className="h-100px bg-stripes zindex-9 cursor-no-drop"></div>
+                      {RenderStaffOff(staff)}
                     </div>
                   ))}
               </div>
@@ -310,9 +341,8 @@ function CalendarStaff({
           </ScrollSyncPane>
         </div>
         <div
-          className={`overlay-layer bg-dark-o-10 ${
-            loading ? "overlay-block" : ""
-          }`}
+          className={`overlay-layer bg-dark-o-10 ${loading ? "overlay-block" : ""
+            }`}
         >
           <div className="spinner spinner-primary"></div>
         </div>
