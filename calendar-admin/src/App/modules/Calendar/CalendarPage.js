@@ -132,7 +132,8 @@ function CalendarPage(props) {
   }, []);
 
   useEffect(() => {
-    if (filters) {
+    
+    if (filters && filters.From) {
       getBooking();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -861,6 +862,7 @@ function CalendarPage(props) {
             />
             {initialView === "resourceTimelineDay" && (
               <CalendarStaff
+                filters={filters}
                 StaffOffline={StaffOffline}
                 loading={loading}
                 height={elmHeight}

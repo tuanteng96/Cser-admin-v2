@@ -346,10 +346,11 @@ function ModalCalendar({
                   <div className="form-group form-group-ezs px-6 pt-3 mb-3">
                     <label className="mb-1 d-none d-md-block">Khách hàng</label>
                     <AsyncCreatableSelect
-                      className={`select-control ${errors.MemberID && touched.MemberID
-                        ? "is-invalid solid-invalid"
-                        : ""
-                        }`}
+                      className={`select-control ${
+                        errors.MemberID && touched.MemberID
+                          ? "is-invalid solid-invalid"
+                          : ""
+                      }`}
                       classNamePrefix="select"
                       isLoading={false}
                       isDisabled={false}
@@ -359,7 +360,7 @@ function ModalCalendar({
                       name="MemberID"
                       value={values.MemberID}
                       onChange={(option) => {
-                        setFieldValue("MemberID", option)
+                        setFieldValue("MemberID", option);
                       }}
                       onBlur={handleBlur}
                       placeholder="Chọn khách hàng"
@@ -369,17 +370,20 @@ function ModalCalendar({
                       onCreateOption={(inputValue) => {
                         const initValue = { ...initialCreate };
                         if (/^-?\d+$/.test(inputValue)) {
-                          initValue.Phone = inputValue
-                          initValue.FullName = ""
+                          initValue.Phone = inputValue;
+                          initValue.FullName = "";
+                        } else {
+                          initValue.Phone = "";
+                          initValue.FullName = inputValue;
                         }
-                        else {
-                          initValue.Phone = ""
-                          initValue.FullName = inputValue
-                        }
-                        setInitialCreate(initValue)
-                        setIsModalCreate(true)
+                        setInitialCreate(initValue);
+                        setIsModalCreate(true);
                       }}
-                      formatCreateLabel={(inputValue) => <span className="text-primary">Tạo mới "{inputValue}"</span>}
+                      formatCreateLabel={(inputValue) => (
+                        <span className="text-primary">
+                          Tạo mới "{inputValue}"
+                        </span>
+                      )}
                       menuPosition="fixed"
                       cacheOptions
                       loadOptions={loadOptionsCustomer}
@@ -389,27 +393,24 @@ function ModalCalendar({
                           ? "Không có khách hàng"
                           : "Không tìm thấy khách hàng"
                       }
-                    //isValidNewOption={(inputValue, selectValue, selectOptions) => inputValue && selectOptions.length === 0}
+                      //isValidNewOption={(inputValue, selectValue, selectOptions) => inputValue && selectOptions.length === 0}
                     />
-                    {
-                      values.MemberID && (
-                        <div className="d-flex mt-2 font-size-xs">
-                          <div className="mr-4">
-                            Khách hàng :
-                            <span className="font-weight-bold pl-1">
-                              {values.MemberID?.text}
-                            </span>
-                          </div>
-                          <div>
-                            Số điện thoại :
-                            <span className="font-weight-bold pl-1">
-                              {values.MemberID?.suffix}
-                            </span>
-                          </div>
+                    {values.MemberID && (
+                      <div className="d-flex mt-2 font-size-xs">
+                        <div className="mr-4">
+                          Khách hàng :
+                          <span className="font-weight-bold pl-1">
+                            {values.MemberID?.text}
+                          </span>
                         </div>
-                      )
-                    }
-
+                        <div>
+                          Số điện thoại :
+                          <span className="font-weight-bold pl-1">
+                            {values.MemberID?.suffix}
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="form-group form-group-ezs px-6 pt-3 mb-3 border-top">
                     <label className="mb-1 d-none d-md-flex justify-content-between">
@@ -420,24 +421,29 @@ function ModalCalendar({
                     </label>
                     <DatePicker
                       name="BookDate"
-                      selected={values.BookDate ? new Date(values.BookDate) : ""}
+                      selected={
+                        values.BookDate ? new Date(values.BookDate) : ""
+                      }
                       onChange={(date) => setFieldValue("BookDate", date)}
                       onBlur={handleBlur}
-                      className={`form-control ${errors.BookDate && touched.BookDate
-                        ? "is-invalid solid-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        errors.BookDate && touched.BookDate
+                          ? "is-invalid solid-invalid"
+                          : ""
+                      }`}
                       shouldCloseOnSelect={false}
-                      dateFormat="dd/MM/yyyy h:mm aa"
+                      dateFormat="dd/MM/yyyy HH:mm aa"
                       placeholderText="Chọn thời gian"
                       timeInputLabel="Thời gian"
                       showTimeSelect
+                      timeFormat="HH:mm"
                     />
                     <Select
-                      className={`select-control mt-2 ${errors.StockID && touched.StockID
-                        ? "is-invalid solid-invalid"
-                        : ""
-                        }`}
+                      className={`select-control mt-2 ${
+                        errors.StockID && touched.StockID
+                          ? "is-invalid solid-invalid"
+                          : ""
+                      }`}
                       classNamePrefix="select"
                       value={AuthStocks.filter(
                         (item) => item.ID === values.StockID
@@ -460,16 +466,18 @@ function ModalCalendar({
                   <div className="form-group form-group-ezs border-top px-6 pt-3 mb-3">
                     <label className="mb-1 d-none d-md-block">Dịch vụ</label>
                     <AsyncSelect
-                      key={`${values.MemberID && values.MemberID.value
-                        ? values.MemberID.value
-                        : "No-Member"
-                        }-${values.StockID}`}
+                      key={`${
+                        values.MemberID && values.MemberID.value
+                          ? values.MemberID.value
+                          : "No-Member"
+                      }-${values.StockID}`}
                       menuPosition="fixed"
                       isMulti
-                      className={`select-control ${errors.RootIdS && touched.RootIdS
-                        ? "is-invalid solid-invalid"
-                        : ""
-                        }`}
+                      className={`select-control ${
+                        errors.RootIdS && touched.RootIdS
+                          ? "is-invalid solid-invalid"
+                          : ""
+                      }`}
                       classNamePrefix="select"
                       isLoading={false}
                       isDisabled={false}
@@ -521,10 +529,11 @@ function ModalCalendar({
                     </label>
                     <AsyncSelect
                       key={values.StockID}
-                      className={`select-control ${errors.UserServiceIDs && touched.UserServiceIDs
-                        ? "is-invalid solid-invalid"
-                        : ""
-                        }`}
+                      className={`select-control ${
+                        errors.UserServiceIDs && touched.UserServiceIDs
+                          ? "is-invalid solid-invalid"
+                          : ""
+                      }`}
                       classNamePrefix="select"
                       isLoading={false}
                       isDisabled={false}
@@ -570,10 +579,11 @@ function ModalCalendar({
                     {values.ID && (
                       <button
                         type="button"
-                        className={`btn btn-sm btn-danger mr-2 ${btnLoading.isBtnDelete
-                          ? "spinner spinner-white spinner-right"
-                          : ""
-                          } w-auto my-0 mr-0 h-auto`}
+                        className={`btn btn-sm btn-danger mr-2 ${
+                          btnLoading.isBtnDelete
+                            ? "spinner spinner-white spinner-right"
+                            : ""
+                        } w-auto my-0 mr-0 h-auto`}
                         disabled={btnLoading.isBtnDelete}
                         onClick={() => onDelete(values)}
                       >
@@ -590,17 +600,24 @@ function ModalCalendar({
                   </div>
                   <div></div>
                 </Modal.Footer>
-                <ModalCreateMember show={isModalCreate} onHide={() => setIsModalCreate(false)} initialDefault={initialCreate} onSubmit={(valuesCreate) => {
-                  setFieldValue("MemberID", {
-                    label: valuesCreate.PassersBy ? "Khách vãng lai" : valuesCreate.FullName,
-                    text: valuesCreate.FullName,
-                    value: valuesCreate.PassersBy ? 0 : null,
-                    suffix: valuesCreate.Phone,
-                    isCreate: true,
-                    PassersBy: valuesCreate.PassersBy
-                  })
-                  setIsModalCreate(false)
-                }} />
+                <ModalCreateMember
+                  show={isModalCreate}
+                  onHide={() => setIsModalCreate(false)}
+                  initialDefault={initialCreate}
+                  onSubmit={(valuesCreate) => {
+                    setFieldValue("MemberID", {
+                      label: valuesCreate.PassersBy
+                        ? "Khách vãng lai"
+                        : valuesCreate.FullName,
+                      text: valuesCreate.FullName,
+                      value: valuesCreate.PassersBy ? 0 : null,
+                      suffix: valuesCreate.Phone,
+                      isCreate: true,
+                      PassersBy: valuesCreate.PassersBy,
+                    });
+                    setIsModalCreate(false);
+                  }}
+                />
               </Form>
             );
           }}

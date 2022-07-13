@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { components } from "react-select";
-import AsyncSelect from "react-select/async";
 // import DatePicker from "react-datepicker";
 import { Form, Formik, useFormikContext } from "formik";
 import CalendarCrud from "../../App/modules/Calendar/_redux/CalendarCrud";
@@ -11,7 +10,8 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import StatusList from "./StatusList";
 import AdvancedList from "./AdvancedList";
 import { Dropdown } from "react-bootstrap";
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { AsyncPaginate } from "react-select-async-paginate";
 
 SidebarCalendar.propTypes = {
   onOpenModal: PropTypes.func,
@@ -28,8 +28,8 @@ SidebarCalendar.defaultProps = {
 
 const perfectScrollbarOptions = {
   wheelSpeed: 2,
-  wheelPropagation: false
-}
+  wheelPropagation: false,
+};
 
 const CustomOptionStaff = ({ children, ...props }) => {
   const { Thumbnail, label } = props.data;
@@ -79,7 +79,9 @@ const ValueChangeListener = () => {
   const { submitForm, values } = useFormikContext();
 
   useEffect(() => {
-    submitForm();
+    if (values.From && values.To) {
+      submitForm();
+    }
   }, [values, submitForm]);
 
   return null;
@@ -103,7 +105,7 @@ function SidebarCalendar({
   onOpenFilter,
   onHideFilter,
   isFilter,
-  headerTitle
+  headerTitle,
 }) {
   const [initialValues, setInitialValues] = useState(initialDefault);
   const { CrStockID } = useSelector((state) => state.Auth);
@@ -115,32 +117,40 @@ function SidebarCalendar({
     }
   }, [filters]);
 
-  const loadOptionsStaff = (inputValue, callback) => {
+  const loadOptionsStaff = async (inputValue) => {
     const filters = {
       key: inputValue,
       StockID: CrStockID,
     };
-    setTimeout(async () => {
-      const { data } = await CalendarCrud.getStaffs(filters);
-      const dataResult = data.data.map((item) => ({
-        value: item.id,
-        label: item.text,
-        Thumbnail: toUrlServer("/images/user.png"),
-      }));
-      callback(dataResult);
-    }, 300);
+    const { data } = await CalendarCrud.getStaffs(filters);
+    const dataResult = data.data.map((item) => ({
+      value: item.id,
+      label: item.text,
+      Thumbnail: toUrlServer("/images/user.png"),
+    }));
+    return {
+      options: dataResult,
+      hasMore: false,
+      additional: {
+        page: 1,
+      },
+    };
   };
 
-  const loadOptionsCustomer = (inputValue, callback) => {
-    setTimeout(async () => {
-      const { data } = await CalendarCrud.getMembers(inputValue);
-      const dataResult = data.data.map((item) => ({
-        value: item.id,
-        label: item.text,
-        Thumbnail: toUrlServer("/images/user.png"),
-      }));
-      callback(dataResult);
-    }, 300);
+  const loadOptionsCustomer = async (inputValue) => {
+    const { data } = await CalendarCrud.getMembers(inputValue);
+    const dataResult = data.data.map((item) => ({
+      value: item.id,
+      label: item.text,
+      Thumbnail: toUrlServer("/images/user.png"),
+    }));
+    return {
+      options: dataResult,
+      hasMore: false,
+      additional: {
+        page: 1,
+      },
+    };
   };
 
   return (
@@ -153,14 +163,19 @@ function SidebarCalendar({
             </Dropdown.Toggle>
 
             <Dropdown.Menu variant="dark">
-              <Dropdown.Item href="#" onClick={() => {
-                window.top?.MemberEdit &&
-                  window.top.MemberEdit({
-                    Member: {
-                      ID: 0,
-                    },
-                  });
-              }}>Khách hàng mới</Dropdown.Item>
+              <Dropdown.Item
+                href="#"
+                onClick={() => {
+                  window.top?.MemberEdit &&
+                    window.top.MemberEdit({
+                      Member: {
+                        ID: 0,
+                      },
+                    });
+                }}
+              >
+                Khách hàng mới
+              </Dropdown.Item>
               <Dropdown.Item href="#" onClick={onOpenModal}>
                 Đặt lịch mới
               </Dropdown.Item>
@@ -223,13 +238,12 @@ function SidebarCalendar({
                   <div className="form-group form-group-ezs mb-0 mt-12px">
                     {/* <label className="mb-1">Khách hàng</label> */}
                     <div>
-                      <AsyncSelect
+                      <AsyncPaginate
                         classIcon="far fa-user-alt"
-                        menuPlacement="top"
+                        menuPlacement="bottom"
                         isMulti
                         className="select-control mb-8px"
                         classNamePrefix="select"
-                        isLoading={false}
                         isClearable
                         isSearchable
                         //menuIsOpen={true}
@@ -243,23 +257,20 @@ function SidebarCalendar({
                           Option: CustomOptionStaff,
                           Control,
                         }}
-                        cacheOptions
                         loadOptions={loadOptionsCustomer}
-                        defaultOptions
                         noOptionsMessage={({ inputValue }) =>
                           !inputValue
                             ? "Không có khách hàng"
                             : "Không tìm thấy khách hàng"
                         }
                       />
-                      <AsyncSelect
+                      <AsyncPaginate
                         classIcon="far fa-user-cog"
-                        menuPlacement="top"
+                        menuPlacement="bottom"
                         key={CrStockID}
                         isMulti
                         className="select-control mb-8px"
                         classNamePrefix="select"
-                        isLoading={false}
                         isClearable
                         isSearchable
                         //menuIsOpen={true}
@@ -273,9 +284,7 @@ function SidebarCalendar({
                           Option: CustomOptionStaff,
                           Control,
                         }}
-                        cacheOptions
                         loadOptions={loadOptionsStaff}
-                        defaultOptions
                         noOptionsMessage={({ inputValue }) =>
                           !inputValue
                             ? "Không có nhân viên"

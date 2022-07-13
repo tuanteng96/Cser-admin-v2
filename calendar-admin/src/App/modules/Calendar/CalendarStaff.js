@@ -17,11 +17,11 @@ var minWidthCell = 220;
 var minWidthCellMobile = 135;
 var minHeightHeader = 40;
 
-const lineTimeArray = (TimeOpen, TimeClose) => {
+const lineTimeArray = (TimeOpen, TimeClose, TimeCurrent) => {
   const [hourOpen, minuteOpen, secondsOpen] = TimeOpen.split(":");
   const [hourClose, minuteClose, secondsClose] = TimeClose.split(":");
 
-  var now = moment();
+  var now = moment(TimeCurrent);
   var timeStart = now
     .set({
       hour: hourOpen,
@@ -49,6 +49,7 @@ const lineTimeArray = (TimeOpen, TimeClose) => {
       ],
     },
   ];
+
   while (
     moment(newArr[newArr.length - 1].Time).diff(timeEnd, "minutes") < -60
   ) {
@@ -95,6 +96,46 @@ function getScrollbarWidth() {
   return scrollbarWidth;
 }
 
+const getTimeMax = (arr, TimeClose) => {
+  if (!arr || arr.length === 0) return TimeClose;
+  let NewTimeClose = "";
+  const newArray = arr && arr.map((item) => moment(item.end));
+  NewTimeClose = moment.max(newArray);
+  const TimeCloseCr = moment(TimeClose, "HH:mm:ss");
+  const TimeCloseMx = moment(
+    moment(NewTimeClose).format("HH:mm:ss"),
+    "HH:mm:ss"
+  );
+  const isTimeMax =
+    TimeCloseCr.isBefore(TimeCloseMx) &&
+    TimeCloseMx.isBefore(moment("23:59:59", "HH:mm:ss"));
+  if (!isTimeMax) return TimeClose;
+  const Remainder = 59 - (NewTimeClose.minute() % 59);
+  return moment(NewTimeClose)
+    .add(Remainder, "minutes")
+    .format("HH:mm:ss");
+};
+
+const getTimeMin = (arr, TimeOpen) => {
+  if (!arr || arr.length === 0) return TimeOpen;
+  let NewTimeOpen = "";
+  const newArray = arr && arr.map((item) => moment(item.end));
+  NewTimeOpen = moment.min(newArray);
+  const TimeOpenCr = moment(TimeOpen, "HH:mm:ss");
+  const TimeOpenMin = moment(
+    moment(NewTimeOpen).format("HH:mm:ss"),
+    "HH:mm:ss"
+  );
+  const isTimeMin =
+    TimeOpenMin.isBefore(TimeOpenCr) &&
+    moment("00:00:00", "HH:mm:ss").isBefore(TimeOpenMin);
+  if (!isTimeMin) return TimeOpen;
+  const Remainder = NewTimeOpen.minute();
+  return moment(NewTimeOpen)
+    .subtract(Remainder, "minutes")
+    .format("HH:mm:ss");
+};
+
 function CalendarStaff({
   loading,
   height,
@@ -102,15 +143,22 @@ function CalendarStaff({
   events,
   dateClick,
   eventClick,
-  StaffOffline
+  StaffOffline,
+  filters,
 }) {
   const { TimeOpen, TimeClose } = useSelector(({ JsonConfig }) => ({
     TimeOpen: JsonConfig?.APP?.Working?.TimeOpen || "00:00:00",
     TimeClose: JsonConfig?.APP?.Working?.TimeClose || "23:59:00",
   }));
-  const [newResources, setNewResources] = useState(resources);
-  const { width } = useWindowSize();
   const { lineTime, timeStart, timeEnd } = lineTimeArray(TimeOpen, TimeClose);
+  const [newResources, setNewResources] = useState(resources);
+  const [ConfigTime, setConfigTime] = useState({
+    lineTime,
+    timeStart,
+    timeEnd,
+  });
+  const { width } = useWindowSize();
+
   useEffect(() => {
     setNewResources((prevState) =>
       prevState.map((item) => ({
@@ -125,28 +173,58 @@ function CalendarStaff({
     );
   }, [events]);
 
+  useEffect(() => {
+    const {
+      lineTime: lineTimeUpdate,
+      timeStart: timeStartUpdate,
+      timeEnd: timeEndUpdate,
+    } = lineTimeArray(
+      getTimeMin(events, TimeOpen),
+      getTimeMax(events, TimeClose),
+      filters.From
+    );
+
+    setConfigTime({
+      lineTime: lineTimeUpdate,
+      timeStart: timeStartUpdate,
+      timeEnd: timeEndUpdate,
+    });
+  }, [filters, TimeOpen, TimeClose, events]);
+
   const getStyleEvent = (service) => {
     const { serviceStart, serviceEnd } = {
       serviceStart: service.start,
       serviceEnd: service.end,
     };
     const { timeStartDay, timeEndDay } = {
-      timeStartDay: timeStart,
-      timeEndDay: timeEnd,
+      timeStartDay: ConfigTime.timeStart,
+      timeEndDay: ConfigTime.timeEnd,
     };
+
     var TotalSeconds = moment(timeEndDay).diff(moment(timeStartDay), "seconds");
+
     const TotalTimeStart = moment(serviceStart).diff(
       moment(timeStartDay),
       "seconds"
     ); // Số phút từ 00 => Thời gian bắt đầu dịch vụ
+
     const TotalTimeService = moment(serviceEnd).diff(
       moment(serviceStart),
       "seconds"
     );
 
+    const minTimeService =
+      TotalTimeService > 60 * 60 ? TotalTimeService : 60 * 60;
+
     const styles = {
       top: `${(TotalTimeStart / TotalSeconds) * 100}%`,
-      height: `${(TotalTimeService / TotalSeconds) * 100}%`,
+      height: `${(minTimeService / TotalSeconds) * 100}%`,
+      // display: `${
+      //   (TotalTimeStart / TotalSeconds) * 100 >= 0 &&
+      //   (TotalTimeStart / TotalSeconds) * 100 <= 100
+      //     ? "block"
+      //     : "none"
+      // }`,
     };
     return styles;
   };
@@ -176,35 +254,105 @@ function CalendarStaff({
   };
 
   const RenderStaffOff = ({ id }) => {
-    const ListOffCurrent = StaffOffline.filter(item => item.UserID === id);
+    const ListOffCurrent = StaffOffline.filter((item) => item.UserID === id);
     if (ListOffCurrent.length === 0) {
       return "";
     }
     return ListOffCurrent.map((item, index) => (
-      <div className="w-100 bg-stripes zindex-9 cursor-no-drop position-absolute left-0" style={getStyleOff(item)} key={index}></div>
-    ))
-  }
+      <div
+        className="w-100 bg-stripes zindex-9 cursor-no-drop position-absolute left-0"
+        style={getStyleOff(item)}
+        key={index}
+      ></div>
+    ));
+  };
 
   const getStyleOff = ({ From, To }) => {
     const { timeStartDay, timeEndDay } = {
-      timeStartDay: timeStart,
-      timeEndDay: timeEnd,
+      timeStartDay: ConfigTime.timeStart,
+      timeEndDay: ConfigTime.timeEnd,
     };
+    let newFrom = "";
+    let newTo = "";
+    newFrom =
+      moment(timeStartDay).diff(From) > 0 &&
+      moment(timeStartDay).format("DD-MM-YYYY") !==
+        moment(From).format("DD-MM-YYYY")
+        ? timeStartDay
+        : From;
+    newTo = moment(timeEndDay).diff(To) < 0 ? timeEndDay : To;
     var TotalSeconds = moment(timeEndDay).diff(moment(timeStartDay), "seconds");
-    const TotalTimeStart = moment(From).diff(
+    const TotalTimeStart = moment(newFrom).diff(
       moment(timeStartDay),
       "seconds"
     ); // Số phút từ 00 => Thời gian bắt đầu dịch vụ
-    const TotalTimeOff = moment(To).diff(
-      moment(From),
-      "seconds"
-    );
+    const TotalTimeOff = moment(newTo).diff(moment(newFrom), "seconds");
     const styles = {
       top: `${(TotalTimeStart / TotalSeconds) * 100}%`,
       height: `${(TotalTimeOff / TotalSeconds) * 100}%`,
     };
     return styles;
-  }
+  };
+
+  const getStyleErrorTop = () => {
+    const styles = {};
+    var TotalSeconds = moment(ConfigTime.timeEnd).diff(
+      moment(ConfigTime.timeStart),
+      "seconds"
+    );
+    const TimeOpenCr = moment(TimeOpen, "HH:mm:ss");
+    const timeOpenFm = moment(
+      moment(ConfigTime.timeStart).format("HH:mm:ss"),
+      "HH:mm:ss"
+    );
+    const TotalTime = TimeOpenCr.diff(timeOpenFm, "seconds");
+    if (TotalTime > 0) {
+      styles.width = "100%";
+      styles.height = `${(TotalTime / TotalSeconds) * 100}%`;
+      styles.top = 0;
+      styles.position = "absolute";
+    } else {
+      styles.display = "none";
+    }
+    return styles;
+  };
+
+  const getStyleErrorBottom = () => {
+    const styles = {};
+    var TotalSeconds = moment(ConfigTime.timeEnd).diff(
+      moment(ConfigTime.timeStart),
+      "seconds"
+    );
+    const TimeCloseCr = moment(TimeClose, "HH:mm:ss");
+    const timeEndFm = moment(
+      moment(ConfigTime.timeEnd).format("HH:mm:ss"),
+      "HH:mm:ss"
+    );
+    const TotalTime = timeEndFm.diff(TimeCloseCr, "seconds");
+    if (TotalTime > 0) {
+      styles.width = "100%";
+      styles.height = `${(TotalTime / TotalSeconds) * 100}%`;
+      styles.bottom = 0;
+      styles.position = "absolute";
+    } else {
+      styles.display = "none";
+    }
+    return styles;
+  };
+
+  const getStyleTimeCurrent = () => {
+    const styles = {};
+    var TotalSeconds = moment(ConfigTime.timeEnd).diff(
+      moment(ConfigTime.timeStart),
+      "seconds"
+    );
+    const TotalTime = moment().diff(moment(ConfigTime.timeStart), "seconds");
+    styles.top = `${(TotalTime / TotalSeconds) * 100}%`;
+    if (moment().format("DD-MM-YYYY") !== moment(filters.From).format("DD-MM-YYYY")) {
+      styles.display = "none";
+    }
+    return styles;
+  };
 
   return (
     <ScrollSync>
@@ -218,22 +366,26 @@ function CalendarStaff({
           </div>
           <ScrollSyncPane>
             <div
-              className="time-body"
+              className="time-body position-relative"
               style={{
                 height: `calc(100% - ${getScrollbarWidth()}px - ${minHeightHeader}px)`,
               }}
             >
-              {lineTime &&
-                lineTime.map((item, index) => (
+              {ConfigTime.lineTime &&
+                ConfigTime.lineTime.map((item, index) => (
                   <div className="line-body" key={index}>
                     <span className="font-size-min gird-time font-number">
-                      {moment(item.Time).format("HH:mm A")}
+                      {moment(item.Time).format("HH A")}
                     </span>
                     {item.TimeEvent.map((o, i) => (
                       <div className="line-item" key={i}></div>
                     ))}
                   </div>
                 ))}
+              <div
+                className="timegrid-now-indicator-arrow position-absolute w-100 left-0"
+                style={getStyleTimeCurrent()}
+              ></div>
             </div>
           </ScrollSyncPane>
         </div>
@@ -254,7 +406,7 @@ function CalendarStaff({
           <ScrollSyncPane>
             <div className="staff-body">
               <div
-                className="d-flex min-h-100"
+                className="d-flex min-h-100 position-relative"
                 style={{
                   minWidth: `${newResources.length *
                     (width > 767 ? minWidthCell : minWidthCellMobile)}px`,
@@ -263,13 +415,14 @@ function CalendarStaff({
                 {newResources &&
                   newResources.map((staff, index) => (
                     <div className="staff-slot" key={index}>
-                      {lineTime &&
-                        lineTime.map((item, idx) => (
+                      {ConfigTime.lineTime &&
+                        ConfigTime.lineTime.map((item, idx) => (
                           <div
-                            className={`staff-label ${lineTime.length - 1 === idx
-                              ? "border-bottom-0"
-                              : ""
-                              }`}
+                            className={`staff-label ${
+                              ConfigTime.lineTime.length - 1 === idx
+                                ? "border-bottom-0"
+                                : ""
+                            }`}
                             key={idx}
                           >
                             {item.TimeEvent.map((o, i) => (
@@ -294,7 +447,7 @@ function CalendarStaff({
                       {staff.Services &&
                         staff.Services.map((service, x) => (
                           <div
-                            className={`fc-event zindex-10`}
+                            className={`fc-event zindex-11`}
                             style={getStyleEvent(service)}
                             key={x}
                             onClick={() => eventClick(service)}
@@ -333,16 +486,36 @@ function CalendarStaff({
                             </div>
                           </div>
                         ))}
+                      {/* Danh sách giờ nghỉ */}
                       {RenderStaffOff(staff)}
+                      {/* Danh sách giờ nghỉ */}
+
+                      {/* Giờ phát sinh */}
+                      <div
+                        className="error-time-work bg-stripes bg-stripes-danger zindex-10"
+                        style={getStyleErrorTop()}
+                      ></div>
+                      <div
+                        className="error-time-work bg-stripes bg-stripes-danger zindex-10"
+                        style={getStyleErrorBottom()}
+                      ></div>
+                      {/* Giờ phát sinh */}
                     </div>
                   ))}
+                {/* Giờ hiện tại */}
+                <div
+                  className="timegrid-now-indicator-line border-top border-danger position-absolute w-100 left-0"
+                  style={getStyleTimeCurrent()}
+                ></div>
+                {/* Giờ hiện tại */}
               </div>
             </div>
           </ScrollSyncPane>
         </div>
         <div
-          className={`overlay-layer bg-dark-o-10 ${loading ? "overlay-block" : ""
-            }`}
+          className={`overlay-layer bg-dark-o-10 ${
+            loading ? "overlay-block" : ""
+          }`}
         >
           <div className="spinner spinner-primary"></div>
         </div>
