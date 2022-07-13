@@ -119,7 +119,7 @@ const getTimeMax = (arr, TimeClose) => {
 const getTimeMin = (arr, TimeOpen) => {
   if (!arr || arr.length === 0) return TimeOpen;
   let NewTimeOpen = "";
-  const newArray = arr && arr.map((item) => moment(item.end));
+  const newArray = arr && arr.map((item) => moment(item.start));
   NewTimeOpen = moment.min(newArray);
   const TimeOpenCr = moment(TimeOpen, "HH:mm:ss");
   const TimeOpenMin = moment(
@@ -218,13 +218,7 @@ function CalendarStaff({
 
     const styles = {
       top: `${(TotalTimeStart / TotalSeconds) * 100}%`,
-      height: `${(minTimeService / TotalSeconds) * 100}%`,
-      // display: `${
-      //   (TotalTimeStart / TotalSeconds) * 100 >= 0 &&
-      //   (TotalTimeStart / TotalSeconds) * 100 <= 100
-      //     ? "block"
-      //     : "none"
-      // }`,
+      height: `${(minTimeService / TotalSeconds) * 100}%`
     };
     return styles;
   };
