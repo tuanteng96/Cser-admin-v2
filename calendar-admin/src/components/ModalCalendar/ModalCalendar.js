@@ -432,7 +432,7 @@ function ModalCalendar({
                           : ""
                       }`}
                       shouldCloseOnSelect={false}
-                      dateFormat="dd/MM/yyyy HH:mm aa"
+                      dateFormat="dd/MM/yyyy HH:mm"
                       placeholderText="Chọn thời gian"
                       timeInputLabel="Thời gian"
                       showTimeSelect

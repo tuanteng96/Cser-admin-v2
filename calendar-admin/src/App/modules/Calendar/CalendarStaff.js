@@ -182,8 +182,8 @@ function CalendarStaff({
       getTimeMin(events, TimeOpen),
       getTimeMax(events, TimeClose),
       filters.From
-    );
-
+      );
+    
     setConfigTime({
       lineTime: lineTimeUpdate,
       timeStart: timeStartUpdate,
