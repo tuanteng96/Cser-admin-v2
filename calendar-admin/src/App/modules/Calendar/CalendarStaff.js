@@ -360,26 +360,28 @@ function CalendarStaff({
           </div>
           <ScrollSyncPane>
             <div
-              className="time-body position-relative"
+              className="time-body"
               style={{
                 height: `calc(100% - ${getScrollbarWidth()}px - ${minHeightHeader}px)`,
               }}
             >
-              {ConfigTime.lineTime &&
-                ConfigTime.lineTime.map((item, index) => (
-                  <div className="line-body" key={index}>
-                    <span className="font-size-min gird-time font-number">
-                      {moment(item.Time).format("HH A")}
-                    </span>
-                    {item.TimeEvent.map((o, i) => (
-                      <div className="line-item" key={i}></div>
-                    ))}
-                  </div>
-                ))}
-              <div
-                className="timegrid-now-indicator-arrow position-absolute w-100 left-0"
-                style={getStyleTimeCurrent()}
-              ></div>
+              <div className="position-relative">
+                {ConfigTime.lineTime &&
+                  ConfigTime.lineTime.map((item, index) => (
+                    <div className="line-body" key={index}>
+                      <span className="font-size-min gird-time font-number">
+                        {moment(item.Time).format("HH A")}
+                      </span>
+                      {item.TimeEvent.map((o, i) => (
+                        <div className="line-item" key={i}></div>
+                      ))}
+                    </div>
+                  ))}
+                <div
+                  className="timegrid-now-indicator-arrow position-absolute w-100 left-0"
+                  style={getStyleTimeCurrent()}
+                ></div>
+              </div>
             </div>
           </ScrollSyncPane>
         </div>

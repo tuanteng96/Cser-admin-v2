@@ -189,6 +189,7 @@ $height-grid: 24px;
 }
 
 .timegrid-now-indicator-arrow {
+    margin-top: -5px;
     border-color: $danger;
     border-width: 5px 0 5px 6px;
     border-top-color: transparent;
