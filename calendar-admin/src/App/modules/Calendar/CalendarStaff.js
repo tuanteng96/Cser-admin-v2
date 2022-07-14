@@ -365,10 +365,17 @@ function CalendarStaff({
                 height: `calc(100% - ${getScrollbarWidth()}px - ${minHeightHeader}px)`,
               }}
             >
-              <div className="position-relative">
+              <div className="position-relative d-flex flex-column min-h-100">
                 {ConfigTime.lineTime &&
                   ConfigTime.lineTime.map((item, index) => (
-                    <div className="line-body" key={index}>
+                    <div
+                      className={`line-body ${
+                        ConfigTime.lineTime.length - 1 !== index
+                          ? "border-bottom"
+                          : ""
+                      }`}
+                      key={index}
+                    >
                       <span className="font-size-min gird-time font-number">
                         {moment(item.Time).format("HH A")}
                       </span>
