@@ -155,6 +155,8 @@ function CalendarPage(props) {
     setIsModal(true);
   };
 
+  window.top.NewBook = onOpenModal;
+
   //Edit Modal Booking
   const onHideModal = () => {
     setInitialValue({});
