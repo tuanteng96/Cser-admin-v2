@@ -80,8 +80,23 @@ function StatusList(props) {
             {
                 isOpen && (
                     <div className="py-8px">
+                        <div className="font-size-minn font-weight-bold text-uppercase text-muted mb-10px">
+                            <span>Lịch dự kiến</span>
+                        </div>
                         {StatusArr &&
-                            StatusArr.map((item, index) => (
+                            StatusArr.slice(0,5).map((item, index) => (
+                                <CheckBox
+                                    isMargin={index === 0}
+                                    name="Status"
+                                    label={item.label}
+                                    value={item.value}
+                                    color={item.color}
+                                    key={index}
+                                />
+                            ))}
+                            <div className="font-size-minn font-weight-bold text-uppercase text-muted mb-10px mt-15px">Lịch thực hiện</div>
+                            {StatusArr &&
+                            StatusArr.slice(5,StatusArr.length).map((item, index) => (
                                 <CheckBox
                                     isMargin={index === 0}
                                     name="Status"
