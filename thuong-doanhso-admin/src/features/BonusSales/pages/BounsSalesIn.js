@@ -85,8 +85,12 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
                                     {formatVND(item.Product.gia_tri_doanh_so)}
                                   </div>
                                   <div>
-                                    Tổng hoa hồng dự kiến :{" "}
+                                    Tổng hoa hồng (Sale) dự kiến :{" "}
                                     {formatVND(item.Product.gia_tri_thanh_toan)}
+                                  </div>
+                                  <div>
+                                    Tổng hoa hồng (KTV) dự kiến :{" "}
+                                    {formatVND(item.Product.BonusSale2)}
                                   </div>
                                 </div>
                               </td>

@@ -5,8 +5,21 @@ import NumberFormat from "react-number-format";
 import { Formik, FieldArray, Form } from "formik";
 import PropTypes from "prop-types";
 
+const TypeStaff = [
+  { value: "SALES", label: "Nhân viên tư vấn (Sale)" },
+  {
+    value: "KTV", label: "Kỹ thuât viên"
+  }
+]
+
 function Equally({ OrderInfo, onSubmit, loading }) {
   const [initialValues, setInitialValues] = useState({ equally: [] });
+
+  const getValueType = (item, user) => {
+    return user.Type.value === "KTV"
+      ? item.BonusSale2
+      : item.gia_tri_thanh_toan;
+  };
 
   const onToAdd = (values, { resetForm }) => {
     const { ToAdd } = values;
@@ -20,7 +33,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                 Staff: user,
                 Value:
                   item.gia_tri_thanh_toan > 0
-                    ? Math.round((user.Value * item.gia_tri_thanh_toan) / 100)
+                    ? Math.round((user.Value * getValueType(item, user)) / 100)
                     : null,
               })).filter((item) => item.Value),
               Doanh_So: ToAdd.map((user) => ({
@@ -38,6 +51,14 @@ function Equally({ OrderInfo, onSubmit, loading }) {
     }
   };
 
+  const checkType = (TodoList, item) => {
+    const index = TodoList && TodoList.findIndex((o) => o.ID === item.ID);
+    if (index > -1) {
+      return TodoList[index].Type;
+    }
+    return TypeStaff[0];
+  }
+
   return (
     <Fragment>
       <div className="row">
@@ -52,7 +73,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                 const { values, setFieldValue, handleBlur } = formikProps;
                 return (
                   <Form>
-                    <div className="d-flex">
+                    <div className="d-flex mb-3">
                       <Select
                         isMulti
                         classNamePrefix="select"
@@ -68,6 +89,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                               ? option.map((item) => ({
                                   ...item,
                                   Value: Math.round(100 / option.length),
+                                  Type: checkType(values.ToAdd, item),
                                 }))
                               : [];
                           setFieldValue(`ToAdd`, newOption, false);
@@ -87,33 +109,60 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                             <div className="w-200px font-weight-bold">
                               {item.Fn}
                             </div>
-                            <div className="flex-1 position-relative">
-                              <NumberFormat
-                                isAllowed={(values) => {
-                                  const { formattedValue, floatValue } = values;
-                                  return (
-                                    formattedValue === "" || floatValue <= 100
-                                  );
-                                }}
-                                allowNegative={false}
-                                name={`ToAdd[${index}].Value`}
-                                placeholder={"Nhập giá trị"}
-                                className={`form-control`}
-                                isNumericString={true}
-                                //thousandSeparator={true}
-                                value={item.Value}
-                                onValueChange={(val) => {
+                            <div className="flex-1 pe-3">
+                              <div className="position-relative">
+                                <NumberFormat
+                                  isAllowed={(values) => {
+                                    const {
+                                      formattedValue,
+                                      floatValue,
+                                    } = values;
+                                    return (
+                                      formattedValue === "" || floatValue <= 100
+                                    );
+                                  }}
+                                  allowNegative={false}
+                                  name={`ToAdd[${index}].Value`}
+                                  placeholder={"Nhập giá trị"}
+                                  className={`form-control`}
+                                  isNumericString={true}
+                                  //thousandSeparator={true}
+                                  value={item.Value}
+                                  onValueChange={(val) => {
+                                    setFieldValue(
+                                      `ToAdd[${index}].Value`,
+                                      val.floatValue
+                                        ? val.floatValue
+                                        : val.value,
+                                      false
+                                    );
+                                  }}
+                                  onBlur={handleBlur}
+                                />
+                                <div className="position-absolute top-0 right-0 h-100 w-45px d-flex align-items-center justify-content-center">
+                                  %
+                                </div>
+                              </div>
+                            </div>
+                            <div className="w-225px">
+                              <Select
+                                classNamePrefix="select"
+                                className={`select-control`}
+                                name={`ToAdd[${index}].Type`}
+                                options={TypeStaff}
+                                value={item.Type}
+                                placeholder="Chọn loại nhân viên"
+                                noOptionsMessage={() => "Không có lựa chọn"}
+                                onChange={(option) => {
                                   setFieldValue(
-                                    `ToAdd[${index}].Value`,
-                                    val.floatValue ? val.floatValue : val.value,
+                                    `ToAdd[${index}].Type`,
+                                    option,
                                     false
                                   );
                                 }}
-                                onBlur={handleBlur}
+                                isSearchable
+                                menuPosition="fixed"
                               />
-                              <div className="position-absolute top-0 right-0 h-100 w-45px d-flex align-items-center justify-content-center">
-                                %
-                              </div>
                             </div>
                           </div>
                         ))}
@@ -249,6 +298,13 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                       disabled={loading.equally}
                     >
                       Cập nhập
+                    </button>
+                    <button
+                      className={`btn btn-danger ms-2`}
+                      type="button"
+                      onClick={() => setInitialValues({ equally: [] })}
+                    >
+                      Hủy
                     </button>
                   </div>
                 </Form>
