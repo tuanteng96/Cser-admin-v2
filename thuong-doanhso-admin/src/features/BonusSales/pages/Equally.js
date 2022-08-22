@@ -15,14 +15,14 @@ const TypeStaff = [
 function Equally({ OrderInfo, onSubmit, loading }) {
   const [initialValues, setInitialValues] = useState({ equally: [] });
 
-  const getValueType = (item, user) => {
-    return user.Type.value === "KTV"
+  const getValueType = (item, Type) => {
+    return Type.value === "KTV"
       ? item.BonusSale2
       : item.gia_tri_thanh_toan;
   };
 
   const onToAdd = (values, { resetForm }) => {
-    const { ToAdd } = values;
+    const { ToAdd, Type } = values;
     if (ToAdd.length > 0) {
       const newArr =
         OrderInfo && OrderInfo.oiItems && OrderInfo.oiItems.length > 0
@@ -33,7 +33,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                 Staff: user,
                 Value:
                   item.gia_tri_thanh_toan > 0
-                    ? Math.round((user.Value * getValueType(item, user)) / 100)
+                    ? Math.round((user.Value * getValueType(item, Type)) / 100)
                     : null,
               })).filter((item) => item.Value),
               Doanh_So: ToAdd.map((user) => ({
@@ -51,14 +51,6 @@ function Equally({ OrderInfo, onSubmit, loading }) {
     }
   };
 
-  const checkType = (TodoList, item) => {
-    const index = TodoList && TodoList.findIndex((o) => o.ID === item.ID);
-    if (index > -1) {
-      return TodoList[index].Type;
-    }
-    return TypeStaff[0];
-  }
-
   return (
     <Fragment>
       <div className="row">
@@ -66,7 +58,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
           <div className="border rounded mb-3 px-4 py-4">
             <Formik
               enableReinitialize
-              initialValues={{ ToAdd: [] }}
+              initialValues={{ ToAdd: [], Type: TypeStaff[0] }}
               onSubmit={onToAdd}
             >
               {(formikProps) => {
@@ -89,13 +81,28 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                               ? option.map((item) => ({
                                   ...item,
                                   Value: Math.round(100 / option.length),
-                                  Type: checkType(values.ToAdd, item),
                                 }))
                               : [];
                           setFieldValue(`ToAdd`, newOption, false);
                         }}
                         isSearchable
                         isClearable
+                        menuPosition="fixed"
+                      />
+                    </div>
+                    <div className="d-flex mb-3">
+                      <Select
+                        classNamePrefix="select"
+                        className={`select-control flex-1`}
+                        name={`Type`}
+                        options={TypeStaff}
+                        value={values.Type}
+                        placeholder="Chọn nhóm Nhân viên"
+                        noOptionsMessage={() => "Không có lựa chọn"}
+                        onChange={(option) => {
+                          setFieldValue(`Type`, option, false);
+                        }}
+                        isSearchable
                         menuPosition="fixed"
                       />
                     </div>
@@ -109,7 +116,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                             <div className="w-200px font-weight-bold">
                               {item.Fn}
                             </div>
-                            <div className="flex-1 pe-3">
+                            <div className="flex-1">
                               <div className="position-relative">
                                 <NumberFormat
                                   isAllowed={(values) => {
@@ -143,26 +150,6 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                                   %
                                 </div>
                               </div>
-                            </div>
-                            <div className="w-225px">
-                              <Select
-                                classNamePrefix="select"
-                                className={`select-control`}
-                                name={`ToAdd[${index}].Type`}
-                                options={TypeStaff}
-                                value={item.Type}
-                                placeholder="Chọn loại nhân viên"
-                                noOptionsMessage={() => "Không có lựa chọn"}
-                                onChange={(option) => {
-                                  setFieldValue(
-                                    `ToAdd[${index}].Type`,
-                                    option,
-                                    false
-                                  );
-                                }}
-                                isSearchable
-                                menuPosition="fixed"
-                              />
                             </div>
                           </div>
                         ))}
