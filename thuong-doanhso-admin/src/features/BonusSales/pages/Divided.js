@@ -55,7 +55,7 @@ function Divided({ OrderInfo, onSubmit, loading }) {
     return (
         <Fragment>
             <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-7">
                     <div className="border rounded mb-3 px-4 py-2">
                         <Formik
                             enableReinitialize
