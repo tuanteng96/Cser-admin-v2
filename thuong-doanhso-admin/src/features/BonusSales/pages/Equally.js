@@ -4,25 +4,20 @@ import Select from "react-select";
 import NumberFormat from "react-number-format";
 import { Formik, FieldArray, Form } from "formik";
 import PropTypes from "prop-types";
-
-const TypeStaff = [
-  { value: "SALES", label: "Nhân viên tư vấn (Sale)" },
-  {
-    value: "KTV", label: "Kỹ thuât viên"
-  }
-]
+import { TypeStaff } from "../../../Json/Json";
 
 function Equally({ OrderInfo, onSubmit, loading }) {
   const [initialValues, setInitialValues] = useState({ equally: [] });
 
   const getValueType = (item, Type) => {
-    return Type.value === "KTV"
+    return Type.value === "KY_THUAT_VIEN"
       ? item.BonusSale2
       : item.gia_tri_thanh_toan;
   };
 
   const onToAdd = (values, { resetForm }) => {
     const { ToAdd, Type } = values;
+    
     if (ToAdd.length > 0) {
       const newArr =
         OrderInfo && OrderInfo.oiItems && OrderInfo.oiItems.length > 0
@@ -83,6 +78,19 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                                   Value: Math.round(100 / option.length),
                                 }))
                               : [];
+                          if (option && option.length > 0) {
+                            const indexType = TypeStaff.findIndex(
+                              (o) =>
+                                o.value ===
+                                option[option.length - 1].loai_hoa_hong
+                            );
+                            if (indexType > -1) {
+                              setFieldValue(`Type`, TypeStaff[indexType], false);
+                            }
+                            else {
+                              setFieldValue(`Type`, TypeStaff[0], false);
+                            }
+                          }
                           setFieldValue(`ToAdd`, newOption, false);
                         }}
                         isSearchable
