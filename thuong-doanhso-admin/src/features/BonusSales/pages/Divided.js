@@ -56,7 +56,7 @@ function Divided({ OrderInfo, onSubmit, loading }) {
   return (
     <Fragment>
       <div className="row">
-        <div className="col-md-7">
+        <div className="col-md-12 col-xl-8">
           <div className="border rounded mb-3 px-4 py-2">
             <Formik
               enableReinitialize
@@ -72,13 +72,13 @@ function Divided({ OrderInfo, onSubmit, loading }) {
                       values.ToAdd &&
                       values.ToAdd.map((item, index) => (
                         <div
-                          className="d-flex align-items-center my-3"
+                          className="d-flex align-md-items-center flex-column flex-md-row my-3"
                           key={index}
                         >
-                          <div className="w-250px fw-bold pe-4">
+                          <div className="w-md-250px fw-bold pe-4">
                             {item.Product.ProdTitle}
                           </div>
-                          <div className="flex-1 pe-3">
+                          <div className="flex-1 pr-md-15px w-100 w-md-auto my-10px my-md-0">
                             <Select
                               classNamePrefix="select"
                               className={`select-control`}
@@ -97,8 +97,7 @@ function Divided({ OrderInfo, onSubmit, loading }) {
                                     TypeStaff[indexType],
                                     false
                                   );
-                                }
-                                else {
+                                } else {
                                   setFieldValue(
                                     `ToAdd[${index}].Type`,
                                     TypeStaff[0],
@@ -116,7 +115,7 @@ function Divided({ OrderInfo, onSubmit, loading }) {
                               menuPosition="fixed"
                             />
                           </div>
-                          <div className="w-225px">
+                          <div className="w-md-225px">
                             <Select
                               classNamePrefix="select"
                               className={`select-control`}
