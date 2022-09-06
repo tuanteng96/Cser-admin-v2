@@ -1,11 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Wheel } from 'react-custom-roulette'
 
 export default function Home() {
   const data = [
-    { option: '0', style: { backgroundColor: 'green', textColor: 'black' } },
-    { option: '1', style: { backgroundColor: 'white', textColor: 'green' } },
-    { option: '2' }
+    {
+      option: 'Iphone 0',
+      style: { backgroundColor: '#D9AB34', color: '#fff' }
+    },
+    {
+      option: 'Iphone 1',
+      style: { backgroundColor: '#E96642', color: '#fff' }
+    },
+    {
+      option: 'Iphone 2',
+      style: { backgroundColor: '#EFA1B6', color: '#fff' }
+    },
+    {
+      option: 'Iphone 3',
+      style: { backgroundColor: '#BFE4D7', color: '#fff' }
+    },
+    {
+      option: 'Iphone 4',
+      style: { backgroundColor: '#46AEFF', color: '#fff' }
+    },
+    {
+      option: 'Iphone 5',
+      style: { backgroundColor: '#E96642', color: '#fff' }
+    }
   ]
 
   const [mustSpin, setMustSpin] = useState(false)
@@ -23,27 +44,27 @@ export default function Home() {
         mustStartSpinning={mustSpin}
         prizeNumber={prizeNumber}
         data={data}
-        innerRadius={20}
-        onStopSpinning={(values) => {
+        innerRadius={10}
+        onStopSpinning={values => {
           console.log(data[prizeNumber])
           setMustSpin(false)
         }}
-        outerBorderColor={['#f2f2f2']}
-        outerBorderWidth={[25]}
+        outerBorderColor={['#fff']}
+        outerBorderWidth={[5]}
         innerBorderColor={['#f2f2f2']}
         radiusLineColor={['#dedede']}
-        radiusLineWidth={[10]}
+        radiusLineWidth={[0]}
         textColors={['#ffffff']}
-        fontSize={[50]}
+        fontSize={[15]}
         perpendicularText={[true]}
-        backgroundColors={[
-          '#F22B35',
-          '#F99533',
-          '#24CA69',
-          '#514E50',
-          '#46AEFF',
-          '#9145B7'
-        ]}
+        // backgroundColors={[
+        //   '#F22B35',
+        //   '#F99533',
+        //   '#24CA69',
+        //   '#514E50',
+        //   '#46AEFF',
+        //   '#9145B7'
+        // ]}
       />
       <button onClick={handleSpinClick}>SPIN</button>
     </div>
