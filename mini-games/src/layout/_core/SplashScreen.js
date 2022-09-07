@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import useQuery from 'src/hooks/useQuery'
 
 const SplashScreenContext = createContext()
 
@@ -35,6 +36,18 @@ export function SplashScreenProvider({ children }) {
     <SplashScreenContext.Provider value={setCount}>
       {children}
     </SplashScreenContext.Provider>
+  )
+}
+
+export const TypeScreenContext = createContext()
+
+export function TypeScreenProvider({ children }) {
+  const query = useQuery()
+
+  return (
+    <TypeScreenContext.Provider value={query}>
+      {children}
+    </TypeScreenContext.Provider>
   )
 }
 
