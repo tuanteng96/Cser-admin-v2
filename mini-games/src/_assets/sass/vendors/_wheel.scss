@@ -1,6 +1,5 @@
 .wheel {
     height: 100vh;
-    background: url(https://devforum.info/DEMO/vong-quay-li-xi/img/bg-2021.jpg);
     background-size: cover;
     background-repeat: no-repeat;
     display: flex;
@@ -26,6 +25,7 @@
         top: calc(50% - 7px);
         left: 50%;
         transform: translate(-50%, -50%);
+        outline: none !important;
     }
 }
 
@@ -36,7 +36,7 @@
     height: 8px;
     border-radius: 50%;
     left: 0;
-    z-index: 10;
+    z-index: 10010;
     pointer-events: none;
     box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
     -moz-animation: 1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards;
@@ -57,6 +57,14 @@
     -o-animation-duration: 1.25s, 1.25s, 6.25s;
     -ms-animation-duration: 1.25s, 1.25s, 6.25s;
     animation-duration: 1.25s, 1.25s, 6.25s;
+}
+
+.animate__shake {
+    animation-name: shake;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
 }
 
 @-webkit-keyframes bang {
@@ -281,5 +289,41 @@
     99.9% {
         margin-top: 30%;
         margin-left: 80%;
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: rotate(0deg);
+    }
+    10% {
+        transform: rotate(-1deg);
+    }
+    20% {
+        transform: rotate(1deg);
+    }
+    30% {
+        transform: rotate(0deg);
+    }
+    40% {
+        transform: rotate(2deg);
+    }
+    50% {
+        transform: rotate(1deg);
+    }
+    60% {
+        transform: rotate -1deg;
+    }
+    70% {
+        transform: rotate(2deg);
+    }
+    80% {
+        transform: rotate(1deg);
+    }
+    90% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(1deg);
     }
 }

@@ -145,7 +145,7 @@ function CheckInPage(props) {
                       alt={item.FullName}
                     />
                   </div>
-                  <div className="px-15px flex-grow-1">
+                  <div className="px-15px flex-1">
                     <div className="text-dark-75 font-weight-bold font-size-15px">
                       {item.FullName}
                     </div>
@@ -156,7 +156,7 @@ function CheckInPage(props) {
                       </span>
                     </div>
                   </div>
-                  <div>
+                  <div className="w-95px d-flex justify-content-end">
                     {item?.CheckIn?.OrderCheckInID ? (
                       <button
                         className="btn btn-icon btn-light-success btn-circle position-relative"

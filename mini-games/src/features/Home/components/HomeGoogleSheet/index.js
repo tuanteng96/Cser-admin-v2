@@ -1,104 +1,218 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import { AssetsHelpers } from 'src/helpers/AssetsHelpers'
 import ModalGift from './ModalGift'
+import moment from 'moment'
+import 'moment/locale/vi'
+moment.locale('vi')
 
 function HomeGoogleSheet(props) {
   const [onPending, setOnPending] = useState(false)
-  const [onFinish, setOnFinish] = useState(false)
   const [finalDeg, setFinalDeg] = useState(0)
   const [gift, setGift] = useState(null)
   const [isGift, setIsGift] = useState(false)
+  const [btnLoading, setBtnLoading] = useState(false)
 
   const data = [
     {
-      option: 'Vàng ngẫu nghiên',
-      style: { backgroundColor: '#D9AB34', color: '#fff' }
+      option: 'Tắm trắng',
+      chance: 0.5,
+      values: 'ADFG'
     },
     {
-      option: '50 Triệu vàng',
-      style: { backgroundColor: '#E96642', color: '#fff' }
+      option: 'Rất tiếc',
+      chance: 0.5,
+      values: ''
     },
     {
-      option: '100 Triệu vàng',
-      style: { backgroundColor: '#EFA1B6', color: '#fff' }
+      option: 'Giảm béo',
+      chance: 0,
+      values: 'ADFG'
     },
     {
-      option: '200 Triệu vàng',
-      style: { backgroundColor: '#BFE4D7', color: '#fff' }
+      option: 'Rất tiếc',
+      chance: 0,
+      values: ''
     },
     {
-      option: '300 Triệu vàng',
-      style: { backgroundColor: '#46AEFF', color: '#fff' }
+      option: 'Tắm trắng',
+      chance: 0,
+      values: 'ADFG'
     },
     {
-      option: '500 triệu vàng',
-      style: { backgroundColor: '#E96642', color: '#fff' }
+      option: 'Rất tiếc',
+      chance: 0,
+      values: ''
     },
     {
-      option: 'Vàng bí ẩn',
-      style: { backgroundColor: '#E96642', color: '#fff' }
+      option: 'Giảm béo',
+      chance: 0,
+      values: 'ADFG'
     },
     {
-      option: 'X99 thỏi vàng',
-      style: { backgroundColor: '#E96642', color: '#fff' }
+      option: 'Rất tiếc',
+      chance: 0,
+      values: ''
     }
   ]
 
   // const data = [
   //   {
-  //     option: '1000 Xu'
+  //     option: 'Vàng ngẫu nghiên',
+  //     chance: 0.5,
   //   },
   //   {
-  //     option: '2 Gói'
+  //     option: '50 Triệu vàng',
+  //     chance: 0.5,
   //   },
   //   {
-  //     option: '100 Xu'
+  //     option: '100 Triệu vàng',
+  //     chance: 0,
   //   },
   //   {
-  //     option: '500 Xu'
+  //     option: '200 Triệu vàng',
+  //     chance: 0,
   //   },
   //   {
-  //     option: '2000 Xu'
+  //     option: '300 Triệu vàng',
+  //     chance: 0,
   //   },
   //   {
-  //     option: '3 Gói'
+  //     option: '500 triệu vàng',
+  //     chance: 0,
+  //   },
+  //   {
+  //     option: 'Vàng bí ẩn',
+  //     chance: 0,
+  //   },
+  //   {
+  //     option: 'X99 thỏi vàng',
+  //     chance: 0,
+  //   }
+  // ]
+
+  // const data = [
+  //   {
+  //     option: '1000 Xu',
+  //     chance: 0.5
+  //   },
+  //   {
+  //     option: '2 Gói',
+  //     chance: 0.5
+  //   },
+  //   {
+  //     option: '100 Xu',
+  //     chance: 0
+  //   },
+  //   {
+  //     option: '500 Xu',
+  //     chance: 0
+  //   },
+  //   {
+  //     option: '2000 Xu',
+  //     chance: 0
+  //   },
+  //   {
+  //     option: '3 Gói',
+  //     chance: 0
   //   }
   // ]
   const clickMp3 = new Audio(AssetsHelpers.toAbsoluteUrl('/mp3/tick.mp3'))
   const filmingMp3 = new Audio(AssetsHelpers.toAbsoluteUrl('/mp3/dangquay.mp3')) // Nhạc quay
   const clapMp3 = new Audio(AssetsHelpers.toAbsoluteUrl('/mp3/votay.mp3')) // Nhạc Vỗ tay
+  const lostMp3 = new Audio(AssetsHelpers.toAbsoluteUrl('/mp3/matluot.mp3')) // Nhạc Mất lượt
+
+  const getRandom = array => {
+    var rnd = Math.floor(Math.random() * 100)
+    var counter = 0
+    for (let i = 0; i < array.length; i++) {
+      counter += array[i].chance * 100
+      if (counter > rnd) {
+        return i
+      }
+    }
+  }
 
   const onClickSpin = () => {
     if (onPending) return
     clickMp3.play()
     filmingMp3.play()
-    setOnFinish(false)
     setOnPending(true)
     const slicesCount = data.length
     const sliceDeg = 360 / slicesCount
-    const min = finalDeg + 500
-    const max = finalDeg + 1500
-    const resultDeg = Math.floor(Math.random() * (max - min + 1)) + min
-
-    let index = Math.floor(((360 - resultDeg + 30) % 360) / sliceDeg)
-    index = (slicesCount + index) % slicesCount
+    const index = getRandom(data)
+    const stillDeg = finalDeg % 360
+    const resultDeg = 360 * 8 + index * -sliceDeg - stillDeg + finalDeg
     setFinalDeg(resultDeg)
+
     setTimeout(() => {
-      clapMp3.play()
-      setOnFinish(true)
-      setOnPending(false)
-      setGift(data[index])
-      setIsGift(true)
-    }, 5000)
+      if (data[index].values) {
+        clapMp3.play()
+        setOnPending(false)
+        setGift(data[index])
+        setIsGift(true)
+      } else {
+        lostMp3.play()
+        setOnPending(false)
+      }
+    }, 6000)
+    //console.log(data[index])
+    //if (onPending) return
+    // clickMp3.play()
+    // filmingMp3.play()
+    // setOnFinish(false)
+    // setOnPending(true)
+    // const slicesCount = data.length
+    // const sliceDeg = 360 / slicesCount
+    // const min = finalDeg + 500
+    // const max = finalDeg + 1500
+    // const resultDeg = Math.floor(Math.random() * (max - min + 1)) + min
+
+    // let index = Math.floor(((360 - resultDeg + 30) % 360) / sliceDeg)
+    // index = (slicesCount + index) % slicesCount
+    // setFinalDeg(resultDeg)
+    // setTimeout(() => {
+    //   clapMp3.play()
+    //   setOnFinish(true)
+    //   setOnPending(false)
+    //   setGift(data[index])
+    //   setIsGift(true)
+    // }, 5000)
   }
 
   const onHide = () => {
     setIsGift(false)
+    setGift(null)
+  }
+
+  const onSubmit = values => {
+    setBtnLoading(true)
+    const objSubmit = {
+      ...values,
+      Option: gift.option,
+      CreateDate: moment().format('HH:mm DD-MM-YYYY')
+    }
+    axios
+      .post(
+        'https://sheet.best/api/sheets/8a9b8266-7b0e-4466-aa7f-6073b44188ce',
+        objSubmit
+      )
+      .then(response => {
+        setBtnLoading(false)
+        onHide()
+      })
   }
 
   return (
-    <div className="wheel">
-      {onFinish && (
+    <div
+      className="wheel"
+      style={{
+        backgroundImage: `url(${AssetsHelpers.toAbsoluteUrl(
+          '/images/wheel/bg.jpg'
+        )})`
+      }}
+    >
+      {gift && (
         <div className="pyro">
           <div className="before"></div>
           <div className="after"></div>
@@ -106,16 +220,17 @@ function HomeGoogleSheet(props) {
       )}
 
       <div className="wheel-container">
-        <div className="title text-center">
+        <div className="title text-center max-w-400px m-auto">
           <img
-            src="https://devforum.info/DEMO/vong-quay-li-xi/img/vqmm-title.png"
+            className="w-100"
+            src={AssetsHelpers.toAbsoluteUrl('/images/wheel/title.png')}
             alt=""
           />
         </div>
         <div className="wheel-rotate">
           <img
             className="w-100"
-            src="https://shopviminh.com/upload-usr/images/xIWXUGg7aX_1609667393.png"
+            src={AssetsHelpers.toAbsoluteUrl('/images/wheel/xoay-4.png')}
             alt=""
             style={{
               transform: `rotate(${finalDeg}deg)`,
@@ -124,7 +239,7 @@ function HomeGoogleSheet(props) {
           />
           {/* <img
             className="w-100"
-            src="https://raw.githubusercontent.com/tranngochung0510/lucky-wheel/2f9495cc107e032c27ff72133a081bd56a6af64f/src/images/rou_under_high.png"
+            src={AssetsHelpers.toAbsoluteUrl('/images/wheel/xoay-2.png')}
             alt=""
             style={{
               transform: `rotate(${finalDeg}deg)`,
@@ -134,14 +249,20 @@ function HomeGoogleSheet(props) {
           <button onClick={onClickSpin}>
             <img
               className="w-100"
-              src="https://shopviminh.com/assets/frontend/vongquay/image/IMG_3478.png?fbclid=IwAR3Nr7uWavPogMHXovHcslq3kvgEyhWOdbzg49yLtzAUwFWM3iDcKqOoPMk"
+              src={AssetsHelpers.toAbsoluteUrl('/images/wheel/button.png')}
               alt=""
             />
           </button>
         </div>
       </div>
 
-      <ModalGift show={isGift} gift={gift} onHide={onHide}/>
+      <ModalGift
+        show={isGift}
+        gift={gift}
+        onHide={onHide}
+        onSubmit={onSubmit}
+        btnLoading={btnLoading}
+      />
     </div>
   )
 }
