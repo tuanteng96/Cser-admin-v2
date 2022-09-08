@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { AssetsHelpers } from 'src/helpers/AssetsHelpers'
+import ModalGift from './ModalGift'
 
 function HomeGoogleSheet(props) {
   const [onPending, setOnPending] = useState(false)
   const [onFinish, setOnFinish] = useState(false)
   const [finalDeg, setFinalDeg] = useState(0)
+  const [gift, setGift] = useState(null)
+  const [isGift, setIsGift] = useState(false)
+
   const data = [
     {
       option: 'Vàng ngẫu nghiên',
@@ -83,9 +87,13 @@ function HomeGoogleSheet(props) {
       clapMp3.play()
       setOnFinish(true)
       setOnPending(false)
-      console.log(data[index])
-      console.log(resultDeg)
+      setGift(data[index])
+      setIsGift(true)
     }, 5000)
+  }
+
+  const onHide = () => {
+    setIsGift(false)
   }
 
   return (
@@ -132,6 +140,8 @@ function HomeGoogleSheet(props) {
           </button>
         </div>
       </div>
+
+      <ModalGift show={isGift} gift={gift} onHide={onHide}/>
     </div>
   )
 }
