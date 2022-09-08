@@ -16,12 +16,12 @@ function HomeGoogleSheet(props) {
   const data = [
     {
       option: 'Tắm trắng',
-      chance: 0.5,
+      chance: 0.25,
       values: 'ADFG'
     },
     {
       option: 'Rất tiếc',
-      chance: 0.5,
+      chance: 0.25,
       values: ''
     },
     {
@@ -36,12 +36,12 @@ function HomeGoogleSheet(props) {
     },
     {
       option: 'Tắm trắng',
-      chance: 0,
+      chance: 0.25,
       values: 'ADFG'
     },
     {
       option: 'Rất tiếc',
-      chance: 0,
+      chance: 0.25,
       values: ''
     },
     {
