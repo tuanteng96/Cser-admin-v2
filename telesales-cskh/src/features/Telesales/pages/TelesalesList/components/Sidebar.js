@@ -227,6 +227,7 @@ function Sidebar({ filters, onSubmit, loading }) {
                     Chọn theo nhân viên
                   </label>
                   <SelectStaffs
+                    className="select-control"
                     menuPosition="fixed"
                     menuPlacement="top"
                     name="filter.tele_user_id"

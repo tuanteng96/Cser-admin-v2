@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AsyncPaginate } from 'react-select-async-paginate'
 import PropTypes from 'prop-types'
 import moreApi from 'src/api/more.api'
@@ -8,8 +8,10 @@ SelectStaffs.propTypes = {
   onChange: PropTypes.func
 }
 
-function SelectStaffs({ onChange, value, ...props }) {
+function SelectStaffs({ onChange, value, isLoading, ...props }) {
+  const [loading, setLoading] = useState(false)
   const getAllStaffs = async (search, loadedOptions, { page }) => {
+    setLoading(true)
     const { data } = await moreApi.getAllStaffs(search)
     const { Items } = {
       Items: data.data || []
@@ -31,6 +33,7 @@ function SelectStaffs({ onChange, value, ...props }) {
         }
       }
     }
+    setLoading(false)
     return {
       options: newData,
       hasMore: false,
@@ -43,7 +46,7 @@ function SelectStaffs({ onChange, value, ...props }) {
   return (
     <AsyncPaginate
       {...props}
-      className="select-control"
+      isLoading={isLoading || loading}
       classNamePrefix="select"
       loadOptions={getAllStaffs}
       placeholder="Chọn nhân viên"

@@ -1,9 +1,9 @@
-@import "../init";
+@import '../init';
 .telesales-list {
-    &__sidebar {
-        width: $telesale-list-sidebar-width;
-    }
-    &__content {
-        width: calc(100% - #{$telesale-list-sidebar-width})
-    }
+  &__sidebar {
+    width: $telesale-list-sidebar-width;
+  }
+  &__content {
+    width: calc(100% - #{$telesale-list-sidebar-width});
+  }
 }

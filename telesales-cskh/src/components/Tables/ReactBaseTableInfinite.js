@@ -44,7 +44,7 @@ function ReactBaseTableInfinite({
   )
 
   return (
-    <div className="w-100 h-100" ref={refElm}>
+    <div className="w-100 h-100 overflow-hidden" ref={refElm}>
       <Table
         ref={tableRef}
         {...props}
