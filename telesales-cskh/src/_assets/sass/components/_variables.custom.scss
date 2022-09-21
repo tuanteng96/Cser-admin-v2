@@ -19,6 +19,8 @@ $font-family-base: 'Roboto',
 sans-serif;
 $font-family-number: 'Poppins',
 sans-serif;
+$font-family-label: 'Niramit',
+sans-serif;
 // Settings for the `<body>` element.
 $body-bg: $white !default;
 $body-color: $dark-75 !default;
@@ -33,20 +35,19 @@ $shadows: 0px 10px 30px 0px rgb(82 63 105 / 8%);
 // Typography
 $config-text: ( font-weight: ( 'name': 'font-weight', 'prefix': 'fw-', 'values': ( '200': 200, '300': 300, '400': 400, '500': 500, '600': 600, '700': 700)), text-transform: ( 'name': 'text-transform', 'prefix': 'text-', 'values': ( 'capitalize': 'capitalize', 'uppercase': 'uppercase', 'lowercase': 'lowercase', 'none': 'none')), text-decoration: ( 'name': 'text-decoration', 'prefix': 'text-', 'values': ( 'underline': 'underline', 'line-through': 'line-through', 'dnone': 'dnone')), font-style: ( 'name': 'font-style', 'prefix': 'text-', 'values': ( 'italic': 'italic', 'initial': 'initial')));
 $config-line-text: ( 'auto': initial, 'xs': 16px, 'sm': 20px, 'md': 22px, 'lg': 25px, 'xl': 28px, 'xxl': 35px);
-$font-size-base: 1rem !default; // Assumes the browser default, typically `13px`
-$font-size-xs: $font-size-base * 0.75 !default;
-$font-size-sm: $font-size-base * 0.825 !default;
-$font-size-smm: $font-size-base * 0.905 !default;
-$font-size-md: $font-size-base * 1 !default;
-$font-size-lg: $font-size-base * 1.2 !default;
-$font-size-xl: $font-size-base * 1.4 !default;
+$font-size-base: 14px !default; // Assumes the browser default, typically `13px`
+$font-size-xs: 12px;
+$font-size-sm: 13px !default;
+$font-size-md: 16px !default;
+$font-size-lg: 18px !default;
+$font-size-xl: 22px !default;
 $h1-font-size: $font-size-base * 3.5 !default; // 26px
 $h2-font-size: $font-size-base * 2 !default; // 22.75px
 $h3-font-size: $font-size-base * 1.6 !default; // 19.5px
 $h4-font-size: $font-size-base * 1.5 !default; // 17.55px
 $h5-font-size: $font-size-base * 1.45 !default; // 16.25px
 $h6-font-size: $font-size-base * 1.3 !default; // 15.275px
-$config-font-size: ( 'size-min': 11px, 'size-xs': $font-size-xs, 'size-sm': $font-size-sm, 'size-smm': $font-size-smm, 'size-md': $font-size-md, 'size-mdd': 1.1rem, 'size-lg': $font-size-lg, 'size-xl': $font-size-xl, 'size-h6': $h6-font-size, 'size-h5': $h5-font-size, 'size-h4': $h4-font-size, 'size-h3': $h3-font-size, 'size-h2': $h2-font-size, 'size-h1': $h1-font-size, 'size-25': 25px, 'size-30': 30px, 'size-35': 35px, 'size-50': 50px);
+$config-font-size: ( 'size-min': 11px, 'size-xs': $font-size-xs, 'size-sm': $font-size-sm, 'size-md': $font-size-md, 'size-mdd': 1.1rem, 'size-lg': $font-size-lg, 'size-xl': $font-size-xl, 'size-base': $font-size-base, 'size-h6': $h6-font-size, 'size-h5': $h5-font-size, 'size-h4': $h4-font-size, 'size-h3': $h3-font-size, 'size-h2': $h2-font-size, 'size-h1': $h1-font-size, 'size-25': 25px, 'size-30': 30px, 'size-35': 35px, 'size-50': 50px);
 // Transition
 $transition: all 0.15s ease !default; // Custom variable
 $transition-link: color 0.15s ease,

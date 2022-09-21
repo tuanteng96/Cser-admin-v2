@@ -23,10 +23,14 @@ if (DevHelpers.isDevelopment()) {
         Title: 'Cser Hồ Chí Minh'
       }
     ],
-    CrStockID: ''
+    CrStockID: '',
+    rightsSum: {
+      tele: true,
+      teleAdv: true
+    }
   }
   window.token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjM3NzQzODA1IiwibmJmIjoxNjYzNTUxNzMxLCJleHAiOjE2NjQxNTY1MzEsImlhdCI6MTY2MzU1MTczMX0.VINa3-gxSqIfp1zy9Xm60PVyyUZSwwZTLmeiIP6kSrQ'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjM3NzQzODAwMzc3NDM4MDMiLCJuYmYiOjE2NjM3MzgyODEsImV4cCI6MTY2NDM0MzA4MSwiaWF0IjoxNjYzNzM4MjgxfQ.UmTcYIgFwB3r_TqeMlPQp-oVR8nd6lxAnUPgYmMXb38'
 }
 
 const Auth = createSlice({
