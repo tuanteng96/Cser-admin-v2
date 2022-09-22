@@ -3,9 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import telesalesApi from 'src/api/telesales.api'
 import { AssetsHelpers } from 'src/helpers/AssetsHelpers'
 import { PriceHelper } from 'src/helpers/PriceHelper'
-import moment from 'moment'
+import SelectProgress from 'src/components/Selects/SelectProgress'
 
+import moment from 'moment'
 import 'moment/locale/vi'
+
 moment.locale('vi')
 
 function TelesalesDetail(props) {
@@ -139,6 +141,7 @@ function TelesalesDetail(props) {
                 {MemberCurrent?.MobilePhone}
               </div>
               <div className="btn btn-sm btn-primary mr-2 py-6px px-3 px-xxl-3 fw-500 mt-8px">
+                <i className="fa-solid fa-phone pr-5px"></i> 
                 Gọi điện
               </div>
             </div>
@@ -152,7 +155,7 @@ function TelesalesDetail(props) {
             </div>
             <div className="d-flex justify-content-between mb-8px">
               <div className="font-label">Loại</div>
-              <div className="fw-600">Khách hàng thân thiêt</div>
+              <div className="fw-600">Khách hàng thân thiết</div>
             </div>
             <div className="d-flex justify-content-between">
               <div className="font-label">Sinh nhật</div>
@@ -214,8 +217,38 @@ function TelesalesDetail(props) {
           ></textarea>
         </div>
       </div>
-      <div className="telesales-list__content flex-fill px-30px pb-30px d-flex flex-column">
-        a
+      <div className="telesales-list__content flex-fill d-flex flex-column bg-white border-left">
+        <div className="telesales-detail-head border-bottom px-20px d-flex align-items-center justify-content-center">
+            <SelectProgress 
+              isMulti
+              className="w-100"
+              placeholder="Chọn Tags khách hàng"
+            />
+        </div>
+        <div className="d-flex telesales-detail-body">
+            <div className="w-425px border-right p-20px">
+              <div className="border-bottom pb-15px mb-15px">
+                <div className="text-uppercase d-flex justify-content-between align-items-center">
+                  <span className="fw-600">SP khách hàng quan tâm</span>
+                  <button className="btn btn-xs btn-success">Thêm mới</button>
+                </div>
+              </div>
+              <div className="border-bottom pb-15px mb-15px">
+                <div className="text-uppercase d-flex justify-content-between align-items-center">
+                  <span className="fw-600">Đặt lịch khách hàng</span>
+                  <button className="btn btn-xs btn-success">Đặt lịch mới</button>
+                </div>
+              </div>
+              <div>
+                <div className="text-uppercase d-flex justify-content-between align-items-center">
+                  <span className="fw-600">Lịch sử chăm sóc</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex-fill">
+              2
+            </div>
+        </div>
       </div>
     </div>
   )

@@ -7,3 +7,10 @@
     width: calc(100% - #{$telesale-list-sidebar-width});
   }
 }
+
+.telesales-detail-head {
+  height: 71px;
+}
+.telesales-detail-body {
+  height: calc(100% - 71px);
+}
