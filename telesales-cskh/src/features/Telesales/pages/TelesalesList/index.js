@@ -5,33 +5,64 @@ import telesalesApi from 'src/api/telesales.api'
 import ReactBaseTableInfinite from 'src/components/Tables/ReactBaseTableInfinite'
 import Sidebar from './components/Sidebar'
 import { Overlay } from 'react-bootstrap'
+import { AssetsHelpers } from 'src/helpers/AssetsHelpers'
+import SelectStaffs from 'src/components/Selects/SelectStaffs'
 
 import moment from 'moment'
 import 'moment/locale/vi'
-import SelectStaffs from 'src/components/Selects/SelectStaffs'
 moment.locale('vi')
 
-const EditableCell = ({ rowData, container }) => {
+const EditableCell = ({ rowData, container, showEditing, hideEditing }) => {
   const [Editing, setEditing] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [value, setValue] = useState('Nguyễn Tài Tuấn')
+  const [value, setValue] = useState(
+    rowData?.TeleUser?.ID > 0
+      ? { label: rowData?.TeleUser?.FullName, value: rowData?.TeleUser?.ID }
+      : null
+  )
   const target = useRef(null)
 
   const handleClick = () => {
     setEditing(true)
+    showEditing()
   }
 
   const handleHide = () => {
     setEditing(false)
+    hideEditing()
+  }
+
+  const onSubmit = options => {
+    setLoading(true)
+    const newData = {
+      items: [
+        {
+          MemberID: rowData.ID,
+          TeleUserID: options ? options.value : null
+        }
+      ]
+    }
+    telesalesApi
+      .setUserIDTelesales(newData)
+      .then(response => {
+        setValue(options)
+        setLoading(false)
+      })
+      .catch(error => console.log(error))
   }
 
   return (
     <div
-      className="h-100 d-flex align-items-center"
+      className="h-100 d-flex align-items-center cursor-pointer"
       ref={target}
       onClick={() => handleClick()}
     >
-      {!Editing && value}
+      {!Editing && (
+        <>
+          {value ? value.label : 'Chọn nhân viên'}
+          <i className="fa-solid fa-user-pen pl-8px font-size-base text-muted"></i>
+        </>
+      )}
       {Editing && target && (
         <Overlay
           target={target.current}
@@ -57,10 +88,9 @@ const EditableCell = ({ rowData, container }) => {
                 name="filter.tele_user_id"
                 //menuIsOpen={true}
                 onChange={otp => {
-                  setLoading(true)
-                  //setFieldValue('filter.tele_user_id', otp, false)
+                  onSubmit(otp)
                 }}
-                // value={values.filter.tele_user_id}
+                value={value}
                 isClearable={true}
               />
             </div>
@@ -80,6 +110,7 @@ function TelesalesList(props) {
   const [loading, setLoading] = useState(false)
   const [PageCount, setPageCount] = useState(0)
   const [PageTotal, setPageTotal] = useState(0)
+  const [IsEditing, setIsEditing] = useState(false)
 
   const [filters, setFilters] = useState({
     filter: {
@@ -165,16 +196,14 @@ function TelesalesList(props) {
         cellRenderer: ({ rowIndex }) => rowIndex + 1,
         width: 60,
         sortable: false,
-        align: 'center',
-        frozen: 'left'
+        align: 'center'
       },
       {
         key: 'FullName',
         title: 'Họ và tên',
         dataKey: 'FullName',
         width: 250,
-        sortable: false,
-        frozen: 'left'
+        sortable: false
       },
       {
         key: 'ByStock.Title',
@@ -190,7 +219,12 @@ function TelesalesList(props) {
         width: 250,
         sortable: false,
         cellRenderer: ({ rowData, container }) => (
-          <EditableCell rowData={rowData} container={container} />
+          <EditableCell
+            rowData={rowData}
+            container={container}
+            hideEditing={() => setIsEditing(false)}
+            showEditing={() => setIsEditing(true)}
+          />
         )
       },
       {
@@ -220,15 +254,18 @@ function TelesalesList(props) {
         dataKey: 'action',
         cellRenderer: ({ rowData }) => (
           <div className="d-flex">
-            <button
-              className="w-38px h-38px rounded-circle btn btn-success shadow mx-4px"
-              style={{ transform: 'rotate(-25deg)' }}
-            >
-              <i className="fa-sharp fa-solid fa-phone-volume text-white"></i>
+            <button className="w-38px h-38px rounded-circle btn btn-success shadow mx-4px p-0 position-relative">
+              <img
+                className="w-23px position-absolute top-7px right-7px"
+                src={AssetsHelpers.toAbsoluteUrl(
+                  '/_assets/images/icon-call.png'
+                )}
+                alt=""
+              />
             </button>
             <Link
               className="w-38px h-38px rounded-circle d-flex align-items-center justify-content-center text-none btn btn-primary shadow mx-4px"
-              to={`/danh-sach/${rowData.ID}`}
+              to={`${rowData.ID}`}
             >
               <i className="fa-regular fa-arrow-right pt-2px"></i>
             </Link>
@@ -276,7 +313,7 @@ function TelesalesList(props) {
             onEndReachedThreshold={300}
             onEndReached={handleEndReached}
             rowHeight={60}
-            onScroll={() => document.body.click()}
+            onScroll={() => IsEditing && document.body.click()}
             //onPagesChange={onPagesChange}
             //rowRenderer={rowRenderer}
           />

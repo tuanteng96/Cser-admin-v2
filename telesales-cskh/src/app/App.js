@@ -5,6 +5,7 @@ import AuthInit from 'src/features/Auth/AuthInit'
 import ScrollToTop from 'src/layout/_core/ScrollToTop'
 import Telesales from 'src/features/Telesales'
 import TelesalesList from 'src/features/Telesales/pages/TelesalesList'
+import TelesalesDetail from 'src/features/Telesales/pages/TelesalesDetail'
 
 function App({ store, persistor }) {
   return (
@@ -13,9 +14,12 @@ function App({ store, persistor }) {
         <AuthInit>
           <ScrollToTop>
             <Routes>
-              <Route path="/" element={<Telesales />}>
+              <Route path="/">
                 <Route index element={<Navigate to="/danh-sach" replace />} />
-                <Route path="danh-sach" element={<TelesalesList />} />
+              </Route>
+              <Route path="/danh-sach" element={<Telesales />}>
+                <Route index element={<TelesalesList />} />
+                <Route path=":MemberID" element={<TelesalesDetail />} />
               </Route>
             </Routes>
           </ScrollToTop>
