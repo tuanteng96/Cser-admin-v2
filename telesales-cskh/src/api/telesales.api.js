@@ -12,6 +12,25 @@ const telesalesApi = {
   },
   getMemberIDTelesales: MemberID => {
     return http.get(`/api/v3/tele23@member_id?memberid=${MemberID}`)
+  },
+  editTagsMember: data => {
+    return http.post('/api/v3/tele23@edit_tags', JSON.stringify(data))
+  },
+  editNoteMember: data => {
+    return http.post('/api/v3/tele23@edit_note', JSON.stringify(data))
+  },
+  getListBuydingProduct: ({ MemberID, pi, ps }) => {
+    return http.get(
+      `/api/v3/member23?cmd=da_mua&memberid=${MemberID}&pi=${pi}&ps=${ps}`
+    )
+  },
+  getHisUseServices: MemberID => {
+    return http.get(
+      `/services/preview.aspx?a=1&cmd=loadOrderService&MemberID=${MemberID}&IsMember=0&fromOrderAdd=0`
+    )
+  },
+  getListProductInDate: (data) => {
+    return http.post('/api/v3/tele23@prods_indate', JSON.stringify(data))
   }
 }
 export default telesalesApi

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import telesalesApi from 'src/api/telesales.api'
-import { AssetsHelpers } from 'src/helpers/AssetsHelpers'
 import { PriceHelper } from 'src/helpers/PriceHelper'
-import SelectProgress from 'src/components/Selects/SelectProgress'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import NoteMember from './NoteMember'
+import ProgressList from './ProgressList'
+import TelesalesOption from '../TelesalesOption'
+import Skeleton from 'react-loading-skeleton'
 
 import moment from 'moment'
 import 'moment/locale/vi'
 
 moment.locale('vi')
+
+const perfectScrollbarOptions = {
+  wheelSpeed: 2,
+  wheelPropagation: false
+}
 
 function TelesalesDetail(props) {
   let { MemberID } = useParams()
@@ -24,6 +32,7 @@ function TelesalesDetail(props) {
   }, [MemberID])
 
   const getMemberTelesales = () => {
+    setLoadingMember(true)
     telesalesApi
       .getMemberIDTelesales(MemberID)
       .then(({ data }) => {
@@ -36,7 +45,7 @@ function TelesalesDetail(props) {
       })
       .catch(error => console.log(error))
   }
-  console.log(MemberCurrent)
+  //console.log(MemberCurrent)
   return (
     <div className="d-flex h-100 telesales-list">
       {/* <div className="mb-15px">
@@ -115,7 +124,7 @@ function TelesalesDetail(props) {
         </div>
       </div> */}
       <div className="telesales-list__sidebar bg-white">
-        <div className="border-bottom px-20px py-15px text-uppercase fw-600 font-size-lg d-flex align-items-center">
+        <div className="border-bottom px-18px py-15px text-uppercase fw-600 font-size-lg d-flex align-items-center">
           <div
             className="w-40px h-40px border rounded-circle cursor-pointer position-relative mr-10px"
             onClick={() => navigate('/danh-sach')}
@@ -124,7 +133,7 @@ function TelesalesDetail(props) {
           </div>
           Thông tin khách hàng
         </div>
-        <div className="p-20px">
+        <div className="p-18px">
           <div className="d-flex justify-content-center">
             <div className="w-85px position-relative">
               <img
@@ -134,14 +143,20 @@ function TelesalesDetail(props) {
               />
             </div>
             <div className="flex-fill pl-15px">
-              <div className="text-capitalize fw-700 font-size-md mb-3px line-height-sm">
-                {MemberCurrent?.FullName}
+              <div className="text-capitalize fw-700 font-size-md mb-3px line-height-sm text-primary">
+                {loadingMember && (
+                  <Skeleton count={1} width={150} height={20} />
+                )}
+                {!loadingMember && MemberCurrent?.FullName}
               </div>
               <div className="font-number fw-600 font-size-base">
-                {MemberCurrent?.MobilePhone}
+                {loadingMember && (
+                  <Skeleton count={1} width={150} height={18} />
+                )}
+                {!loadingMember && MemberCurrent?.MobilePhone}
               </div>
               <div className="btn btn-sm btn-primary mr-2 py-6px px-3 px-xxl-3 fw-500 mt-8px">
-                <i className="fa-solid fa-phone pr-5px"></i> 
+                <i className="fa-solid fa-phone pr-5px"></i>
                 Gọi điện
               </div>
             </div>
@@ -150,17 +165,23 @@ function TelesalesDetail(props) {
             <div className="d-flex justify-content-between mb-8px">
               <div className="font-label">Cơ sở</div>
               <div className="fw-600">
-                {MemberCurrent?.ByStock?.Title || 'Chưa có'}
+                {loadingMember && <Skeleton count={1} width={100} />}
+                {!loadingMember && (MemberCurrent?.ByStock?.Title || 'Chưa có')}
               </div>
             </div>
             <div className="d-flex justify-content-between mb-8px">
               <div className="font-label">Loại</div>
-              <div className="fw-600">Khách hàng thân thiết</div>
+              <div className="fw-600">
+                {MemberCurrent?.GroupNames || 'Chưa có nhóm'}
+              </div>
             </div>
             <div className="d-flex justify-content-between">
               <div className="font-label">Sinh nhật</div>
               <div className="fw-600 font-number">
-                {moment().format('DD-MM-YYYY')}
+                {loadingMember && <Skeleton count={1} width={100} />}
+                {!loadingMember && MemberCurrent?.BirthDate
+                  ? moment(MemberCurrent?.BirthDate).format('DD-MM-YYYY')
+                  : 'Chưa có'}
               </div>
             </div>
           </div>
@@ -172,7 +193,9 @@ function TelesalesDetail(props) {
                 Ví điện tử
               </div>
               <div className="font-number font-size-md fw-600 mt-3px">
-                {PriceHelper.formatVND(MemberCurrent?.Present?.nap_vi)}
+                {loadingMember && <Skeleton count={1} width={50} height={22} />}
+                {!loadingMember &&
+                  PriceHelper.formatVND(MemberCurrent?.Present?.nap_vi)}
               </div>
             </div>
           </div>
@@ -182,9 +205,11 @@ function TelesalesDetail(props) {
                 Thẻ tiền
               </div>
               <div className="font-number font-size-md fw-600 mt-3px">
-                {PriceHelper.formatVND(
-                  MemberCurrent?.Present?.the_tien_kha_dung
-                )}
+                {loadingMember && <Skeleton count={1} width={50} height={22} />}
+                {!loadingMember &&
+                  PriceHelper.formatVND(
+                    MemberCurrent?.Present?.the_tien_kha_dung
+                  )}
               </div>
             </div>
           </div>
@@ -194,7 +219,9 @@ function TelesalesDetail(props) {
                 Đã chi tiêu
               </div>
               <div className="font-number font-size-md fw-600 mt-3px">
-                {PriceHelper.formatVND(MemberCurrent?.Present?.da_chi_tieu)}
+                {loadingMember && <Skeleton count={1} width={50} height={22} />}
+                {!loadingMember &&
+                  PriceHelper.formatVND(MemberCurrent?.Present?.da_chi_tieu)}
               </div>
             </div>
           </div>
@@ -203,51 +230,155 @@ function TelesalesDetail(props) {
               <div className="text-uppercase font-size-min fw-700 text-muted">
                 Công nợ
               </div>
-              <div className="font-number font-size-md fw-600 mt-3px">
-                {PriceHelper.formatVND(MemberCurrent?.Present?.no)}
+              <div className="font-number font-size-md fw-600 mt-3px text-danger">
+                {loadingMember && <Skeleton count={1} width={50} height={22} />}
+                {!loadingMember &&
+                  PriceHelper.formatVND(MemberCurrent?.Present?.no)}
               </div>
             </div>
           </div>
         </div>
-        <div className="pl-15px pr-15px pb-15px pt-8px">
-          <textarea
-            className="w-100 form-control form-control-solid p-12px"
-            rows="6"
-            placeholder="Nhập ghi chú"
-          ></textarea>
-        </div>
+        <NoteMember
+          initialValues={MemberCurrent?.TeleNote}
+          loading={loadingMember}
+        />
       </div>
       <div className="telesales-list__content flex-fill d-flex flex-column bg-white border-left">
-        <div className="telesales-detail-head border-bottom px-20px d-flex align-items-center justify-content-center">
-            <SelectProgress 
-              isMulti
-              className="w-100"
-              placeholder="Chọn Tags khách hàng"
-            />
-        </div>
+        <ProgressList
+          initialValues={MemberCurrent?.TeleTags}
+          MemberLoading={loadingMember}
+        />
         <div className="d-flex telesales-detail-body">
-            <div className="w-425px border-right p-20px">
-              <div className="border-bottom pb-15px mb-15px">
+          <div className="w-425px border-right">
+            <PerfectScrollbar
+              options={perfectScrollbarOptions}
+              className="scroll h-100"
+              style={{ position: 'relative' }}
+            >
+              <div className="border-bottom p-18px">
                 <div className="text-uppercase d-flex justify-content-between align-items-center">
-                  <span className="fw-600">SP khách hàng quan tâm</span>
+                  <span className="fw-600 text-primary">
+                    SP khách hàng quan tâm
+                  </span>
                   <button className="btn btn-xs btn-success">Thêm mới</button>
                 </div>
-              </div>
-              <div className="border-bottom pb-15px mb-15px">
-                <div className="text-uppercase d-flex justify-content-between align-items-center">
-                  <span className="fw-600">Đặt lịch khách hàng</span>
-                  <button className="btn btn-xs btn-success">Đặt lịch mới</button>
+                <div>
+                  <div className="bg-light rounded-sm mt-12px d-flex overflow-hidden">
+                    <div className="flex-fill py-8px px-15px fw-500">
+                      Kem trị nám Bio Xtra
+                    </div>
+                    <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
+                      <i className="fa-regular fa-xmark text-white"></i>
+                    </div>
+                  </div>
+                  <div className="bg-light rounded-sm mt-12px d-flex overflow-hidden">
+                    <div className="flex-fill py-8px px-15px fw-500">
+                      Kem trị nám Bio Xtra
+                    </div>
+                    <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
+                      <i className="fa-regular fa-xmark text-white"></i>
+                    </div>
+                  </div>
+                  <div className="bg-light rounded-sm mt-12px d-flex overflow-hidden">
+                    <div className="flex-fill py-8px px-15px fw-500">
+                      Kem trị nám Bio Xtra
+                    </div>
+                    <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
+                      <i className="fa-regular fa-xmark text-white"></i>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div>
+              <div className="border-bottom p-18px">
                 <div className="text-uppercase d-flex justify-content-between align-items-center">
-                  <span className="fw-600">Lịch sử chăm sóc</span>
+                  <span className="fw-600 text-primary">
+                    Đặt lịch khách hàng
+                  </span>
+                  <button className="btn btn-xs btn-success">
+                    Đặt lịch mới
+                  </button>
+                </div>
+                <div>
+                  <div className="bg-light rounded-sm p-15px mt-12px">
+                    <div className="d-flex justify-content-between">
+                      <span className="font-number fw-500">
+                        15:30 18-11-2022
+                      </span>
+                      <span className="fw-600 text-success font-size-sm">
+                        Đã xác nhận
+                      </span>
+                    </div>
+                    <div className="mt-5px fw-500">
+                      Trị nám da bảo hành vĩnh viễn
+                    </div>
+                  </div>
+                  <div className="bg-light rounded-sm p-15px mt-12px">
+                    <div className="d-flex justify-content-between">
+                      <span className="font-number fw-500">
+                        15:30 18-11-2022
+                      </span>
+                      <span className="fw-600 text-success font-size-sm">
+                        Đã xác nhận
+                      </span>
+                    </div>
+                    <div className="mt-5px fw-500">
+                      Trị nám da bảo hành vĩnh viễn
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex-fill">
-              2
-            </div>
+              <div className="p-18px">
+                <div className="text-uppercase d-flex justify-content-between align-items-center">
+                  <span className="fw-600 text-primary">Lịch sử chăm sóc</span>
+                  <button className="btn btn-xs btn-success">Thêm mới</button>
+                </div>
+                <div>
+                  <div className="bg-light rounded-sm p-15px mt-12px">
+                    <div className="d-flex justify-content-between">
+                      <span className="font-number fw-500">
+                        15:30 18-11-2022
+                      </span>
+                      <span className="fw-500">Điện thoại</span>
+                    </div>
+                    <div className="mt-5px fw-300">
+                      English Cách sử dụng "key text" trong một câu ... In our
+                      undergraduate off-weeks we learned languages (ancient,
+                      modern and computer), read the key texts in our ...
+                    </div>
+                  </div>
+                  <div className="bg-light rounded-sm p-15px mt-12px">
+                    <div className="d-flex justify-content-between">
+                      <span className="font-number fw-500">
+                        15:30 18-11-2022
+                      </span>
+                      <span className="fw-500">Điện thoại</span>
+                    </div>
+                    <div className="mt-5px fw-300">
+                      English Cách sử dụng "key text" trong một câu ... In our
+                      undergraduate off-weeks we learned languages (ancient,
+                      modern and computer), read the key texts in our ...
+                    </div>
+                  </div>
+                  <div className="bg-light rounded-sm p-15px mt-12px">
+                    <div className="d-flex justify-content-between">
+                      <span className="font-number fw-500">
+                        15:30 18-11-2022
+                      </span>
+                      <span className="fw-500">Điện thoại</span>
+                    </div>
+                    <div className="mt-5px fw-300">
+                      English Cách sử dụng "key text" trong một câu ... In our
+                      undergraduate off-weeks we learned languages (ancient,
+                      modern and computer), read the key texts in our ...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </PerfectScrollbar>
+          </div>
+          <div className="flex-fill">
+            <TelesalesOption />
+          </div>
         </div>
       </div>
     </div>

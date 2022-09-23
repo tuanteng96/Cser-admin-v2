@@ -281,10 +281,9 @@ function TelesalesList(props) {
   )
 
   const handleEndReached = () => {
-    if (ListTelesales.length > PageTotal) {
-      return
+    if (ListTelesales.length < PageTotal) {
+      setFilters(prevState => ({ ...prevState, pi: prevState.pi + 1 }))
     }
-    setFilters(prevState => ({ ...prevState, pi: prevState.pi + 1 }))
   }
 
   const onFilter = values => {
@@ -305,7 +304,6 @@ function TelesalesList(props) {
         <div className="flex-grow-1">
           <ReactBaseTableInfinite
             rowKey="ID"
-            filters={filters}
             columns={columns}
             data={ListTelesales}
             loading={loading}

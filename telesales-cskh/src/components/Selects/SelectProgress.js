@@ -22,13 +22,15 @@ function SelectProgress({ onChange, value, isLoading, className, ...props }) {
     const { data } = await configApi.getConfigName('tagkh')
     if (data && data.data && data?.data.length > 0) {
       const result = JSON.parse(data.data[0].Value)
-      const newResult = result.map((item) => ({
+      const newResult = result.map(item => ({
         value: item.Title,
         label: item.Title,
-        options: item.Children && item.Children.map((o) => ({
+        options:
+          item.Children &&
+          item.Children.map(o => ({
             value: o.Title,
-            label: o.Title,
-        }))
+            label: o.Title
+          }))
       }))
       setOptions(newResult)
       setLoading(false)

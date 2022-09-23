@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import Table from 'react-base-table'
 import Text from 'react-texty'
 import 'react-texty/styles.css'
+import { AssetsHelpers } from 'src/helpers/AssetsHelpers'
 
 ReactBaseTableInfinite.propTypes = {
   columns: PropTypes.array,
@@ -10,12 +11,15 @@ ReactBaseTableInfinite.propTypes = {
   loading: PropTypes.bool
 }
 
+ReactBaseTableInfinite.defaultProps = {
+  PageCount: 0
+}
+
 function ReactBaseTableInfinite({
   columns,
   data,
   onPagesChange,
   loading,
-  filters,
   pageCount,
   rowKey,
   rowRenderer,
@@ -48,7 +52,6 @@ function ReactBaseTableInfinite({
       <Table
         ref={tableRef}
         {...props}
-        fixed
         rowKey={rowKey}
         width={width}
         height={height}
@@ -63,7 +66,24 @@ function ReactBaseTableInfinite({
             )}
           </>
         )}
-        emptyRenderer={() => !loading && 'Trống.'}
+        emptyRenderer={() =>
+          !loading && (
+            <div className="w-100 h-100 d-flex align-items-center justify-content-center">
+              <div>
+                <img
+                  className="w-100 max-w-300px"
+                  src={AssetsHelpers.toAbsoluteUrl(
+                    '/_assets/images/data-empty.png'
+                  )}
+                  alt="Không có dữ liệu"
+                />
+                <div className="text-center font-size-base mt-15px fw-300">
+                  Không có dữ liệu ...
+                </div>
+              </div>
+            </div>
+          )
+        }
         rowRenderer={rowRenderer}
         components={{ TableCell, TableHeaderCell }}
         ignoreFunctionInColumnCompare={false}

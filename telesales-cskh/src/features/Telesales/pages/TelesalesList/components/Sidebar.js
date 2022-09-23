@@ -6,9 +6,10 @@ import SelectProductService from 'src/components/Selects/SelectProductService'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import SelectStaffs from 'src/components/Selects/SelectStaffs'
 import { NumericFormat } from 'react-number-format'
+import clsx from 'clsx'
+import Skeleton from 'react-loading-skeleton'
 
 import vi from 'date-fns/locale/vi' // the locale you want
-import clsx from 'clsx'
 
 registerLocale('vi', vi) // register it with the name you want
 
@@ -69,7 +70,39 @@ function Sidebar({ filters, onSubmit, loading }) {
                     onBlur={handleBlur}
                   />
                 </div>
-                {ListType &&
+                {loadingType &&
+                  Array(2)
+                    .fill()
+                    .map((item, index) => (
+                      <div className="mb-15px form-group" key={index}>
+                        <label className="font-label text-muted">
+                          <Skeleton count={1} width={100} />
+                        </label>
+                        <div className="checkbox-list mt-8px">
+                          {Array(2)
+                            .fill()
+                            .map((x, idx) => (
+                              <label
+                                className="checkbox d-flex cursor-pointer"
+                                key={idx}
+                              >
+                                <input
+                                  type="checkbox"
+                                  name="filter.tele_process"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                                <span className="checkbox-icon"></span>
+                                <span className="fw-500 font-label">
+                                  <Skeleton count={1} width={100} />
+                                </span>
+                              </label>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                {!loadingType &&
+                  ListType &&
                   ListType.map((type, index) => (
                     <div className="mb-15px form-group" key={index}>
                       <label className="font-label text-muted">
