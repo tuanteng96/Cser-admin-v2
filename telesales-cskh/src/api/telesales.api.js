@@ -29,8 +29,14 @@ const telesalesApi = {
       `/services/preview.aspx?a=1&cmd=loadOrderService&MemberID=${MemberID}&IsMember=0&fromOrderAdd=0`
     )
   },
-  getListProductInDate: (data) => {
+  getListProductInDate: data => {
     return http.post('/api/v3/tele23@prods_indate', JSON.stringify(data))
-  }
+  },
+  addWishListMember: data => {
+    return http.post('/api/v3/tele23@member_wishlist', JSON.stringify(data))
+  },
+  getWishListMember: data => {
+    return http.post('/api/v3/tele23@member_wishlist_list', JSON.stringify(data))
+  },
 }
 export default telesalesApi

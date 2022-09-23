@@ -52,6 +52,7 @@ function ReactBaseTableInfinite({
       <Table
         ref={tableRef}
         {...props}
+        fixed
         rowKey={rowKey}
         width={width}
         height={height}

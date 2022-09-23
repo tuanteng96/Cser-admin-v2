@@ -10,6 +10,7 @@ import Skeleton from 'react-loading-skeleton'
 
 import moment from 'moment'
 import 'moment/locale/vi'
+import InterestedProducts from './InterestedProducts'
 
 moment.locale('vi')
 
@@ -255,40 +256,7 @@ function TelesalesDetail(props) {
               className="scroll h-100"
               style={{ position: 'relative' }}
             >
-              <div className="border-bottom p-18px">
-                <div className="text-uppercase d-flex justify-content-between align-items-center">
-                  <span className="fw-600 text-primary">
-                    SP khách hàng quan tâm
-                  </span>
-                  <button className="btn btn-xs btn-success">Thêm mới</button>
-                </div>
-                <div>
-                  <div className="bg-light rounded-sm mt-12px d-flex overflow-hidden">
-                    <div className="flex-fill py-8px px-15px fw-500">
-                      Kem trị nám Bio Xtra
-                    </div>
-                    <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
-                      <i className="fa-regular fa-xmark text-white"></i>
-                    </div>
-                  </div>
-                  <div className="bg-light rounded-sm mt-12px d-flex overflow-hidden">
-                    <div className="flex-fill py-8px px-15px fw-500">
-                      Kem trị nám Bio Xtra
-                    </div>
-                    <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
-                      <i className="fa-regular fa-xmark text-white"></i>
-                    </div>
-                  </div>
-                  <div className="bg-light rounded-sm mt-12px d-flex overflow-hidden">
-                    <div className="flex-fill py-8px px-15px fw-500">
-                      Kem trị nám Bio Xtra
-                    </div>
-                    <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
-                      <i className="fa-regular fa-xmark text-white"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <InterestedProducts />
               <div className="border-bottom p-18px">
                 <div className="text-uppercase d-flex justify-content-between align-items-center">
                   <span className="fw-600 text-primary">

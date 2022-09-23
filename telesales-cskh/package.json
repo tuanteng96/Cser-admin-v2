@@ -34,7 +34,9 @@
         "react-uuid": "^1.0.3",
         "redux": "^4.2.0",
         "redux-persist": "^6.0.0",
-        "web-vitals": "^2.1.4"
+        "sweetalert2": "^11.4.33",
+        "web-vitals": "^2.1.4",
+        "yup": "^0.32.11"
     },
     "resolutions": {
         "autoprefixer": "10.4.5"

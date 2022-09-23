@@ -16,6 +16,9 @@
       border-top-color: #fff !important;
     }
   }
+  &.bs-popover-bottom .popover-header::before {
+    border-bottom: 0;
+  }
   &.bs-popover-bottom {
     .popover-arrow {
       &:before {
@@ -23,7 +26,17 @@
       }
     }
   }
+  &.bs-popover-start {
+    .popover-arrow {
+      &:before {
+        border-left-color: #fff !important;
+      }
+    }
+  }
   &.popover-md {
-    max-width: 300px;
+    min-width: 300px;
+  }
+  &.popover-lg {
+    min-width: 380px;
   }
 }

@@ -13,7 +13,7 @@ function TelesalesOption(props) {
           }
           to="dich-vu"
         >
-          Dịch vụ hiện có
+          Dịch vụ
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -23,7 +23,7 @@ function TelesalesOption(props) {
           }
           to="san-pham"
         >
-          Sản phẩm gần hết
+          Sản phẩm
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -43,7 +43,7 @@ function TelesalesOption(props) {
           }
           to="lich-su-du-dung-dv"
         >
-          Lịch sử sử dụng dịch vụ
+          Lịch sử SD DV
         </NavLink>
       </div>
       <div className="flex-grow-1">
