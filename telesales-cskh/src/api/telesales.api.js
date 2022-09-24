@@ -36,7 +36,16 @@ const telesalesApi = {
     return http.post('/api/v3/tele23@member_wishlist', JSON.stringify(data))
   },
   getWishListMember: data => {
-    return http.post('/api/v3/tele23@member_wishlist_list', JSON.stringify(data))
+    return http.post(
+      '/api/v3/tele23@member_wishlist_list',
+      JSON.stringify(data)
+    )
   },
+  addCareHistory: data => {
+    return http.post('/api/v3/tele23@edit_tele', JSON.stringify(data))
+  },
+  getCareHistory: data => {
+    return http.post('/api/v3/tele23@list_tele', JSON.stringify(data))
+  }
 }
 export default telesalesApi

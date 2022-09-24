@@ -78,7 +78,7 @@ function TelesalesOptionBuying(props) {
         key: 'Title',
         title: 'Tên mặt hàng',
         dataKey: 'Title',
-        width: 250,
+        width: 350,
         sortable: false,
         className: 'flex-fill',
         headerClassName: 'flex-fill'

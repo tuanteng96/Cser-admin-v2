@@ -7,10 +7,12 @@ import NoteMember from './NoteMember'
 import ProgressList from './ProgressList'
 import TelesalesOption from '../TelesalesOption'
 import Skeleton from 'react-loading-skeleton'
+import InterestedProducts from './InterestedProducts'
+import CareHistory from './CareHistory'
+import uuid from 'react-uuid'
 
 import moment from 'moment'
 import 'moment/locale/vi'
-import InterestedProducts from './InterestedProducts'
 
 moment.locale('vi')
 
@@ -22,6 +24,7 @@ const perfectScrollbarOptions = {
 function TelesalesDetail(props) {
   let { MemberID } = useParams()
 
+  const [ListProds, setListProds] = useState([])
   const [MemberCurrent, setMemberCurrent] = useState(null)
   const [loadingMember, setLoadingMember] = useState(false)
 
@@ -40,6 +43,7 @@ function TelesalesDetail(props) {
         if (data.error) {
           navigate('/danh-sach')
         } else {
+          setListProds(() => data.prods.map(item => ({ ...item, Ids: uuid() })))
           setMemberCurrent(data.member)
           setLoadingMember(false)
         }
@@ -49,81 +53,6 @@ function TelesalesDetail(props) {
   //console.log(MemberCurrent)
   return (
     <div className="d-flex h-100 telesales-list">
-      {/* <div className="mb-15px">
-        <div className="container-fluid">
-          <div className="bg-white rounded-sm">
-            <div className="d-flex align-items-center px-15px py-15px">
-              <div className="flex-fill d-flex align-items-center">
-                <div
-                  className="w-40px h-40px border rounded-circle cursor-pointer position-relative"
-                  onClick={() => navigate('/danh-sach')}
-                >
-                  <i className="fa-regular fa-chevrons-left position-absolute left-12px top-14px"></i>
-                </div>
-                <div className="rounded-circle overflow-hidden w-60px shadow ml-12px">
-                  <img
-                    className="w-100"
-                    src="https://preview.keenthemes.com/metronic/theme/html/demo1/dist/assets/media/users/300_1.jpg"
-                    alt=""
-                  />
-                </div>
-                <div className="pl-15px">
-                  <div className="mb-2px">
-                    <div className="text-uppercase fw-600 font-size-lg">
-                      {MemberCurrent?.FullName} - {MemberCurrent?.MobilePhone}
-                    </div>
-                  </div>
-                  <div className="member-topay">
-                    <ul className="d-flex p-0 m-0 breadcrumb-solid">
-                      <li>
-                        Ví
-                        <span className="font-number pl-5px fw-600">
-                          {PriceHelper.formatVND(
-                            MemberCurrent?.Present?.nap_vi
-                          )}
-                        </span>
-                      </li>
-                      <li>
-                        Thẻ tiền
-                        <span className="font-number pl-5px fw-600">
-                          {PriceHelper.formatVND(
-                            MemberCurrent?.Present?.the_tien_kha_dung
-                          )}
-                        </span>
-                      </li>
-                      <li>
-                        Đã chi tiêu
-                        <span className="font-number pl-5px fw-600">
-                          {PriceHelper.formatVND(
-                            MemberCurrent?.Present?.da_chi_tieu
-                          )}
-                        </span>
-                      </li>
-                      <li>
-                        Công nợ
-                        <span className="font-number pl-5px fw-600">
-                          {PriceHelper.formatVND(MemberCurrent?.Present?.no)}
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <button className="w-45px h-45px rounded-circle btn btn-success shadow mx-4px p-0 position-relative">
-                  <img
-                    className="w-25px position-absolute top-10px left-8px"
-                    src={AssetsHelpers.toAbsoluteUrl(
-                      '/_assets/images/icon-call.png'
-                    )}
-                    alt=""
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
       <div className="telesales-list__sidebar bg-white">
         <div className="border-bottom px-18px py-15px text-uppercase fw-600 font-size-lg d-flex align-items-center">
           <div
@@ -295,57 +224,11 @@ function TelesalesDetail(props) {
                   </div>
                 </div>
               </div>
-              <div className="p-18px">
-                <div className="text-uppercase d-flex justify-content-between align-items-center">
-                  <span className="fw-600 text-primary">Lịch sử chăm sóc</span>
-                  <button className="btn btn-xs btn-success">Thêm mới</button>
-                </div>
-                <div>
-                  <div className="bg-light rounded-sm p-15px mt-12px">
-                    <div className="d-flex justify-content-between">
-                      <span className="font-number fw-500">
-                        15:30 18-11-2022
-                      </span>
-                      <span className="fw-500">Điện thoại</span>
-                    </div>
-                    <div className="mt-5px fw-300">
-                      English Cách sử dụng "key text" trong một câu ... In our
-                      undergraduate off-weeks we learned languages (ancient,
-                      modern and computer), read the key texts in our ...
-                    </div>
-                  </div>
-                  <div className="bg-light rounded-sm p-15px mt-12px">
-                    <div className="d-flex justify-content-between">
-                      <span className="font-number fw-500">
-                        15:30 18-11-2022
-                      </span>
-                      <span className="fw-500">Điện thoại</span>
-                    </div>
-                    <div className="mt-5px fw-300">
-                      English Cách sử dụng "key text" trong một câu ... In our
-                      undergraduate off-weeks we learned languages (ancient,
-                      modern and computer), read the key texts in our ...
-                    </div>
-                  </div>
-                  <div className="bg-light rounded-sm p-15px mt-12px">
-                    <div className="d-flex justify-content-between">
-                      <span className="font-number fw-500">
-                        15:30 18-11-2022
-                      </span>
-                      <span className="fw-500">Điện thoại</span>
-                    </div>
-                    <div className="mt-5px fw-300">
-                      English Cách sử dụng "key text" trong một câu ... In our
-                      undergraduate off-weeks we learned languages (ancient,
-                      modern and computer), read the key texts in our ...
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <CareHistory />
             </PerfectScrollbar>
           </div>
           <div className="flex-fill">
-            <TelesalesOption />
+            <TelesalesOption ListProds={ListProds} loading={loadingMember} />
           </div>
         </div>
       </div>

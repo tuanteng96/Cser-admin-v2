@@ -12,6 +12,13 @@
     z-index: 100;
   }
 }
+
 .BaseTable__overlay {
   z-index: 101;
+}
+
+.BaseTable__header {
+  &-row {
+    width: calc(100% - var(--width-scroll)) !important;
+  }
 }

@@ -144,7 +144,7 @@ function TelesalesList(props) {
           ? filters.filter.tele_user_id.values
           : '',
         tele_process: filters.filter.tele_process
-          ? filters.filter.tele_process.map(process => process.value).join(',')
+          ? filters.filter.tele_process.join(',')
           : '',
         wishlist: filters.filter.wishlist
           ? filters.filter.wishlist.map(wish => wish.value).join(',')

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { OverlayTrigger, Popover } from 'react-bootstrap'
-import SelectProduct from 'src/components/Selects/SelectProduct'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
@@ -10,39 +9,43 @@ import Text from 'react-texty'
 import Skeleton from 'react-loading-skeleton'
 import Swal from 'sweetalert2'
 
+import moment from 'moment'
+import 'moment/locale/vi'
+
+moment.locale('vi')
+
 const initialValues = {
-  add_wishlist: null
+  Content: ''
 }
 
 const AddWishListSchema = Yup.object().shape({
-  add_wishlist: Yup.array().required('Chọn sản phẩm')
+  Content: Yup.string().required('Nhập ghi chú')
 })
 
-function InterestedProducts(props) {
+function CareHistory(props) {
   let { MemberID } = useParams()
   const [loading, setLoading] = useState(false)
   const [List, setList] = useState([])
   const [btnLoading, setBtnLoading] = useState(false)
 
   useEffect(() => {
-    getWishListMember()
+    getCareHistoryList()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const getWishListMember = (isLoading = true, callback) => {
+  const getCareHistoryList = (isLoading = true, callback) => {
     isLoading && setLoading(true)
     const filters = {
       filter: {
-        memberid: MemberID,
-        key: ''
+        MemberID: MemberID
       },
       pi: 1,
       ps: 1000
     }
     telesalesApi
-      .getWishListMember(filters)
+      .getCareHistory(filters)
       .then(({ data }) => {
-        setList(data.items)
+        setList(data.data)
         setLoading(false)
         callback && callback()
       })
@@ -55,19 +58,16 @@ function InterestedProducts(props) {
       items: [
         {
           MemberID: MemberID,
-          reset: false,
-          add_wishlist: values.add_wishlist.map(item => ({
-            prodid: item.value,
-            desc: item.title
-          })),
-          delete_wishlist: []
+          Content: values.Content,
+          Type: 'PROCESS'
         }
-      ]
+      ],
+      delete: []
     }
     telesalesApi
-      .addWishListMember(newData)
+      .addCareHistory(newData)
       .then(response => {
-        getWishListMember(false, () => {
+        getCareHistoryList(false, () => {
           setBtnLoading(false)
           setLoading(false)
           document.body.click()
@@ -78,18 +78,11 @@ function InterestedProducts(props) {
 
   const onDelete = item => {
     const newData = {
-      items: [
-        {
-          MemberID: MemberID,
-          reset: false, // true => xóa trắng insert lại
-          add_wishlist: [],
-          delete_wishlist: [item.ID] //id san_pham
-        }
-      ]
+      delete: [item.ID]
     }
     Swal.fire({
       title: 'Thực hiện xóa ?',
-      html: `Bạn đang thực hiện xóa sản phẩm <span class="text-danger">${item.Title}</span>.`,
+      html: `Bạn đang thực hiện xóa lịch sử này không.`,
       showCancelButton: true,
       confirmButtonText: 'Xóa ngay',
       cancelButtonText: 'Hủy',
@@ -100,9 +93,9 @@ function InterestedProducts(props) {
       preConfirm: () =>
         new Promise((resolve, reject) => {
           telesalesApi
-            .addWishListMember(newData)
+            .addCareHistory(newData)
             .then(response => {
-              getWishListMember(false, () => {
+              getCareHistoryList(false, () => {
                 resolve()
               })
             })
@@ -113,9 +106,9 @@ function InterestedProducts(props) {
   }
 
   return (
-    <div className="border-bottom p-18px">
+    <div className="p-18px">
       <div className="text-uppercase d-flex justify-content-between align-items-center">
-        <span className="fw-600 text-primary">SP khách hàng quan tâm</span>
+        <span className="fw-600 text-primary">Lịch sử chăm sóc</span>
         <OverlayTrigger
           rootClose
           trigger="click"
@@ -130,31 +123,28 @@ function InterestedProducts(props) {
                 enableReinitialize={true}
               >
                 {formikProps => {
-                  const { values, touched, errors, handleBlur, setFieldValue } =
+                  const { values, touched, errors, handleBlur, handleChange } =
                     formikProps
                   return (
                     <Form>
                       <Popover.Header className="font-weight-bold text-uppercase d-flex justify-content-between py-3">
-                        Thêm mới sản phẩm quan tâm
+                        Thêm mới lịch sử
                       </Popover.Header>
                       <Popover.Body>
                         <div className="form-group">
-                          <label>Sản phẩm</label>
-                          <SelectProduct
-                            isMulti
-                            isClearable
-                            className={`select-control ${
-                              errors?.add_wishlist && touched?.add_wishlist
+                          <label>Ghi chú</label>
+                          <textarea
+                            name="Content"
+                            className={`form-control ${
+                              errors?.Content && touched?.Content
                                 ? 'is-invalid solid-invalid'
                                 : ''
                             }`}
-                            name="add_wishlist"
-                            value={values.add_wishlist}
-                            onChange={option => {
-                              setFieldValue('add_wishlist', option, false)
-                            }}
+                            rows="5"
+                            value={values.Content}
+                            onChange={handleChange}
                             onBlur={handleBlur}
-                          />
+                          ></textarea>
                         </div>
                       </Popover.Body>
                       <div className="font-weight-bold d-flex justify-content-between py-10px px-3 border-top">
@@ -184,15 +174,17 @@ function InterestedProducts(props) {
           Array(1)
             .fill()
             .map((item, index) => (
-              <div
-                className="bg-light rounded-sm mt-12px d-flex overflow-hidden"
-                key={index}
-              >
-                <div className="flex-fill py-8px px-15px fw-500">
-                  <Skeleton count={1} width={150} height={18} />
+              <div className="bg-light rounded-sm p-15px mt-12px" key={index}>
+                <div className="d-flex justify-content-between">
+                  <span className="font-number fw-500">
+                    <Skeleton count={1} width={130} height={15} />
+                  </span>
+                  <span className="fw-500">
+                    <Skeleton count={1} width={80} height={15} />
+                  </span>
                 </div>
-                <div className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer">
-                  <i className="fa-regular fa-xmark text-white"></i>
+                <div className="mt-5px fw-300">
+                  <Skeleton count={3} height={15} />
                 </div>
               </div>
             ))}
@@ -200,26 +192,23 @@ function InterestedProducts(props) {
           <>
             {List && List.length > 0 ? (
               List.map((item, index) => (
-                <div
-                  className="bg-light rounded-sm mt-12px d-flex overflow-hidden"
-                  key={index}
-                >
-                  <div
-                    className="flex-fill py-8px px-15px fw-500"
-                    style={{ width: 'calc(100% - 35px)' }}
-                  >
-                    <Text tooltipMaxWidth={250}>{item.Title}</Text>
+                <div className="bg-light rounded-sm p-15px mt-12px" key={index}>
+                  <div className="d-flex justify-content-between">
+                    <span className="font-number fw-500">
+                      {moment(item.CreateDate).format('HH:mm DD-MM-YYYY')}
+                    </span>
+                    <span
+                      className="fw-500 text-danger cursor-pointer"
+                      onClick={() => onDelete(item)}
+                    >
+                      Xóa
+                    </span>
                   </div>
-                  <div
-                    className="w-35px bg-danger d-flex align-items-center justify-content-center cursor-pointer"
-                    onClick={() => onDelete(item)}
-                  >
-                    <i className="fa-regular fa-xmark text-white"></i>
-                  </div>
+                  <div className="mt-5px fw-300">{item.Content}</div>
                 </div>
               ))
             ) : (
-              <div className="mt-10px">Không có sản phẩm</div>
+              <div className="mt-10px">Không có lịch sử</div>
             )}
           </>
         )}
@@ -228,4 +217,4 @@ function InterestedProducts(props) {
   )
 }
 
-export default InterestedProducts
+export default CareHistory
