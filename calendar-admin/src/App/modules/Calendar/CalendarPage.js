@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -16,9 +16,11 @@ import CalendarCrud from "./_redux/CalendarCrud";
 import { useWindowSize } from "../../../hooks/useWindowSize";
 import _ from "lodash";
 import CalendarStaff from "./CalendarStaff";
+import { AppContext } from "../../App";
 
 import moment from "moment";
 import "moment/locale/vi";
+
 moment.locale("vi");
 
 var todayDate = moment().startOf("day");
@@ -112,7 +114,8 @@ function CalendarPage(props) {
   );
   const [elmHeight, setElmHeight] = useState(0);
   const calendarRef = useRef("");
-  
+  const { isTelesales } = useContext(AppContext);
+
   //Get Staff Full
   useEffect(() => {
     async function getStaffFull() {
@@ -132,7 +135,6 @@ function CalendarPage(props) {
   }, []);
 
   useEffect(() => {
-    
     if (filters && filters.From) {
       getBooking();
     }
@@ -443,7 +445,7 @@ function CalendarPage(props) {
 
     CalendarCrud.getBooking(newFilters)
       .then(({ data }) => {
-        setStaffOffline(data?.dayOffs ?? [])
+        setStaffOffline(data?.dayOffs ?? []);
         const dataBooks =
           data.books && Array.isArray(data.books)
             ? data.books
@@ -580,6 +582,7 @@ function CalendarPage(props) {
                 dayGridMonth: {
                   dayMaxEvents: 2,
                   dateClick: ({ date }) => {
+                    if (isTelesales) return;
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
@@ -618,6 +621,7 @@ function CalendarPage(props) {
                   now: moment(new Date()).format("YYYY-MM-DD HH:mm"),
                   scrollTime: moment(new Date()).format("HH:mm"),
                   dateClick: ({ date }) => {
+                    if (isTelesales) return;
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
@@ -655,6 +659,7 @@ function CalendarPage(props) {
                   scrollTime: moment(new Date()).format("HH:mm"),
                   slotMinWidth: "50",
                   dateClick: ({ date }) => {
+                    if (isTelesales) return;
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
@@ -684,6 +689,7 @@ function CalendarPage(props) {
                   resourceAreaWidth: width > 767 ? "180px" : "70px",
                   slotMinWidth: width > 767 ? "60" : "35",
                   dateClick: ({ date }) => {
+                    if (isTelesales) return;
                     setInitialValue({ ...initialValue, BookDate: date });
                     onOpenModal();
                   },
@@ -731,6 +737,7 @@ function CalendarPage(props) {
                 return <>Xem thêm + {num}</>;
               }}
               eventClick={({ event, el }) => {
+                if (isTelesales) return;
                 const { _def } = event;
                 if (_def.extendedProps.os) {
                   window?.top?.BANGLICH_BUOI &&
@@ -871,6 +878,7 @@ function CalendarPage(props) {
                 resources={StaffFull}
                 events={Events}
                 dateClick={({ BookDate, UserServiceIDs }) => {
+                  if (isTelesales) return;
                   setInitialValue({
                     ...initialValue,
                     BookDate,

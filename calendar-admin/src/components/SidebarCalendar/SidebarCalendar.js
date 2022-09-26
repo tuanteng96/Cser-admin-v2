@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { components } from "react-select";
 // import DatePicker from "react-datepicker";
@@ -12,6 +12,7 @@ import AdvancedList from "./AdvancedList";
 import { Dropdown } from "react-bootstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { AsyncPaginate } from "react-select-async-paginate";
+import { AppContext } from "../../App/App";
 
 SidebarCalendar.propTypes = {
   onOpenModal: PropTypes.func,
@@ -110,6 +111,7 @@ function SidebarCalendar({
   const [initialValues, setInitialValues] = useState(initialDefault);
   const { CrStockID } = useSelector((state) => state.Auth);
   const { width } = useWindowSize();
+  const { isTelesales } = useContext(AppContext);
 
   useEffect(() => {
     if (filters) {
@@ -157,36 +159,32 @@ function SidebarCalendar({
     <div className="ezs-calendar__sidebar">
       <div className="header-sidebar p-15px">
         <div className="d-flex justify-content-between align-items-center">
-          <Dropdown>
-            <Dropdown.Toggle className="btn btn-primary btn-sm h-42px btn-shadow px-15px">
-              {width > 1200 ? "Tạo mới" : <i className="fal fa-plus"></i>}
-            </Dropdown.Toggle>
+          {!isTelesales && (
+            <Dropdown>
+              <Dropdown.Toggle className="btn btn-primary btn-sm h-42px btn-shadow px-15px">
+                {width > 1200 ? "Tạo mới" : <i className="fal fa-plus"></i>}
+              </Dropdown.Toggle>
 
-            <Dropdown.Menu variant="dark">
-              <Dropdown.Item
-                href="#"
-                onClick={() => {
-                  window.top?.MemberEdit &&
-                    window.top.MemberEdit({
-                      Member: {
-                        ID: 0,
-                      },
-                    });
-                }}
-              >
-                Khách hàng mới
-              </Dropdown.Item>
-              <Dropdown.Item href="#" onClick={onOpenModal}>
-                Đặt lịch mới
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-          {/* <button
-          className="btn btn-primary btn-sm h-42px mb-3 mb-md-24px"
-          onClick={onOpenModal}
-        >
-          Tạo đặt lịch mới
-        </button> */}
+              <Dropdown.Menu variant="dark">
+                <Dropdown.Item
+                  href="#"
+                  onClick={() => {
+                    window.top?.MemberEdit &&
+                      window.top.MemberEdit({
+                        Member: {
+                          ID: 0,
+                        },
+                      });
+                  }}
+                >
+                  Khách hàng mới
+                </Dropdown.Item>
+                <Dropdown.Item href="#" onClick={onOpenModal}>
+                  Đặt lịch mới
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )}
           <div className="d-xl-none align-items-center font-size-lg font-weight-bolder">
             {headerTitle}
           </div>

@@ -6,13 +6,20 @@ import BookingPage from "./modules/Booking/BookingPage";
 import CalendarPage from "./modules/Calendar/CalendarPage";
 import CheckInPage from "./modules/Checkin/CheckInPage";
 
+export const AppContext = React.createContext();
+
+const getParamsURL = (name) => {
+  const URL_STRING = window.location.href;
+  var URL_NEW = new URL(URL_STRING);
+  return URL_NEW.searchParams.get(name);
+};
+
 function App({ store, basename }) {
   const [NameCurrent, setNameCurrent] = useState("");
+  const [isTelesales, setIsTelesales] = useState(false);
   useEffect(() => {
-    const URL_STRING = window.location.href;
-    var URL_NEW = new URL(URL_STRING);
-    var IsPop = URL_NEW.searchParams.get("ispop");
-    var IsCheckin = URL_NEW.searchParams.get("ischeckin");
+    var IsPop = getParamsURL("ispop");
+    var IsCheckin = getParamsURL("ischeckin");
     if (IsPop) {
       setNameCurrent("POPUP");
     }
@@ -23,24 +30,36 @@ function App({ store, basename }) {
         window.top.SideBarCheckInReady();
     }
   }, []);
+
+  useEffect(() => {
+    const telesales = getParamsURL("isTelesales");
+    setIsTelesales(telesales || false);
+  }, []);
+
   return (
     <Provider store={store}>
-      {!NameCurrent && (
-        <AuthInit isConfig={true}>
-          <CalendarPage />
-        </AuthInit>
-      )}
-      {NameCurrent === "POPUP" && (
-        <AuthInit isConfig={false}>
-          <BookingPage />
-        </AuthInit>
-      )}
-      {NameCurrent === "CHECKIN" && (
-        <AuthInit isConfig={false}>
-          <CheckInPage />
-        </AuthInit>
-      )}
-      <ToastContainer />
+      <AppContext.Provider
+        value={{
+          isTelesales,
+        }}
+      >
+        {!NameCurrent && (
+          <AuthInit isConfig={true}>
+            <CalendarPage />
+          </AuthInit>
+        )}
+        {NameCurrent === "POPUP" && (
+          <AuthInit isConfig={false}>
+            <BookingPage />
+          </AuthInit>
+        )}
+        {NameCurrent === "CHECKIN" && (
+          <AuthInit isConfig={false}>
+            <CheckInPage />
+          </AuthInit>
+        )}
+        <ToastContainer />
+      </AppContext.Provider>
     </Provider>
   );
 }
