@@ -2,6 +2,7 @@
 //
 // Variables should follow the `$component-state-property-size` formula for
 // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+$min-contrast-ratio: 1;
 // Color system
 // scss-docs-start gray-color-variables
 $white: #fff !default;
@@ -22,7 +23,7 @@ $grays: ( '100': $gray-100, '200': $gray-200, '300': $gray-300, '400': $gray-400
 // scss-docs-end gray-colors-map
 // fusv-enable
 // scss-docs-start color-variables
-$blue: #0d6efd !default;
+$blue: #0d6efd;
 $indigo: #6610f2 !default;
 $purple: #6f42c1 !default;
 $pink: #d63384 !default;
@@ -271,7 +272,7 @@ $container-padding-x: $grid-gutter-width * 0.5 !default;
 // scss-docs-start border-variables
 $border-width: 1px !default;
 $border-widths: ( 1: 1px, 2: 2px, 3: 3px, 4: 4px, 5: 5px) !default;
-$border-color: $gray-300 !default;
+$border-color: #ebedf3 !default;
 // scss-docs-end border-variables
 // scss-docs-start border-radius-variables
 $border-radius: 0.25rem !default;
@@ -336,8 +337,11 @@ $font-family-code: var(--#{$variable-prefix}font-monospace) !default;
 // $font-size-base affects the font size of the body text
 $font-size-root: null !default;
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
+$font-size-xs: $font-size-base * 0.675;
 $font-size-sm: $font-size-base * 0.875 !default;
-$font-size-lg: $font-size-base * 1.25 !default;
+$font-size-md: $font-size-base * 1.15 !default;
+$font-size-lg: $font-size-base * 1.35 !default;
+$font-size-xl: $font-size-base * 2 !default;
 $font-weight-lighter: lighter !default;
 $font-weight-light: 300 !default;
 $font-weight-normal: 400 !default;

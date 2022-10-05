@@ -5,6 +5,7 @@
   border-radius: 0.42rem;
   -webkit-box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 15%);
   box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 15%);
+  font-size: 14px;
   &-header {
     font-size: 1rem;
     font-weight: 500;
@@ -16,6 +17,9 @@
       border-top-color: #fff !important;
     }
   }
+  &.bs-popover-bottom .popover-header::before {
+    border-bottom: 0;
+  }
   &.bs-popover-bottom {
     .popover-arrow {
       &:before {
@@ -23,7 +27,18 @@
       }
     }
   }
+  &.bs-popover-start {
+    .popover-arrow {
+      &:before {
+        border-left-color: #fff !important;
+        display: none;
+      }
+    }
+  }
   &.popover-md {
-    max-width: 300px;
+    min-width: 300px;
+  }
+  &.popover-lg {
+    min-width: 380px;
   }
 }

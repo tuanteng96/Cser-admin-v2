@@ -1,0 +1,104 @@
+    @import '../init';
+    .location {
+        &-item {
+            position: relative;
+            &__title {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                box-shadow: 0px 10px 30px 0px rgb(82 63 105 / 8%);
+                padding: 12px 15px;
+                font-weight: 600;
+                border: 1px solid #EBEDF3;
+                border-radius: 4px;
+                color: #222222;
+                transition: all .2s ease;
+                &:hover {
+                    background-color: $primary;
+                }
+                i {
+                    position: absolute;
+                    right: 15px;
+                    top: 13px;
+                    font-size: 20px;
+                    color: #B5B5C3;
+                }
+            }
+            input {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                &:checked~div.location-item__title {
+                    background-color: $primary;
+                    color: #fff;
+                    i {
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+    
+    .date-time {
+        &-navlink {
+            background: #edf2f7;
+            border: 1px solid #edf2f7;
+            color: #718096;
+            border-radius: 2px;
+            &.active {
+                background: #fff;
+                border: 1px solid $primary;
+                color: $primary;
+            }
+        }
+        &-radio {
+            input {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                opacity: 0;
+            }
+            .time {
+                font-size: 13px;
+                cursor: pointer;
+                &.active {
+                    border: 1px solid $primary !important;
+                    background: $primary;
+                    color: $white;
+                }
+                &.disabled {
+                    cursor: no-drop;
+                    pointer-events: none;
+                    background: $gray-300;
+                }
+            }
+        }
+    }
+    
+    .tab-book {
+        &__content {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            background: #f3f6f9;
+            transition: transform 0.25s;
+            transition-timing-function: ease-in-out;
+            opacity: 1 !important;
+        }
+        .tab-booking {
+            transform: translateX(-100%);
+            &.active {
+                transform: translateX(0%);
+            }
+        }
+        .tab-confirm {
+            transform: translateX(100%);
+            &.active {
+                transform: translateX(0%);
+            }
+        }
+    }

@@ -1,15 +1,42 @@
-import React from 'react'
-import { Button } from 'react-bootstrap'
+import React, { useState } from 'react'
+import { Tab } from 'react-bootstrap'
+import Booking from './Booking'
+import '../../_assets/sass/pages/_home.scss'
+import Confirm from './Confirm'
 
 export default function Home() {
+  const [key, setKey] = useState('booking')
+  const [valueBooking, setValuesBooking] = useState(null)
+
+  const onSubmitBooking = values => {
+    setValuesBooking(values)
+    nextStep()
+  }
+
+  const nextStep = () => {
+    setKey('confirm')
+  }
+
+  const prevStep = () => {
+    setKey('booking')
+  }
+
   return (
-    <div className="h-100">
-      <div className="border-bottom p-15px text-uppercase fw-700 font-size-lg bg-white">
-        Đặt lịch dịch vụ
-      </div>
-      <div className='steps'>
-        
-      </div>
+    <div className="h-100 overflow-hidden position-relative tab-book">
+      <Tab.Container className="h-100" activeKey={key}>
+        <Tab.Pane
+          className="h-100 tab-book__content tab-booking"
+          eventKey="booking"
+        >
+          <Booking onSubmit={onSubmitBooking} />
+        </Tab.Pane>
+        <Tab.Pane
+          className="h-100 tab-book__content tab-confirm"
+          eventKey="confirm"
+        >
+          <Confirm prevStep={prevStep} />
+        </Tab.Pane>
+      </Tab.Container>
     </div>
   )
 }
