@@ -57,6 +57,10 @@
   }
 }
 
+.bg-ezs {
+  background-color: $ezs !important;
+}
+
 // Gray background colors
 @each $color, $value in $grays {
   .bg-gray-#{$color} {

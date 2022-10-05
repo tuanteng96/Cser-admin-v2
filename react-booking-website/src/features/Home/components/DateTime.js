@@ -122,7 +122,7 @@ function DateTime({ formikProps }) {
                           placeholderText="Chọn ngày khác"
                           className={clsx(
                             'form-control',
-                            DateChoose && 'border-primary text-primary'
+                            DateChoose && 'border-ezs text-ezs'
                           )}
                           dateFormat="dd/MM/yyyy"
                           //isClearable={DateChoose}
@@ -156,7 +156,7 @@ function DateTime({ formikProps }) {
             <span className="fw-500 pl-8px">Còn chỗ</span>
           </div>
           <div className="d-flex align-items-center">
-            <div className="box w-45px h-25px bg-primary rounded-sm border-primary border"></div>
+            <div className="box w-45px h-25px bg-ezs rounded-sm border-ezs border"></div>
             <span className="fw-500 pl-8px">Đang chọn</span>
           </div>
         </div>

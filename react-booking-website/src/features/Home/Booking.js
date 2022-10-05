@@ -4,9 +4,15 @@ import ListStocks from './components/ListStocks'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import DateTime from './components/DateTime'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 Booking.propTypes = {
   onSubmit: PropTypes.func
+}
+
+const perfectScrollbarOptions = {
+  wheelSpeed: 2,
+  wheelPropagation: false
 }
 
 const initialValues = {
@@ -35,23 +41,26 @@ function Booking({ onSubmit }) {
     >
       {formikProps => {
         // errors, touched, handleChange, handleBlur
-        {
-          /* const { values, errors, setFieldValue, handleChange, handleBlur } =
-          formikProps */
-        }
+        // {
+        //   const { values, errors, setFieldValue, handleChange, handleBlur } =
+        //   formikProps
+        // }
         return (
           <Form className="d-flex flex-column h-100">
-            <div className="border-bottom p-15px text-uppercase fw-700 font-size-lg bg-white text-center">
+            <div className="border-bottom p-15px text-uppercase fw-700 font-size-md bg-white text-center">
               Đặt lịch dịch vụ
             </div>
-            <div className="flex-grow-1">
+            <PerfectScrollbar
+              options={perfectScrollbarOptions}
+              className="flex-grow-1 scroll"
+            >
               <ListStocks formikProps={formikProps} />
               <DateTime formikProps={formikProps} />
-            </div>
+            </PerfectScrollbar>
             <div>
               <button
                 type="submit"
-                className="btn btn-primary w-100 rounded-0 text-uppercase h-42px"
+                className="btn btn-ezs w-100 rounded-0 text-uppercase h-42px fw-500"
               >
                 Chọn dịch vụ
               </button>

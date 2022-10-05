@@ -6,11 +6,18 @@ import Confirm from './Confirm'
 
 export default function Home() {
   const [key, setKey] = useState('booking')
-  const [valueBooking, setValuesBooking] = useState(null)
+  const [valuesBooking, setValuesBooking] = useState(null)
 
   const onSubmitBooking = values => {
     setValuesBooking(values)
     nextStep()
+  }
+
+  const onSubmitSelected = values => {
+    setValuesBooking(prevState => ({
+      ...prevState,
+      RootIdS: values.RootIdS
+    }))
   }
 
   const nextStep = () => {
@@ -34,7 +41,11 @@ export default function Home() {
           className="h-100 tab-book__content tab-confirm"
           eventKey="confirm"
         >
-          <Confirm prevStep={prevStep} />
+          <Confirm
+            prevStep={prevStep}
+            valuesBooking={valuesBooking}
+            onSubmitSelected={onSubmitSelected}
+          />
         </Tab.Pane>
       </Tab.Container>
     </div>
