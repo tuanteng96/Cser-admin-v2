@@ -3,21 +3,15 @@ import PropTypes from 'prop-types'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import bookingApi from 'src/api/booking.api'
 import clsx from 'clsx'
-import { Form, Formik, Field } from 'formik'
+import { Field } from 'formik'
+import { Placeholder } from 'react-bootstrap'
 
 Confirm.propTypes = {
   prevStep: PropTypes.func
 }
 
-const AutoSubmit = ({ values, submitForm }) => {
-  useEffect(() => {
-    submitForm()
-  }, [values, submitForm])
-
-  return null
-}
-
-function Confirm({ prevStep, valuesBooking, onSubmitSelected }) {
+function Confirm({ prevStep, formikProps, onSubmit, loadingBtn }) {
+  const { values } = formikProps
   const [ListServices, setListServices] = useState([])
   const [loading, setLoading] = useState(false)
   const [noLoading, setNoLoading] = useState(false)
@@ -29,9 +23,8 @@ function Confirm({ prevStep, valuesBooking, onSubmitSelected }) {
     Ps: 8,
     Pi: 1,
     Key: '',
-    StockID: valuesBooking?.StockID || ''
+    StockID: values?.StockID || ''
   })
-  const [initialValues, setInitialValues] = useState({ RootIdS: [] })
 
   const typingTimeoutRef = useRef(null)
 
@@ -128,75 +121,79 @@ function Confirm({ prevStep, valuesBooking, onSubmitSelected }) {
           scrollThreshold={1}
           scrollableTarget="scrollableDiv"
         >
-          {loading && 'Đang tải ...'}
+          {loading && (
+            <>
+              {Array(5)
+                .fill()
+                .map((item, index) => (
+                  <div className="position-relative service-box" key={index}>
+                    <div className="item-service">
+                      <div className="item-service__title fw-600">
+                        <Placeholder animation="glow">
+                          <Placeholder xs={8} />
+                        </Placeholder>
+                        {/* {item.Title} */}
+                      </div>
+                      <div className="item-service__desc text-muted">
+                        <Placeholder animation="glow">
+                          <Placeholder xs={8} />
+                          <Placeholder xs={4} />
+                        </Placeholder>
+                      </div>
+                      <i className="fa-regular fa-circle-check"></i>
+                    </div>
+                  </div>
+                ))}
+            </>
+          )}
           {!loading && (
             <>
               {ListServices && ListServices.length > 0 ? (
-                <Formik
-                  initialValues={initialValues}
-                  onSubmit={onSubmitSelected}
-                  enableReinitialize={true}
-                >
-                  {formikProps => {
-                    // errors, touched, handleChange, handleBlur
-                    const { submitForm, values } = formikProps
-                    return (
-                      <Form>
-                        {ListServices.map((item, index) => (
-                          <div
-                            className="position-relative service-box"
-                            key={index}
-                          >
-                            <Field
-                              type="checkbox"
-                              name="RootIdS"
-                              value={item.ID.toString()}
-                            />
-                            <div
-                              className={clsx(
-                                'item-service',
-                                ServiceHOT(item) &&
-                                  !TreatmentCard(item) &&
-                                  'deal-hot'
-                              )}
-                            >
-                              <div className="item-service__title fw-600">
-                                {item.Title}
-                                <label className="badge badge-danger ml-5px">
-                                  HOT
-                                </label>
-                              </div>
-                              <div className="font-size-xs text-muted">
-                                {item.ProdItems &&
-                                  item.ProdItems.map(prod => prod.Title).join(
-                                    ', '
-                                  )}
-                              </div>
-                              {TreatmentCard(item) && (
-                                <div className="item-desc item-treat">
-                                  <i className="las la-tag"></i>{' '}
-                                  {item.OsBH > 0
-                                    ? 'Đang có thẻ bảo hành'
-                                    : 'Đang có thẻ liệu trình'}
-                                </div>
-                              )}
-                              {item.SaleDecs && (
-                                <div
-                                  className="item-service__desc text-muted"
-                                  dangerouslySetInnerHTML={{
-                                    __html: item.SaleDecs
-                                  }}
-                                ></div>
-                              )}
-                              <i className="fa-regular fa-circle-check"></i>
-                            </div>
+                <>
+                  {ListServices.map((item, index) => (
+                    <div className="position-relative service-box" key={index}>
+                      <Field
+                        type="checkbox"
+                        name="RootIdS"
+                        value={item.ID.toString()}
+                      />
+                      <div
+                        className={clsx(
+                          'item-service',
+                          ServiceHOT(item) && !TreatmentCard(item) && 'deal-hot'
+                        )}
+                      >
+                        <div className="item-service__title fw-600">
+                          {item.Title}
+                          <label className="badge badge-danger ml-5px">
+                            HOT
+                          </label>
+                        </div>
+                        <div className="font-size-xs text-muted">
+                          {item.ProdItems &&
+                            item.ProdItems.map(prod => prod.Title).join(', ')}
+                        </div>
+                        {TreatmentCard(item) && (
+                          <div className="item-desc item-treat">
+                            <i className="las la-tag"></i>{' '}
+                            {item.OsBH > 0
+                              ? 'Đang có thẻ bảo hành'
+                              : 'Đang có thẻ liệu trình'}
                           </div>
-                        ))}
-                        <AutoSubmit values={values} submitForm={submitForm} />
-                      </Form>
-                    )
-                  }}
-                </Formik>
+                        )}
+                        {item.SaleDecs && (
+                          <div
+                            className="item-service__desc text-muted"
+                            dangerouslySetInnerHTML={{
+                              __html: item.SaleDecs
+                            }}
+                          ></div>
+                        )}
+                        <i className="fa-regular fa-circle-check"></i>
+                      </div>
+                    </div>
+                  ))}
+                </>
               ) : (
                 <div>Chưa có dịch vụ</div>
               )}
@@ -207,10 +204,10 @@ function Confirm({ prevStep, valuesBooking, onSubmitSelected }) {
       <div className="pt-15px bg-white">
         <button
           type="submit"
-          className="btn btn-ezs w-100 rounded-0 text-uppercase h-42px fw-500"
-          disabled={
-            !valuesBooking?.RootIdS || valuesBooking?.RootIdS?.length === 0
-          }
+          className={clsx(
+            'btn btn-ezs w-100 rounded-0 text-uppercase h-42px fw-500',
+            loadingBtn && 'spinner spinner-white spinner-right'
+          )}
         >
           Đặt lịch ngay
         </button>

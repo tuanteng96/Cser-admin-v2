@@ -8,6 +8,14 @@ const bookingApi = {
     return http.get(
       `/api/v3/mbook?cmd=getroot&memberid=${MemberID}&ps=${Ps}&pi=${Pi}&key=${Key}&stockid=${StockID}`
     )
+  },
+  getListStaff: stockid => {
+    return http.get(
+      `/api/gl/select2?cmd=user&includeRoles=1&includeSource=1&crstockid=${stockid}&roles=DV`
+    )
+  },
+  postBooking: data => {
+    return http.post(`/api/v3/mbook?cmd=booking`, JSON.stringify(data))
   }
 }
 

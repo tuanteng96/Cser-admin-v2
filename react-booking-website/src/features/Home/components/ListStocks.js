@@ -13,7 +13,13 @@ function ListStocks({ formikProps }) {
   const [loading, setLoading] = useState(false)
   const [ListStocks, setListStocks] = useState([])
 
-  const { touched, errors } = formikProps
+  const { touched, errors, setFieldValue, values } = formikProps
+
+  useEffect(() => {
+    setFieldValue('UserServiceIDs', '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values.StockID])
+
   useEffect(() => {
     getListStock()
   }, [])
