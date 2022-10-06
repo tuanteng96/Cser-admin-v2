@@ -121,7 +121,7 @@ function DateTime({ formikProps }) {
                           selected={DateChoose}
                           placeholderText="Chọn ngày khác"
                           className={clsx(
-                            'form-control',
+                            'form-control min-h-38px min-h-md-auto',
                             DateChoose && 'border-ezs text-ezs'
                           )}
                           dateFormat="dd/MM/yyyy"
@@ -149,15 +149,15 @@ function DateTime({ formikProps }) {
         <div className="d-flex justify-content-between mb-15px">
           <div className="d-flex align-items-center">
             <div className="box w-45px h-25px bg-gray-300 rounded-sm border"></div>
-            <span className="fw-500 pl-8px">Hết chỗ</span>
+            <span className="fw-500 pl-8px note-text">Hết chỗ</span>
           </div>
           <div className="d-flex align-items-center">
             <div className="box w-45px h-25px bg-white rounded-sm border"></div>
-            <span className="fw-500 pl-8px">Còn chỗ</span>
+            <span className="fw-500 pl-8px note-text">Còn chỗ</span>
           </div>
           <div className="d-flex align-items-center">
             <div className="box w-45px h-25px bg-ezs rounded-sm border-ezs border"></div>
-            <span className="fw-500 pl-8px">Đang chọn</span>
+            <span className="fw-500 pl-8px note-text">Đang chọn</span>
           </div>
         </div>
         <Tab.Content>

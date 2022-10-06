@@ -13,7 +13,7 @@ moment.locale('vi')
 
 const initialValue = {
   AtHome: false,
-  MemberID: window.top?.Member?.ID || 0,
+  MemberID: window.top?.Member?.ID || '',
   RootIdS: '',
   BookDate: '',
   Desc: '',
@@ -57,14 +57,8 @@ export default function Home() {
       .then(response => {
         setLoadingBtn(false)
         resetForm()
-        window.top?.Swal &&
-          window.top?.Swal?.fire({
-            position: 'top-end',
-            icon: 'success',
-            title: 'Đặt lịch thành công !',
-            showConfirmButton: false,
-            timer: 1500
-          })
+        window.top?.toastr &&
+          window.top?.toastr.success('Đặt lịch thành công!', { timeOut: 2500 })
         window.top?.onHideBooking && window.top.onHideBooking()
       })
       .catch(error => console.log(error))

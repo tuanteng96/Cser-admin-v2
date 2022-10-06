@@ -19,7 +19,7 @@ function Confirm({ prevStep, formikProps, onSubmit, loadingBtn }) {
   const [hasMore, setHasMore] = useState(true)
   const [valueS, setValueS] = useState('')
   const [filters, setFilters] = useState({
-    MemberID: '',
+    MemberID: formikProps?.values?.MemberID || '',
     Ps: 8,
     Pi: 1,
     Key: '',
@@ -169,16 +169,18 @@ function Confirm({ prevStep, formikProps, onSubmit, loadingBtn }) {
                             HOT
                           </label>
                         </div>
-                        <div className="font-size-xs text-muted">
+                        <div className="font-size-sm text-muted my-2px">
                           {item.ProdItems &&
                             item.ProdItems.map(prod => prod.Title).join(', ')}
                         </div>
                         {TreatmentCard(item) && (
-                          <div className="item-desc item-treat">
-                            <i className="las la-tag"></i>{' '}
-                            {item.OsBH > 0
-                              ? 'Đang có thẻ bảo hành'
-                              : 'Đang có thẻ liệu trình'}
+                          <div className="item-desc item-treat fw-500">
+                            <i className="text-ezs fa-solid fa-tag pr-8px"></i>
+                            <span>
+                              {item.OsBH > 0
+                                ? 'Đang có thẻ bảo hành'
+                                : 'Đang có thẻ liệu trình'}
+                            </span>
                           </div>
                         )}
                         {item.SaleDecs && (
