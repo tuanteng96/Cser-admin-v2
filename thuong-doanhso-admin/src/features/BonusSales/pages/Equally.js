@@ -127,15 +127,15 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                             <div className="flex-1">
                               <div className="position-relative">
                                 <NumberFormat
-                                  // isAllowed={(values) => {
-                                  //   const {
-                                  //     formattedValue,
-                                  //     floatValue,
-                                  //   } = values;
-                                  //   return (
-                                  //     formattedValue === "" || floatValue <= 100
-                                  //   );
-                                  // }}
+                                  isAllowed={(values) => {
+                                    const {
+                                      formattedValue,
+                                      floatValue,
+                                    } = values;
+                                    return (
+                                      formattedValue === "" || floatValue <= 100
+                                    );
+                                  }}
                                   allowNegative={false}
                                   name={`ToAdd[${index}].Value`}
                                   placeholder={"Nhập giá trị"}
