@@ -146,20 +146,22 @@ function DateTime({ formikProps }) {
             </Nav>
           </div>
         </div>
-        <div className="d-flex justify-content-between mb-15px">
-          <div className="d-flex align-items-center">
-            <div className="box w-45px h-25px bg-gray-300 rounded-sm border"></div>
-            <span className="fw-500 pl-8px note-text">Hết chỗ</span>
+        {window.GlobalConfig?.APP?.Booking?.hideNoteTime && (
+          <div className="d-flex justify-content-between mb-15px">
+            <div className="d-flex align-items-center">
+              <div className="box w-45px h-25px bg-gray-300 rounded-sm border"></div>
+              <span className="fw-500 pl-8px note-text">Hết chỗ</span>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="box w-45px h-25px bg-white rounded-sm border"></div>
+              <span className="fw-500 pl-8px note-text">Còn chỗ</span>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="box w-45px h-25px bg-ezs rounded-sm border-ezs border"></div>
+              <span className="fw-500 pl-8px note-text">Đang chọn</span>
+            </div>
           </div>
-          <div className="d-flex align-items-center">
-            <div className="box w-45px h-25px bg-white rounded-sm border"></div>
-            <span className="fw-500 pl-8px note-text">Còn chỗ</span>
-          </div>
-          <div className="d-flex align-items-center">
-            <div className="box w-45px h-25px bg-ezs rounded-sm border-ezs border"></div>
-            <span className="fw-500 pl-8px note-text">Đang chọn</span>
-          </div>
-        </div>
+        )}
         <Tab.Content>
           {ListChoose &&
             ListChoose.map((item, index) => (
@@ -221,6 +223,12 @@ function DateTime({ formikProps }) {
             ))}
         </Tab.Content>
       </Tab.Container>
+      {!window.GlobalConfig?.APP?.Booking?.hideNoteWarning && (
+        <div className="text-danger font-size-sm mt-8px">
+          (*) Nếu khung giờ bạn chọn đã kín lịch, chúng tôi sẽ liên hệ trực tiếp
+          để thông báo
+        </div>
+      )}
     </div>
   )
 }
