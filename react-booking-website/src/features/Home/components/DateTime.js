@@ -146,7 +146,7 @@ function DateTime({ formikProps }) {
             </Nav>
           </div>
         </div>
-        {window.GlobalConfig?.APP?.Booking?.hideNoteTime && (
+        {!window.GlobalConfig?.APP?.Booking?.hideNoteTime && (
           <div className="d-flex justify-content-between mb-15px">
             <div className="d-flex align-items-center">
               <div className="box w-45px h-25px bg-gray-300 rounded-sm border"></div>
