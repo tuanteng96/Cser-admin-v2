@@ -21,6 +21,34 @@ const GroupByCount = (List, Count) => {
   }, [])
 }
 
+const DisableTime = [
+  {
+    Date: '11/03/2022',
+    TimeClose: [
+      {
+        Start: '15:00',
+        End: '16:00'
+      },
+      {
+        Start: '20:00',
+        End: '20:30'
+      }
+    ]
+  },
+  {
+    Date: '11/04/2022',
+    TimeClose: [
+      {
+        Start: '10:00',
+        End: '12:00'
+      }
+    ]
+  },
+  {
+    Date: '11/05/2022'
+  }
+]
+
 function DateTime({ formikProps }) {
   const [key, setKey] = useState('tab-0')
   const [ListChoose, setListChoose] = useState([])
@@ -56,9 +84,47 @@ function DateTime({ formikProps }) {
       let newListTime = []
       for (let minute = 0; minute <= MinutesTotal; minute += TimeNext) {
         const datetime = moment(startDate).add(minute, 'minute').toDate()
+        let isDayOff = false
+        const indexDayOf = DisableTime.findIndex(
+          day =>
+            moment(day.Date).format('DD/MM/YYYY') ===
+            moment(datetime).format('DD/MM/YYYY')
+        )
+        if (indexDayOf > -1) {
+          if (
+            DisableTime[indexDayOf].TimeClose &&
+            DisableTime[indexDayOf].TimeClose.length > 0
+          ) {
+            isDayOff = DisableTime[indexDayOf].TimeClose.some(time => {
+              const DateStartDayOf = moment(DisableTime[indexDayOf].Date).set({
+                hour: time.Start.split(':')[0],
+                minute: time.Start.split(':')[1]
+              })
+              const DateEndDayOf = moment(DisableTime[indexDayOf].Date).set({
+                hour: time.End.split(':')[0],
+                minute: time.End.split(':')[1]
+              })
+              let isStart =
+                moment(datetime, 'HH:mm').isSameOrAfter(
+                  moment(DateStartDayOf, 'HH:mm')
+                ) ||
+                moment(datetime).format('HH:mm') ===
+                  moment(DateStartDayOf).format('HH:mm')
+              let isEnd =
+                moment(datetime, 'HH:mm').isSameOrBefore(
+                  moment(DateEndDayOf, 'HH:mm')
+                ) ||
+                moment(datetime).format('HH:mm') ===
+                  moment(DateEndDayOf).format('HH:mm')
+              return isStart && isEnd
+            })
+          } else {
+            isDayOff = true
+          }
+        }
         newListTime.push({
           Time: datetime,
-          Disable: moment().diff(datetime, 'minutes') > 0
+          Disable: moment().diff(datetime, 'minutes') > 0 || isDayOff
         })
       }
 
@@ -177,7 +243,7 @@ function DateTime({ formikProps }) {
                                 className="font-number mb-10px date-time-radio position-relative"
                                 key={timeIndex}
                               >
-                                {/* {console.log(values.BookDate)}
+                                {/* 
                                 <input
                                   type="radio"
                                   name="BookDate"
