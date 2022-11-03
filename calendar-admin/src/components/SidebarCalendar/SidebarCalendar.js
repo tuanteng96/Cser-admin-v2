@@ -188,6 +188,7 @@ function SidebarCalendar({
           <div className="d-xl-none align-items-center font-size-lg font-weight-bolder">
             {headerTitle}
           </div>
+          <button></button>
           <button
             className="btn btn-info h-40px d-xl-none w-45px p-0 d-xl-none"
             onClick={onOpenFilter}
@@ -293,21 +294,7 @@ function SidebarCalendar({
                   </div>
                   <AdvancedList formikProps={formikProps} />
                   <StatusList />
-                  {/* 
-              <div className="form-group form-group-ezs">
-                <label className="mb-1">Nâng cao</label>
-                <Select
-                  className="select-control"
-                  classNamePrefix="select"
-                  isLoading={false}
-                  isClearable
-                  isSearchable
-                  //menuIsOpen={true}
-                  name="color"
-                  placeholder="Chọn"
-                  options={AdvancedArr}
-                />
-              </div> */}
+                  <div className="font-size-xs font-weight-bold">Cài đặt khóa lịch</div>
                 </div>
               </PerfectScrollbar>
               {width > 991 ? (
