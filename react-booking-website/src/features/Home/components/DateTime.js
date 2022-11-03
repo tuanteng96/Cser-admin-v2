@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
-import 'moment/locale/vi'
 import { Nav, Tab } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import Carousel from 'nuka-carousel'
 import { clsx } from 'clsx'
 
+import moment from 'moment'
+import 'moment/locale/vi'
+import bookingApi from 'src/api/booking.api'
 moment.locale('vi')
 
 DateTime.propTypes = {
@@ -21,43 +22,21 @@ const GroupByCount = (List, Count) => {
   }, [])
 }
 
-const DisableTime = [
-  {
-    Date: '11/03/2022',
-    TimeClose: [
-      {
-        Start: '15:00',
-        End: '16:00'
-      },
-      {
-        Start: '20:00',
-        End: '20:30'
-      }
-    ]
-  },
-  {
-    Date: '11/04/2022',
-    TimeClose: [
-      {
-        Start: '10:00',
-        End: '12:00'
-      }
-    ]
-  },
-  {
-    Date: '11/05/2022'
-  }
-]
-
 function DateTime({ formikProps }) {
   const [key, setKey] = useState('tab-0')
   const [ListChoose, setListChoose] = useState([])
   const [DateChoose, setDateChoose] = useState()
+  const [ListDisable, setListDisable] = useState([])
   const { values, touched, errors, setFieldValue, setErrors } = formikProps
 
   useEffect(() => {
+    getListDisable()
+  }, [])
+
+  useEffect(() => {
     getListChoose(DateChoose)
-  }, [DateChoose])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [DateChoose, ListDisable])
 
   useEffect(() => {
     if (DateChoose) {
@@ -68,6 +47,18 @@ function DateTime({ formikProps }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DateChoose])
 
+  const getListDisable = () => {
+    bookingApi
+      .getConfigName('giocam')
+      .then(({ data }) => {
+        console.log(data)
+        if (data && data.data && data?.data.length > 0) {
+          const result = JSON.parse(data.data[0].Value)
+          setListDisable(result)
+        }
+      })
+      .catch(error => console.log(error))
+  }
   const getListChoose = DateChoose => {
     const { TimeOpen, TimeClose, TimeNext } = window?.GlobalConfig?.APP?.Booking
     const newListChoose = []
@@ -85,41 +76,45 @@ function DateTime({ formikProps }) {
       for (let minute = 0; minute <= MinutesTotal; minute += TimeNext) {
         const datetime = moment(startDate).add(minute, 'minute').toDate()
         let isDayOff = false
-        const indexDayOf = DisableTime.findIndex(
-          day =>
-            moment(day.Date).format('DD/MM/YYYY') ===
-            moment(datetime).format('DD/MM/YYYY')
-        )
-        if (indexDayOf > -1) {
-          if (
-            DisableTime[indexDayOf].TimeClose &&
-            DisableTime[indexDayOf].TimeClose.length > 0
-          ) {
-            isDayOff = DisableTime[indexDayOf].TimeClose.some(time => {
-              const DateStartDayOf = moment(DisableTime[indexDayOf].Date).set({
-                hour: time.Start.split(':')[0],
-                minute: time.Start.split(':')[1]
+        if (ListDisable && ListDisable.length > 0) {
+          const indexDayOf = ListDisable.findIndex(
+            day =>
+              moment(day.Date).format('DD/MM/YYYY') ===
+              moment(datetime).format('DD/MM/YYYY')
+          )
+          if (indexDayOf > -1) {
+            if (
+              ListDisable[indexDayOf].TimeClose &&
+              ListDisable[indexDayOf].TimeClose.length > 0
+            ) {
+              isDayOff = ListDisable[indexDayOf].TimeClose.some(time => {
+                const DateStartDayOf = moment(ListDisable[indexDayOf].Date).set(
+                  {
+                    hour: time.Start.split(':')[0],
+                    minute: time.Start.split(':')[1]
+                  }
+                )
+                const DateEndDayOf = moment(ListDisable[indexDayOf].Date).set({
+                  hour: time.End.split(':')[0],
+                  minute: time.End.split(':')[1]
+                })
+                let isStart =
+                  moment(datetime, 'HH:mm').isSameOrAfter(
+                    moment(DateStartDayOf, 'HH:mm')
+                  ) ||
+                  moment(datetime).format('HH:mm') ===
+                    moment(DateStartDayOf).format('HH:mm')
+                let isEnd =
+                  moment(datetime, 'HH:mm').isSameOrBefore(
+                    moment(DateEndDayOf, 'HH:mm')
+                  ) ||
+                  moment(datetime).format('HH:mm') ===
+                    moment(DateEndDayOf).format('HH:mm')
+                return isStart && isEnd
               })
-              const DateEndDayOf = moment(DisableTime[indexDayOf].Date).set({
-                hour: time.End.split(':')[0],
-                minute: time.End.split(':')[1]
-              })
-              let isStart =
-                moment(datetime, 'HH:mm').isSameOrAfter(
-                  moment(DateStartDayOf, 'HH:mm')
-                ) ||
-                moment(datetime).format('HH:mm') ===
-                  moment(DateStartDayOf).format('HH:mm')
-              let isEnd =
-                moment(datetime, 'HH:mm').isSameOrBefore(
-                  moment(DateEndDayOf, 'HH:mm')
-                ) ||
-                moment(datetime).format('HH:mm') ===
-                  moment(DateEndDayOf).format('HH:mm')
-              return isStart && isEnd
-            })
-          } else {
-            isDayOff = true
+            } else {
+              isDayOff = true
+            }
           }
         }
         newListTime.push({
@@ -243,22 +238,6 @@ function DateTime({ formikProps }) {
                                 className="font-number mb-10px date-time-radio position-relative"
                                 key={timeIndex}
                               >
-                                {/* 
-                                <input
-                                  type="radio"
-                                  name="BookDate"
-                                  value={time.Time}
-                                  onChange={handleChange}
-                                  onBlur={handleBlur}
-                                  disabled={time.Disable}
-                                  // checked={
-                                  //   values.BookDate
-                                  //     ? moment(values.BookDate).format(
-                                  //         'HH:mm'
-                                  //       ) === moment(time.Time).format('HH:mm')
-                                  //     : false
-                                  // }
-                                /> */}
                                 <div
                                   className={clsx(
                                     'h-40px border rounded-sm d-flex align-items-center justify-content-center fw-600 time',

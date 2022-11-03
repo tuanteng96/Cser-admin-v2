@@ -16,6 +16,9 @@ const bookingApi = {
   },
   postBooking: data => {
     return http.post(`/api/v3/mbook?cmd=booking`, JSON.stringify(data))
+  },
+  getConfigName: name => {
+    return http.get(`/api/v3/config?cmd=getnames&names=${name}&ignore_root=1`)
   }
 }
 
