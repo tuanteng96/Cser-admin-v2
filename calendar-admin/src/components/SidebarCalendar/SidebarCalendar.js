@@ -107,6 +107,7 @@ function SidebarCalendar({
   onHideFilter,
   isFilter,
   headerTitle,
+  onOpenModalLock
 }) {
   const [initialValues, setInitialValues] = useState(initialDefault);
   const { CrStockID } = useSelector((state) => state.Auth);
@@ -188,7 +189,6 @@ function SidebarCalendar({
           <div className="d-xl-none align-items-center font-size-lg font-weight-bolder">
             {headerTitle}
           </div>
-          <button></button>
           <button
             className="btn btn-info h-40px d-xl-none w-45px p-0 d-xl-none"
             onClick={onOpenFilter}
@@ -294,7 +294,13 @@ function SidebarCalendar({
                   </div>
                   <AdvancedList formikProps={formikProps} />
                   <StatusList />
-                  <div className="font-size-xs font-weight-bold">Cài đặt khóa lịch</div>
+                  <div
+                    className="font-size-xs font-weight-bold mt-15px text-primary text-decoration-underline cursor-pointer"
+                    onClick={onOpenModalLock}
+                  >
+                    <i className="fas fa-tools font-size-xs pr-8px"></i>Cài đặt
+                    khóa lịch
+                  </div>
                 </div>
               </PerfectScrollbar>
               {width > 991 ? (

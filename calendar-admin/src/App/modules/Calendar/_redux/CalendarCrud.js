@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "../../../../redux/axioClient";
 
 const GET_MEMBERS_STAFF_URL = "/api/gl/select2";
@@ -36,6 +37,14 @@ const checkinMember = (data) => {
     })
 }
 
+const getConfigName = (name) => {
+    return axiosClient.get(`/api/v3/config?cmd=getnames&names=${name}&ignore_root=1`)
+}
+
+const saveConfigName = (name, data) => {
+    return axiosClient.post(`/api/v3/ConfigJson@save?name=${name}`, JSON.stringify(data))
+}
+
 const CalendarCrud = {
     getMembers,
     getStaffs,
@@ -44,6 +53,8 @@ const CalendarCrud = {
     deleteBooking,
     getBooking,
     createMember,
-    checkinMember
+    checkinMember,
+    getConfigName,
+    saveConfigName
 };
 export default CalendarCrud;

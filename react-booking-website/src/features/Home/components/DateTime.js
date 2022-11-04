@@ -51,7 +51,6 @@ function DateTime({ formikProps }) {
     bookingApi
       .getConfigName('giocam')
       .then(({ data }) => {
-        console.log(data)
         if (data && data.data && data?.data.length > 0) {
           const result = JSON.parse(data.data[0].Value)
           setListDisable(result)

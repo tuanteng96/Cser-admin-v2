@@ -17,6 +17,7 @@ import { useWindowSize } from "../../../hooks/useWindowSize";
 import _ from "lodash";
 import CalendarStaff from "./CalendarStaff";
 import { AppContext } from "../../App";
+import ModalCalendarLock from "../../../components/ModalCalendarLock/ModalCalendarLock";
 
 import moment from "moment";
 import "moment/locale/vi";
@@ -104,6 +105,7 @@ function CalendarPage(props) {
   const [initialView, setInitialView] = useState("timeGridWeek");
   const [headerTitle, setHeaderTitle] = useState("");
   const [StaffOffline, setStaffOffline] = useState([]);
+  const [isModalLock, setIsModalLock] = useState(false);
   const { width } = useWindowSize();
   const { AuthCrStockID, TimeOpen, TimeClose } = useSelector(
     ({ Auth, JsonConfig }) => ({
@@ -113,6 +115,10 @@ function CalendarPage(props) {
     })
   );
   const [elmHeight, setElmHeight] = useState(0);
+  const [ListLock, setListLock] = useState({
+    ListDisable: [],
+  });
+  const [btnLoadingLock, setBtnLoadingLock] = useState(false);
   const calendarRef = useRef("");
   const { isTelesales } = useContext(AppContext);
 
@@ -147,6 +153,66 @@ function CalendarPage(props) {
       setHeaderTitle(calendarApi.currentDataManager.data?.viewTitle);
     }
   }, [calendarRef]);
+
+  useEffect(() => {
+    getListLock();
+  }, []);
+
+  const getListLock = (callback) => {
+    CalendarCrud.getConfigName(`giocam`)
+      .then(({ data }) => {
+        if (data && data.data && data?.data.length > 0) {
+          const result = JSON.parse(data.data[0].Value);
+          const newResult = result
+            ? result
+                .filter((item) => moment().isSameOrAfter(item.Date, "day"))
+                .map((item) => ({
+                  ...item,
+                  TimeClose:
+                    item.TimeClose && item.TimeClose.length > 0
+                      ? item.TimeClose
+                      : [{ Start: "", End: "" }],
+                }))
+                .sort(
+                  (a, b) => moment(a.Date).valueOf() - moment(b.Date).valueOf()
+                )
+            : [];
+          setListLock({
+            ListDisable: newResult || [],
+          });
+          callback && callback();
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const onSubmitLock = ({ ListDisable }) => {
+    setBtnLoadingLock(true);
+    const newListDisable = ListDisable
+      ? ListDisable.filter((item) => item.Date).map((item) => ({
+          ...item,
+          Date: moment(item.Date).format("MM/DD/YYYY"),
+          TimeClose:
+            item.TimeClose && item.TimeClose.length > 0
+              ? item.TimeClose.filter((time) => time.Start && time.End).map(
+                  (time) => ({
+                    Start: moment(time.Start).format("HH:mm"),
+                    End: moment(time.End).format("HH:mm"),
+                  })
+                )
+              : [],
+        }))
+      : [];
+    CalendarCrud.saveConfigName("giocam", newListDisable)
+      .then((response) => {
+        getListLock(() => {
+          onHideModalLock();
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const onRefresh = (callback) => {
     getBooking(() => callback && callback());
@@ -534,6 +600,15 @@ function CalendarPage(props) {
     }</div>`;
   };
 
+  const onOpenModalLock = () => {
+    setIsModalLock(true);
+  };
+
+  const onHideModalLock = () => {
+    setIsModalLock(false);
+    setBtnLoadingLock(false);
+  };
+
   // const someMethod = () => {
   //   let calendarApi = calendarRef.current.getApi()
   //   console.log(calendarApi)
@@ -560,6 +635,7 @@ function CalendarPage(props) {
             onHideFilter={onHideFilter}
             isFilter={isFilter}
             headerTitle={headerTitle}
+            onOpenModalLock={onOpenModalLock}
           />
           <div
             className={`ezs-calendar__content ${loading &&
@@ -908,6 +984,13 @@ function CalendarPage(props) {
         onDelete={onDeleteBooking}
         btnLoading={btnLoading}
         initialValue={initialValue}
+      />
+      <ModalCalendarLock
+        show={isModalLock}
+        onHide={onHideModalLock}
+        ListLock={ListLock}
+        onSubmit={onSubmitLock}
+        btnLoadingLock={btnLoadingLock}
       />
     </div>
   );
