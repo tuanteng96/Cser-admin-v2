@@ -107,21 +107,21 @@ function CalendarPage(props) {
   const [StaffOffline, setStaffOffline] = useState([]);
   const [isModalLock, setIsModalLock] = useState(false);
   const { width } = useWindowSize();
-  const { AuthCrStockID, TimeOpen, TimeClose } = useSelector(
+  const { AuthCrStockID, TimeOpen, TimeClose, StocksList } = useSelector(
     ({ Auth, JsonConfig }) => ({
       AuthCrStockID: Auth.CrStockID,
+      StocksList: Auth.Stocks.filter((x) => x.ParentID !== 0),
       TimeOpen: JsonConfig?.APP?.Working?.TimeOpen || "00:00:00",
       TimeClose: JsonConfig?.APP?.Working?.TimeClose || "23:59:00",
     })
   );
   const [elmHeight, setElmHeight] = useState(0);
   const [ListLock, setListLock] = useState({
-    ListDisable: [],
+    ListLocks: [],
   });
   const [btnLoadingLock, setBtnLoadingLock] = useState(false);
   const calendarRef = useRef("");
   const { isTelesales } = useContext(AppContext);
-
   //Get Staff Full
   useEffect(() => {
     async function getStaffFull() {
@@ -156,29 +156,46 @@ function CalendarPage(props) {
 
   useEffect(() => {
     getListLock();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [AuthCrStockID]);
 
   const getListLock = (callback) => {
     CalendarCrud.getConfigName(`giocam`)
       .then(({ data }) => {
         if (data && data.data && data?.data.length > 0) {
           const result = JSON.parse(data.data[0].Value);
-          const newResult = result
-            ? result
-                .filter((item) => moment().isSameOrAfter(item.Date, "day"))
-                .map((item) => ({
-                  ...item,
-                  TimeClose:
-                    item.TimeClose && item.TimeClose.length > 0
-                      ? item.TimeClose
-                      : [{ Start: "", End: "" }],
+          const newResult =
+            result && result.length > 0
+              ? result.map((lock) => ({
+                  ...lock,
+                  ListDisable:
+                    lock.ListDisable && lock.ListDisable.length > 0
+                      ? lock.ListDisable.filter((item) =>
+                          moment().isSameOrAfter(
+                            moment(item.Date).format("DD/MM/YYYY"),
+                            "day"
+                          )
+                        )
+                          .map((item) => ({
+                            ...item,
+                            TimeClose:
+                              item.TimeClose && item.TimeClose.length > 0
+                                ? item.TimeClose
+                                : [{ Start: "", End: "" }],
+                          }))
+                          .sort(
+                            (a, b) =>
+                              moment(a.Date).valueOf() -
+                              moment(b.Date).valueOf()
+                          )
+                      : [],
                 }))
-                .sort(
-                  (a, b) => moment(a.Date).valueOf() - moment(b.Date).valueOf()
-                )
-            : [];
+              : StocksList.map((o) => ({
+                  StockID: o.ID,
+                  ListDisable: [],
+                }));
           setListLock({
-            ListDisable: newResult || [],
+            ListLocks: newResult,
           });
           callback && callback();
         }
@@ -186,24 +203,30 @@ function CalendarPage(props) {
       .catch((error) => console.log(error));
   };
 
-  const onSubmitLock = ({ ListDisable }) => {
-    setBtnLoadingLock(true);
-    const newListDisable = ListDisable
-      ? ListDisable.filter((item) => item.Date).map((item) => ({
-          ...item,
-          Date: moment(item.Date).format("MM/DD/YYYY"),
-          TimeClose:
-            item.TimeClose && item.TimeClose.length > 0
-              ? item.TimeClose.filter((time) => time.Start && time.End).map(
-                  (time) => ({
-                    Start: moment(time.Start).format("HH:mm"),
-                    End: moment(time.End).format("HH:mm"),
-                  })
-                )
-              : [],
-        }))
-      : [];
-    CalendarCrud.saveConfigName("giocam", newListDisable)
+  const onSubmitLock = ({ ListLocks }) => {
+    //setBtnLoadingLock(true);
+
+    const newListLock =
+      ListLocks && ListLocks.length > 0
+        ? ListLocks.map((lock) => ({
+            ...lock,
+            ListDisable:
+              lock.ListDisable && lock.ListDisable.length > 0
+                ? lock.ListDisable.filter((item) => item.Date).map((item) => ({
+                    ...item,
+                    Date: moment(item.Date).format("MM/DD/YYYY"),
+                    TimeClose:
+                      item.TimeClose && item.TimeClose.length > 0
+                        ? item.TimeClose.filter(
+                            (time) => time.Start && time.End
+                          )
+                        : [],
+                  }))
+                : [],
+          }))
+        : [];
+
+    CalendarCrud.saveConfigName("giocam", newListLock)
       .then((response) => {
         getListLock(() => {
           onHideModalLock();
@@ -991,6 +1014,7 @@ function CalendarPage(props) {
         ListLock={ListLock}
         onSubmit={onSubmitLock}
         btnLoadingLock={btnLoadingLock}
+        AuthCrStockID={AuthCrStockID}
       />
     </div>
   );
