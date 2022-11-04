@@ -26,7 +26,7 @@ function DateTime({ formikProps }) {
   const [key, setKey] = useState('tab-0')
   const [ListChoose, setListChoose] = useState([])
   const [DateChoose, setDateChoose] = useState()
-  const [ListDisable, setListDisable] = useState([])
+  const [ListLock, setListLock] = useState([])
   const { values, touched, errors, setFieldValue, setErrors } = formikProps
 
   useEffect(() => {
@@ -36,7 +36,7 @@ function DateTime({ formikProps }) {
   useEffect(() => {
     getListChoose(DateChoose)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [DateChoose, ListDisable])
+  }, [DateChoose, ListLock, values.StockID])
 
   useEffect(() => {
     if (DateChoose) {
@@ -53,7 +53,7 @@ function DateTime({ formikProps }) {
       .then(({ data }) => {
         if (data && data.data && data?.data.length > 0) {
           const result = JSON.parse(data.data[0].Value)
-          setListDisable(result)
+          setListLock(result)
         }
       })
       .catch(error => console.log(error))
@@ -61,7 +61,15 @@ function DateTime({ formikProps }) {
   const getListChoose = DateChoose => {
     const { TimeOpen, TimeClose, TimeNext } = window?.GlobalConfig?.APP?.Booking
     const newListChoose = []
-
+    let ListDisable = []
+    if (ListLock && ListLock.length > 0) {
+      const indexLock = ListLock.findIndex(
+        item => Number(item.StockID) === Number(values.StockID)
+      )
+      if (indexLock > -1) {
+        ListDisable = ListLock[indexLock].ListDisable
+      }
+    }
     for (let index = 0; index < 3; index++) {
       let day = moment().add(index, 'days').toDate()
       if (DateChoose && index === 2) {
@@ -77,8 +85,8 @@ function DateTime({ formikProps }) {
         let isDayOff = false
         if (ListDisable && ListDisable.length > 0) {
           const indexDayOf = ListDisable.findIndex(
-            day =>
-              moment(day.Date).format('DD/MM/YYYY') ===
+            x =>
+              moment(x.Date).format('DD/MM/YYYY') ===
               moment(datetime).format('DD/MM/YYYY')
           )
           if (indexDayOf > -1) {

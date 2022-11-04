@@ -41,19 +41,18 @@ function StaffAtHome({ formikProps }) {
     bookingApi
       .getListStaff(values.StockID)
       .then(({ data }) => {
-        if (data.data && data.data.length > 0) {
+        if (data.data) {
           const newData = data.data.map(item => ({
             ...item,
             value: item.id,
             label: item.text
           }))
           setListStaff(newData)
-          setLoading(false)
         }
+        setLoading(false)
       })
       .catch(error => console.log(error))
   }
-
   return (
     <div className="bg-white mt-1px pt-15px pl-15px pr-15px pb-10px date-time">
       <div className="fw-700 text-uppercase mb-10px">
@@ -71,6 +70,7 @@ function StaffAtHome({ formikProps }) {
           value={values.UserServiceIDs}
           onChange={value => setFieldValue('UserServiceIDs', value)}
           components={{ Option: CustomOption }}
+          noOptionsMessage={() => 'Không có nhân viên.'}
         />
       </div>
     </div>
