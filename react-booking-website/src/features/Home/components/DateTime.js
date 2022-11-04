@@ -217,7 +217,7 @@ function DateTime({ formikProps }) {
         {!window.GlobalConfig?.APP?.Booking?.hideNoteTime && (
           <div className="d-flex justify-content-between mb-15px">
             <div className="d-flex align-items-center">
-              <div className="box w-45px h-25px bg-gray-300 rounded-sm border"></div>
+              <div className="box w-45px h-25px bg-stripes rounded-sm border"></div>
               <span className="fw-500 pl-8px note-text">Hết chỗ</span>
             </div>
             <div className="d-flex align-items-center">
@@ -248,7 +248,7 @@ function DateTime({ formikProps }) {
                                 <div
                                   className={clsx(
                                     'h-40px border rounded-sm d-flex align-items-center justify-content-center fw-600 time',
-                                    time.Disable && 'disabled',
+                                    time.Disable && 'disabled bg-stripes',
                                     moment(values.BookDate).diff(
                                       time.Time,
                                       'minutes'
