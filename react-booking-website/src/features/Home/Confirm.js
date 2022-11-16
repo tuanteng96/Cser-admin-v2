@@ -20,7 +20,7 @@ function Confirm({ prevStep, formikProps, onSubmit, loadingBtn }) {
   const [valueS, setValueS] = useState('')
   const [filters, setFilters] = useState({
     MemberID: formikProps?.values?.MemberID || '',
-    Ps: 8,
+    Ps: 15,
     Pi: 1,
     Key: '',
     StockID: values?.StockID || ''
