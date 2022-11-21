@@ -160,6 +160,7 @@ function CalendarPage(props) {
   }, [AuthCrStockID]);
 
   const getListLock = (callback) => {
+    console.log(moment(new Date()).isSameOrBefore("2022-11-21", "day"));
     CalendarCrud.getConfigName(`giocam`)
       .then(({ data }) => {
         if (data && data.data && data?.data.length > 0) {
@@ -171,10 +172,7 @@ function CalendarPage(props) {
                   ListDisable:
                     lock.ListDisable && lock.ListDisable.length > 0
                       ? lock.ListDisable.filter((item) =>
-                          moment().isSameOrAfter(
-                            moment(item.Date).format("DD/MM/YYYY"),
-                            "day"
-                          )
+                          moment().isSameOrBefore(item.Date, "day")
                         )
                           .map((item) => ({
                             ...item,
