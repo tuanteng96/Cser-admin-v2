@@ -154,7 +154,22 @@ function DateTime({ formikProps }) {
     cellSpacing: 10,
     renderBottomCenterControls: () => false,
     renderCenterLeftControls: null,
-    renderCenterRightControls: null
+    renderCenterRightControls: ({ nextDisabled, nextSlide }) => (
+      <div
+        className={`support-scroll && ${nextDisabled ? 'd-none' : ''}`}
+        onClick={nextSlide}
+      >
+        <div className="support-scroll__text">
+          Chọn khung giờ khác {nextDisabled}
+        </div>
+        <div className="support-scroll__icon">
+          <div className="line"></div>
+          <div className="arrow">
+            <i className="fas fa-chevron-right"></i>
+          </div>
+        </div>
+      </div>
+    )
     // afterChange: current => {},
     // beforeChange: (current, next) => {}
   }
