@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Select, { components } from "react-select";
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import AsyncCreatableSelect from "react-select/async-creatable";
 import AsyncSelect from "react-select/async";
 import { Dropdown, Modal } from "react-bootstrap";
 import DatePicker from "react-datepicker";
@@ -30,13 +30,11 @@ const CustomOptionStaff = ({ children, ...props }) => {
   return (
     <components.Option {...props}>
       <div className="d-flex align-items-center">
-        {
-          Thumbnail && (
-            <div className="w-20px h-20px mr-3 rounded-circle overflow-hidden d-flex align-items-center justify-content-center">
-              <img className="w-100" src={Thumbnail} alt={label} />
-            </div>
-          )
-        }
+        {Thumbnail && (
+          <div className="w-20px h-20px mr-3 rounded-circle overflow-hidden d-flex align-items-center justify-content-center">
+            <img className="w-100" src={Thumbnail} alt={label} />
+          </div>
+        )}
 
         {children}
       </div>
@@ -70,12 +68,12 @@ function ModalCalendar({
     ).map((item) => ({ ...item, value: item.ID, label: item.Title })),
     AuthCrStockID: Auth.CrStockID,
   }));
-  const [isModalCreate, setIsModalCreate] = useState(false)
+  const [isModalCreate, setIsModalCreate] = useState(false);
   const [initialCreate, setInitialCreate] = useState({
     FullName: "",
     Phone: "",
     PassersBy: false, // Khách vãng lai
-  })
+  });
 
   useEffect(() => {
     if (show) {
@@ -111,7 +109,7 @@ function ModalCalendar({
           ...prevState,
           StockID: AuthCrStockID,
           BookDate: initialValue?.BookDate ? initialValue.BookDate : new Date(),
-          UserServiceIDs: initialValue?.UserServiceIDs || []
+          UserServiceIDs: initialValue?.UserServiceIDs || [],
         }));
       }
     } else {
@@ -131,12 +129,11 @@ function ModalCalendar({
         Phone: member?.Phone,
       };
       objMember.MemberPhone = member?.MemberPhone;
-    }
-    else {
+    } else {
       objMember.MemberID = member?.Member?.ID;
     }
     return objMember;
-  }
+  };
 
   const loadOptionsCustomer = (inputValue, callback) => {
     setTimeout(async () => {
@@ -194,9 +191,11 @@ function ModalCalendar({
     return (
       <Dropdown>
         <Dropdown.Toggle
-          className={`bg-transparent p-0 border-0 modal-dropdown-title ${Status === "XAC_NHAN" ? "text-primary" : ""
-            } ${Status === "KHACH_KHONG_DEN" ? "text-danger" : ""} ${Status === "KHACH_DEN" ? "text-success" : ""
-            }`}
+          className={`bg-transparent p-0 border-0 modal-dropdown-title ${
+            Status === "XAC_NHAN" ? "text-primary" : ""
+          } ${Status === "KHACH_KHONG_DEN" ? "text-danger" : ""} ${
+            Status === "KHACH_DEN" ? "text-success" : ""
+          }`}
           id="dropdown-custom-1"
         >
           <span>
@@ -242,10 +241,11 @@ function ModalCalendar({
         <Fragment>
           <button
             type="submit"
-            className={`btn btn-sm btn-primary mr-2 ${btnLoading.isBtnBooking
-              ? "spinner spinner-white spinner-right"
-              : ""
-              } w-auto my-0 mr-0 h-auto`}
+            className={`btn btn-sm btn-primary mr-2 ${
+              btnLoading.isBtnBooking
+                ? "spinner spinner-white spinner-right"
+                : ""
+            } w-auto my-0 mr-0 h-auto`}
             disabled={btnLoading.isBtnBooking}
           >
             Đặt lịch
@@ -258,10 +258,11 @@ function ModalCalendar({
         <Fragment>
           <button
             type="submit"
-            className={`btn btn-sm btn-primary mr-2 ${btnLoading.isBtnBooking
-              ? "spinner spinner-white spinner-right"
-              : ""
-              } w-auto my-0 mr-0 h-auto`}
+            className={`btn btn-sm btn-primary mr-2 ${
+              btnLoading.isBtnBooking
+                ? "spinner spinner-white spinner-right"
+                : ""
+            } w-auto my-0 mr-0 h-auto`}
             disabled={btnLoading.isBtnBooking}
             onClick={() => {
               setFieldValue("Status", "XAC_NHAN", submitForm()); //submitForm()
@@ -276,18 +277,18 @@ function ModalCalendar({
       <Fragment>
         <button
           type="submit"
-          className={`btn btn-sm btn-primary mr-2 ${btnLoading.isBtnBooking ? "spinner spinner-white spinner-right" : ""
-            } w-auto my-0 mr-0 h-auto`}
+          className={`btn btn-sm btn-primary mr-2 ${
+            btnLoading.isBtnBooking ? "spinner spinner-white spinner-right" : ""
+          } w-auto my-0 mr-0 h-auto`}
           disabled={btnLoading.isBtnBooking}
         >
           Lưu
         </button>
         <button
           type="button"
-          className={`btn btn-sm btn-primary mr-2 ${btnLoading.isBtnBooking
-            ? "spinner spinner-white spinner-right"
-            : ""
-            } w-auto my-0 mr-0 h-auto`}
+          className={`btn btn-sm btn-primary mr-2 ${
+            btnLoading.isBtnBooking ? "spinner spinner-white spinner-right" : ""
+          } w-auto my-0 mr-0 h-auto`}
           disabled={btnLoading.isBtnBooking}
           onClick={() => onFinish(values)}
         >
@@ -572,6 +573,36 @@ function ModalCalendar({
                       onBlur={handleBlur}
                     ></textarea>
                   </div>
+                  {values?.ID && (
+                    <div className="form-group form-group-ezs px-6 pt-3 mb-3 border-top d-flex">
+                      <div className="flex-1">
+                        <label className="mb-1 d-none d-md-block">
+                          Nhân viên tạo
+                        </label>
+                        <div className="mt-2px">
+                          {initialValue?.UserName ? (
+                            <span className="text-uppercase font-weight-bolder">
+                              {initialValue?.UserName}
+                            </span>
+                          ) : (
+                            <span className="font-weight-bolder">
+                              Đặt lịch Online
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="w-120px">
+                        <label className="mb-1 d-none d-md-block">
+                          Đặt lịch thành công
+                        </label>
+                        <div className="mt-2px font-weight-bolder">
+                          {initialValue?.BookCount?.Done || 0}
+                          <span className="px-2px">/</span>
+                          {initialValue?.BookCount?.Total || 0}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </Modal.Body>
                 <Modal.Footer className="justify-content-between">
                   <div>
