@@ -182,8 +182,8 @@ function CalendarStaff({
       getTimeMin(events, TimeOpen),
       getTimeMax(events, TimeClose),
       filters.From
-      );
-    
+    );
+
     setConfigTime({
       lineTime: lineTimeUpdate,
       timeStart: timeStartUpdate,
@@ -218,7 +218,7 @@ function CalendarStaff({
 
     const styles = {
       top: `${(TotalTimeStart / TotalSeconds) * 100}%`,
-      height: `${(minTimeService / TotalSeconds) * 100}%`
+      height: `${(minTimeService / TotalSeconds) * 100}%`,
     };
     return styles;
   };
@@ -342,7 +342,10 @@ function CalendarStaff({
     );
     const TotalTime = moment().diff(moment(ConfigTime.timeStart), "seconds");
     styles.top = `${(TotalTime / TotalSeconds) * 100}%`;
-    if (moment().format("DD-MM-YYYY") !== moment(filters.From).format("DD-MM-YYYY")) {
+    if (
+      moment().format("DD-MM-YYYY") !==
+      moment(filters.From).format("DD-MM-YYYY")
+    ) {
       styles.display = "none";
     }
     return styles;
@@ -461,18 +464,26 @@ function CalendarStaff({
                                 service
                               )}`}
                             >
-                              <div>
-                                <span className="fullname">
-                                  {service.AtHome
-                                    ? `<i className="fas fa-home text-white font-size-xs"></i>`
-                                    : ""}{" "}
-                                  {service.Star ? `(${service.Star})` : ""}
-                                  {service.MemberCurrent.FullName}
-                                </span>
-                                <span className="d-none d-md-inline">
-                                  {" "}
-                                  - {service.MemberCurrent?.MobilePhone}
-                                </span>
+                              <div className="d-flex justify-content-between">
+                                <div>
+                                  <span className="fullname">
+                                    {service.AtHome
+                                      ? `<i className="fas fa-home text-white font-size-xs"></i>`
+                                      : ""}{" "}
+                                    {service.Star ? `(${service.Star})` : ""}
+                                    {service.MemberCurrent.FullName}
+                                  </span>
+                                  <span className="d-none d-md-inline">
+                                    {" "}
+                                    - {service.MemberCurrent?.MobilePhone}
+                                  </span>
+                                </div>
+                                {service?.isBook && (
+                                  <div>
+                                    {service?.BookCount?.Done || 0}/
+                                    {service?.BookCount?.Total || 0}
+                                  </div>
+                                )}
                               </div>
                               <div className="d-flex">
                                 <div className="w-35px">

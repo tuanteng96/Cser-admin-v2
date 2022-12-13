@@ -160,7 +160,6 @@ function CalendarPage(props) {
   }, [AuthCrStockID]);
 
   const getListLock = (callback) => {
-    console.log(moment(new Date()).isSameOrBefore("2022-11-21", "day"));
     CalendarCrud.getConfigName(`giocam`)
       .then(({ data }) => {
         if (data && data.data && data?.data.length > 0) {
@@ -566,6 +565,7 @@ function CalendarPage(props) {
                         : item?.Member?.MobilePhone,
                   },
                   Star: checkStar(item),
+                  isBook: true
                 }))
                 .filter((item) => item.Status !== "TU_CHOI")
             : [];
@@ -847,6 +847,7 @@ function CalendarPage(props) {
               eventContent={(arg) => {
                 const { event, view } = arg;
                 const { extendedProps } = event._def;
+                console.log(extendedProps);
                 let italicEl = document.createElement("div");
                 italicEl.classList.add("fc-content");
                 if (
@@ -855,7 +856,7 @@ function CalendarPage(props) {
                 ) {
                   if (view.type !== "listWeek") {
                     italicEl.innerHTML = `<div class="fc-title">
-                    <div><span class="fullname">${
+                    <div class="d-flex justify-content-between"><div><span class="fullname">${
                       extendedProps.AtHome
                         ? `<i class="fas fa-home text-white font-size-xs"></i>`
                         : ""
@@ -863,7 +864,9 @@ function CalendarPage(props) {
                       extendedProps.MemberCurrent.FullName
                     }</span><span class="d-none d-md-inline"> - ${
                       extendedProps.MemberCurrent?.MobilePhone
-                    }</span></div>
+                    }</span></div><span class="${!extendedProps.isBook && "d-none"}">${extendedProps
+                      ?.BookCount?.Done || 0}/${extendedProps?.BookCount
+                      ?.Total || 0}</span></div>
                     <div class="d-flex">
                       <div class="w-35px">${moment(
                         extendedProps.BookDate
@@ -885,7 +888,11 @@ function CalendarPage(props) {
                       extendedProps.MemberCurrent?.MobilePhone
                     }</span><span> - ${extendedProps.RootMinutes ??
                       extendedProps?.os?.RootMinutes ??
-                      60}p - ${extendedProps.RootTitles}</span></div>
+                      60}p - ${
+                      extendedProps.RootTitles
+                    }</span> <span class="${!extendedProps.isBook &&
+                      "d-none"}">- ${extendedProps?.BookCount?.Done ||
+                      0}/${extendedProps?.BookCount?.Total || 0}</span></div>
                   </div>`;
                   }
                 } else {
