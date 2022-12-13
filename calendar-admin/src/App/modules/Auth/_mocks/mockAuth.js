@@ -437,5 +437,5 @@ export const AuthMock = {
         DAT_LICH: {
             "8975": 0,
         },
-    },
+    }
 };

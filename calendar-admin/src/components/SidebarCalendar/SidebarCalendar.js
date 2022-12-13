@@ -13,6 +13,7 @@ import { Dropdown } from "react-bootstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { AsyncPaginate } from "react-select-async-paginate";
 import { AppContext } from "../../App/App";
+import Select from "react-select";
 
 SidebarCalendar.propTypes = {
   onOpenModal: PropTypes.func,
@@ -31,6 +32,57 @@ const perfectScrollbarOptions = {
   wheelSpeed: 2,
   wheelPropagation: false,
 };
+
+function SelectStocks({ value, ...props }) {
+  const [StocksList, setStocksList] = useState([]);
+
+  useEffect(() => {
+    let PermissionStocks = [];
+    if (
+      window?.top?.Info?.rightsSum?.tele?.hasRight ||
+      window?.top?.Info?.rightsSum?.teleAdv?.hasRight
+    ) {
+      if (window?.top?.Info?.rightsSum?.tele?.stocks) {
+        PermissionStocks = window?.top?.Info?.rightsSum?.tele?.stocks || [];
+      } else {
+        PermissionStocks = "All Stocks";
+      }
+    } else {
+      PermissionStocks = "401 Unauthorized";
+    }
+    let newStocks = window?.top?.Info?.Stocks || [];
+    if (PermissionStocks === "All Stocks") {
+      newStocks = [{ value: "", label: "Tất cả cơ sở" }, ...newStocks];
+    } else {
+      newStocks = newStocks.filter(
+        (o) => PermissionStocks && PermissionStocks.some((x) => o.ID === x.ID)
+      );
+    }
+    setStocksList(() =>
+      newStocks
+        .filter((o) => o.ID !== 778)
+        .map((item) => ({
+          ...item,
+          label: item.Title || item.label,
+          value: item.ID || item.value,
+        }))
+    );
+  }, []);
+
+  return (
+    <Select
+      placeholder="Chọn cơ cở"
+      classNamePrefix="select"
+      options={StocksList || []}
+      className="select-control mb-8px"
+      value={
+        StocksList &&
+        StocksList.filter((item) => Number(value) === Number(item.value))
+      }
+      {...props}
+    />
+  );
+}
 
 const CustomOptionStaff = ({ children, ...props }) => {
   const { Thumbnail, label } = props.data;
@@ -107,7 +159,7 @@ function SidebarCalendar({
   onHideFilter,
   isFilter,
   headerTitle,
-  onOpenModalLock
+  onOpenModalLock,
 }) {
   const [initialValues, setInitialValues] = useState(initialDefault);
   const { CrStockID } = useSelector((state) => state.Auth);
@@ -207,7 +259,7 @@ function SidebarCalendar({
         enableReinitialize
       >
         {(formikProps) => {
-          const { values, setFieldValue } = formikProps;
+          const { values, setFieldValue, handleBlur } = formikProps;
           return (
             <Form className={`${isFilter ? "show" : ""} sidebar-body`}>
               <PerfectScrollbar
@@ -237,6 +289,32 @@ function SidebarCalendar({
                   <div className="form-group form-group-ezs mb-0 mt-12px">
                     {/* <label className="mb-1">Khách hàng</label> */}
                     <div>
+                      {isTelesales && (
+                        <SelectStocks
+                          noOptionsMessage={() => "không có sơ sở"}
+                          classIcon="far fa-map-marker-alt"
+                          classNamePrefix="select"
+                          value={values.StockID}
+                          components={{
+                            Control,
+                          }}
+                          //isLoading={true}
+                          //isDisabled={true}
+                          isSearchable
+                          //menuIsOpen={true}
+                          name="StockID"
+                          placeholder="Chọn cơ sở"
+                          onChange={(option) => {
+                            setFieldValue(
+                              "StockID",
+                              option ? option.value : ""
+                            );
+                          }}
+                          menuPosition="fixed"
+                          onBlur={handleBlur}
+                        />
+                      )}
+
                       <AsyncPaginate
                         classIcon="far fa-user-alt"
                         menuPlacement="bottom"
@@ -294,13 +372,15 @@ function SidebarCalendar({
                   </div>
                   <AdvancedList formikProps={formikProps} />
                   <StatusList />
-                  <div
-                    className="font-size-xs font-weight-bold mt-15px text-primary text-decoration-underline cursor-pointer"
-                    onClick={onOpenModalLock}
-                  >
-                    <i className="fas fa-tools font-size-xs pr-8px"></i>Cài đặt
-                    khóa lịch
-                  </div>
+                  {!isTelesales && (
+                    <div
+                      className="font-size-xs font-weight-bold mt-15px text-primary text-decoration-underline cursor-pointer"
+                      onClick={onOpenModalLock}
+                    >
+                      <i className="fas fa-tools font-size-xs pr-8px"></i>Cài
+                      đặt khóa lịch
+                    </div>
+                  )}
                 </div>
               </PerfectScrollbar>
               {width > 991 ? (

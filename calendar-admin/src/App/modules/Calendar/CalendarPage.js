@@ -847,7 +847,6 @@ function CalendarPage(props) {
               eventContent={(arg) => {
                 const { event, view } = arg;
                 const { extendedProps } = event._def;
-                console.log(extendedProps);
                 let italicEl = document.createElement("div");
                 italicEl.classList.add("fc-content");
                 if (
