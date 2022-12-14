@@ -451,7 +451,7 @@ function ModalCalendar({
                       )}
                       //isLoading={true}
                       //isDisabled={true}
-                      isClearable
+                      //isClearable
                       isSearchable
                       //menuIsOpen={true}
                       name="StockID"
