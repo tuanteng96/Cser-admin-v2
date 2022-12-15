@@ -28,6 +28,7 @@ function ModalCalendarLock({
   btnLoadingLock,
   AuthCrStockID,
 }) {
+  console.log(AuthCrStockID);
   return (
     <Modal
       size="md"
@@ -60,216 +61,227 @@ function ModalCalendarLock({
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <FieldArray
-                  name="ListLocks"
-                  render={(ListLocksHelpers) => (
-                    <Fragment>
-                      {values.ListLocks &&
-                        values.ListLocks.map((lock, i) => (
-                          <div
-                            className={`${Number(AuthCrStockID) !==
-                              Number(lock.StockID) && "d-none"}`}
-                            key={i}
-                          >
-                            <FieldArray
-                              name={`ListLocks[${i}].ListDisable`}
-                              render={(ListDisableHelpers) => (
-                                <div>
-                                  {values.ListLocks[i].ListDisable &&
-                                  values.ListLocks[i].ListDisable.length > 0 ? (
-                                    values.ListLocks[i].ListDisable.map(
-                                      (item, index) => (
-                                        <div
-                                          className={`${
-                                            values.ListLocks[i].ListDisable
-                                              .length -
-                                              1 ===
-                                            index
-                                              ? ""
-                                              : "mb-15px"
-                                          }`}
-                                          key={index}
-                                        >
-                                          <div className="d-flex">
-                                            <DatePicker
-                                              className="form-control font-size-sm"
-                                              selected={
-                                                item.Date
-                                                  ? new Date(item.Date)
-                                                  : ""
-                                              }
-                                              onChange={(date) => {
-                                                setFieldValue(
-                                                  `ListLocks[${i}].ListDisable[${index}.Date]`,
-                                                  date
-                                                );
-                                              }}
-                                              popperContainer={
-                                                CalendarContainer
-                                              }
-                                              dateFormat="dd/MM/yyyy"
-                                              placeholderText="Chọn ngày"
-                                            />
-                                            <button
-                                              type="button"
-                                              className="btn btn-light-success btn-sm ml-5px"
-                                              onClick={() =>
-                                                ListDisableHelpers.push({
-                                                  Date: "",
-                                                  TimeClose: [
-                                                    {
-                                                      Start: "",
-                                                      End: "",
-                                                    },
-                                                  ],
-                                                })
-                                              }
-                                            >
-                                              <i className="fal fa-plus pr-0 font-size-xs"></i>
-                                            </button>
-                                            <button
-                                              type="button"
-                                              className="btn btn-light-danger btn-sm ml-5px"
-                                              onClick={() =>
-                                                ListDisableHelpers.remove(index)
-                                              }
-                                            >
-                                              <i className="far fa-trash-alt pr-0 font-size-xs"></i>
-                                            </button>
-                                          </div>
-
-                                          <FieldArray
-                                            name={`ListLocks[${i}].ListDisable[${index}].TimeClose`}
-                                            render={(TimeCloseHelpers) => (
-                                              <div
-                                                className={`listtime-lock ${(!item.TimeClose ||
-                                                  item.TimeClose.length ===
-                                                    0) &&
-                                                  "d-none"}`}
+                {!AuthCrStockID ? (
+                  <div className="text-danger">
+                    Bạn vui lòng chọn điểm muốn cài đặt khóa lịch.
+                  </div>
+                ) : (
+                  <FieldArray
+                    name="ListLocks"
+                    render={(ListLocksHelpers) => (
+                      <Fragment>
+                        {values.ListLocks &&
+                          values.ListLocks.map((lock, i) => (
+                            <div
+                              className={`${Number(AuthCrStockID) !==
+                                Number(lock.StockID) && "d-none"}`}
+                              key={i}
+                            >
+                              <FieldArray
+                                name={`ListLocks[${i}].ListDisable`}
+                                render={(ListDisableHelpers) => (
+                                  <div>
+                                    {values.ListLocks[i].ListDisable &&
+                                    values.ListLocks[i].ListDisable.length >
+                                      0 ? (
+                                      values.ListLocks[i].ListDisable.map(
+                                        (item, index) => (
+                                          <div
+                                            className={`${
+                                              values.ListLocks[i].ListDisable
+                                                .length -
+                                                1 ===
+                                              index
+                                                ? ""
+                                                : "mb-15px"
+                                            }`}
+                                            key={index}
+                                          >
+                                            <div className="d-flex">
+                                              <DatePicker
+                                                className="form-control font-size-sm"
+                                                selected={
+                                                  item.Date
+                                                    ? new Date(item.Date)
+                                                    : ""
+                                                }
+                                                onChange={(date) => {
+                                                  setFieldValue(
+                                                    `ListLocks[${i}].ListDisable[${index}.Date]`,
+                                                    date
+                                                  );
+                                                }}
+                                                popperContainer={
+                                                  CalendarContainer
+                                                }
+                                                dateFormat="dd/MM/yyyy"
+                                                placeholderText="Chọn ngày"
+                                              />
+                                              <button
+                                                type="button"
+                                                className="btn btn-light-success btn-sm ml-5px"
+                                                onClick={() =>
+                                                  ListDisableHelpers.push({
+                                                    Date: "",
+                                                    TimeClose: [
+                                                      {
+                                                        Start: "",
+                                                        End: "",
+                                                      },
+                                                    ],
+                                                  })
+                                                }
                                               >
-                                                {item.TimeClose &&
-                                                  item.TimeClose.map(
-                                                    (time, idx) => (
-                                                      <div
-                                                        className={`${
-                                                          item.TimeClose
-                                                            .length -
-                                                            1 ===
-                                                          idx
-                                                            ? ""
-                                                            : "mb-10px"
-                                                        } listtime-lock__item`}
-                                                        key={idx}
-                                                      >
-                                                        <div className="d-flex">
-                                                          <TimePicker.RangePicker
-                                                            onChange={(val) => {
-                                                              setFieldValue(
-                                                                `ListLocks[${i}].ListDisable[${index}].TimeClose[${idx}].Start`,
-                                                                val &&
-                                                                  moment(
-                                                                    val[0]
-                                                                  ).format(
-                                                                    "HH:mm"
-                                                                  )
-                                                              );
-                                                              setFieldValue(
-                                                                `ListLocks[${i}].ListDisable[${index}].TimeClose[${idx}].End`,
-                                                                val &&
-                                                                  moment(
-                                                                    val[1]
-                                                                  ).format(
-                                                                    "HH:mm"
-                                                                  )
-                                                              );
-                                                            }}
-                                                            format="HH:mm"
-                                                            value={[
-                                                              time.Start
-                                                                ? moment(
-                                                                    time.Start,
-                                                                    "HH:mm"
-                                                                  )
-                                                                : "",
-                                                              time.End
-                                                                ? moment(
-                                                                    time.End,
-                                                                    "HH:mm"
-                                                                  )
-                                                                : "",
-                                                            ]}
-                                                            placeholder={[
-                                                              "Bắt đầu",
-                                                              "Kết thúc",
-                                                            ]}
-                                                            className="w-100"
-                                                          />
-                                                          <button
-                                                            type="button"
-                                                            className="btn btn-light-success btn-sm ml-5px"
-                                                            onClick={() =>
-                                                              TimeCloseHelpers.push(
-                                                                idx,
-                                                                {
-                                                                  Start: "",
-                                                                  End: "",
-                                                                }
-                                                              )
-                                                            }
-                                                          >
-                                                            <i className="fal fa-plus pr-0 font-size-xs"></i>
-                                                          </button>
-                                                          <button
-                                                            type="button"
-                                                            className="btn btn-light-danger btn-sm ml-5px"
-                                                            onClick={() =>
-                                                              TimeCloseHelpers.remove(
-                                                                idx
-                                                              )
-                                                            }
-                                                          >
-                                                            <i className="far fa-trash-alt pr-0 font-size-xs"></i>
-                                                          </button>
+                                                <i className="fal fa-plus pr-0 font-size-xs"></i>
+                                              </button>
+                                              <button
+                                                type="button"
+                                                className="btn btn-light-danger btn-sm ml-5px"
+                                                onClick={() =>
+                                                  ListDisableHelpers.remove(
+                                                    index
+                                                  )
+                                                }
+                                              >
+                                                <i className="far fa-trash-alt pr-0 font-size-xs"></i>
+                                              </button>
+                                            </div>
+
+                                            <FieldArray
+                                              name={`ListLocks[${i}].ListDisable[${index}].TimeClose`}
+                                              render={(TimeCloseHelpers) => (
+                                                <div
+                                                  className={`listtime-lock ${(!item.TimeClose ||
+                                                    item.TimeClose.length ===
+                                                      0) &&
+                                                    "d-none"}`}
+                                                >
+                                                  {item.TimeClose &&
+                                                    item.TimeClose.map(
+                                                      (time, idx) => (
+                                                        <div
+                                                          className={`${
+                                                            item.TimeClose
+                                                              .length -
+                                                              1 ===
+                                                            idx
+                                                              ? ""
+                                                              : "mb-10px"
+                                                          } listtime-lock__item`}
+                                                          key={idx}
+                                                        >
+                                                          <div className="d-flex">
+                                                            <TimePicker.RangePicker
+                                                              onChange={(
+                                                                val
+                                                              ) => {
+                                                                setFieldValue(
+                                                                  `ListLocks[${i}].ListDisable[${index}].TimeClose[${idx}].Start`,
+                                                                  val &&
+                                                                    moment(
+                                                                      val[0]
+                                                                    ).format(
+                                                                      "HH:mm"
+                                                                    )
+                                                                );
+                                                                setFieldValue(
+                                                                  `ListLocks[${i}].ListDisable[${index}].TimeClose[${idx}].End`,
+                                                                  val &&
+                                                                    moment(
+                                                                      val[1]
+                                                                    ).format(
+                                                                      "HH:mm"
+                                                                    )
+                                                                );
+                                                              }}
+                                                              format="HH:mm"
+                                                              value={[
+                                                                time.Start
+                                                                  ? moment(
+                                                                      time.Start,
+                                                                      "HH:mm"
+                                                                    )
+                                                                  : "",
+                                                                time.End
+                                                                  ? moment(
+                                                                      time.End,
+                                                                      "HH:mm"
+                                                                    )
+                                                                  : "",
+                                                              ]}
+                                                              placeholder={[
+                                                                "Bắt đầu",
+                                                                "Kết thúc",
+                                                              ]}
+                                                              className="w-100"
+                                                            />
+                                                            <button
+                                                              type="button"
+                                                              className="btn btn-light-success btn-sm ml-5px"
+                                                              onClick={() =>
+                                                                TimeCloseHelpers.push(
+                                                                  idx,
+                                                                  {
+                                                                    Start: "",
+                                                                    End: "",
+                                                                  }
+                                                                )
+                                                              }
+                                                            >
+                                                              <i className="fal fa-plus pr-0 font-size-xs"></i>
+                                                            </button>
+                                                            <button
+                                                              type="button"
+                                                              className="btn btn-light-danger btn-sm ml-5px"
+                                                              onClick={() =>
+                                                                TimeCloseHelpers.remove(
+                                                                  idx
+                                                                )
+                                                              }
+                                                            >
+                                                              <i className="far fa-trash-alt pr-0 font-size-xs"></i>
+                                                            </button>
+                                                          </div>
                                                         </div>
-                                                      </div>
-                                                    )
-                                                  )}
-                                              </div>
-                                            )}
-                                          />
-                                        </div>
+                                                      )
+                                                    )}
+                                                </div>
+                                              )}
+                                            />
+                                          </div>
+                                        )
                                       )
-                                    )
-                                  ) : (
-                                    <div>
-                                      Bạn chưa có lịch khóa trong từ hôm nay cho
-                                      tới các ngày sắp tới. Vui lòng
-                                      <span
-                                        className="text-primary cursor-pointer font-weight-bold text-decoration-underline pl-5px"
-                                        onClick={() =>
-                                          ListDisableHelpers.push({
-                                            Date: "",
-                                            TimeClose: [
-                                              {
-                                                Start: "",
-                                                End: "",
-                                              },
-                                            ],
-                                          })
-                                        }
-                                      >
-                                        Tạo khóa lịch mới
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-                            />
-                          </div>
-                        ))}
-                    </Fragment>
-                  )}
-                />
+                                    ) : (
+                                      <div>
+                                        Bạn chưa có lịch khóa trong từ hôm nay
+                                        cho tới các ngày sắp tới. Vui lòng
+                                        <span
+                                          className="text-primary cursor-pointer font-weight-bold text-decoration-underline pl-5px"
+                                          onClick={() =>
+                                            ListDisableHelpers.push({
+                                              Date: "",
+                                              TimeClose: [
+                                                {
+                                                  Start: "",
+                                                  End: "",
+                                                },
+                                              ],
+                                            })
+                                          }
+                                        >
+                                          Tạo khóa lịch mới
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              />
+                            </div>
+                          ))}
+                      </Fragment>
+                    )}
+                  />
+                )}
               </Modal.Body>
               <Modal.Footer>
                 <button

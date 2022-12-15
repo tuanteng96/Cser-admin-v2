@@ -17,7 +17,14 @@ const initialValue = {
   RootIdS: '',
   BookDate: '',
   Desc: '',
-  StockID: window.top?.MemberSelectStockID || '',
+  StockID:
+    window?.GlobalConfig?.StocksNotBook &&
+    window.top?.MemberSelectStockID &&
+    window?.GlobalConfig?.StocksNotBook.includes(
+      window.top?.MemberSelectStockID
+    )
+      ? ''
+      : window.top?.MemberSelectStockID || '',
   FullName: window.top?.Member?.FullName || '',
   Phone: window.top?.Member?.MobilePhone || '',
   UserServiceIDs: ''

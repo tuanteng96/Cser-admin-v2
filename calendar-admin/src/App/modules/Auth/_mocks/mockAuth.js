@@ -424,7 +424,7 @@ export const AuthMock = {
         PHU_CAP: 0,
         NGAY_CONG: 0,
     }, ],
-    CrStockID: 8975,
+    CrStockID: 0, //8975
     Mode: null,
     CashNoPending: "1",
     _AllGroup: ["order", "service", "director", "store", "accountant"],

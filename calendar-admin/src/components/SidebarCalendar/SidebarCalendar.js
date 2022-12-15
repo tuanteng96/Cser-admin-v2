@@ -314,33 +314,34 @@ function SidebarCalendar({
                           onBlur={handleBlur}
                         />
                       )}
-
-                      <AsyncPaginate
-                        classIcon="far fa-user-alt"
-                        menuPlacement="bottom"
-                        isMulti
-                        className="select-control mb-8px"
-                        classNamePrefix="select"
-                        isClearable
-                        isSearchable
-                        //menuIsOpen={true}
-                        name="MemberID"
-                        value={values.MemberID}
-                        onChange={(option) =>
-                          setFieldValue("MemberID", option, false)
-                        }
-                        placeholder="Khách hàng"
-                        components={{
-                          Option: CustomOptionStaff,
-                          Control,
-                        }}
-                        loadOptions={loadOptionsCustomer}
-                        noOptionsMessage={({ inputValue }) =>
-                          !inputValue
-                            ? "Không có khách hàng"
-                            : "Không tìm thấy khách hàng"
-                        }
-                      />
+                      {!isTelesales && (
+                        <AsyncPaginate
+                          classIcon="far fa-user-alt"
+                          menuPlacement="bottom"
+                          isMulti
+                          className="select-control mb-8px"
+                          classNamePrefix="select"
+                          isClearable
+                          isSearchable
+                          //menuIsOpen={true}
+                          name="MemberID"
+                          value={values.MemberID}
+                          onChange={(option) =>
+                            setFieldValue("MemberID", option, false)
+                          }
+                          placeholder="Khách hàng"
+                          components={{
+                            Option: CustomOptionStaff,
+                            Control,
+                          }}
+                          loadOptions={loadOptionsCustomer}
+                          noOptionsMessage={({ inputValue }) =>
+                            !inputValue
+                              ? "Không có khách hàng"
+                              : "Không tìm thấy khách hàng"
+                          }
+                        />
+                      )}
                       <AsyncPaginate
                         classIcon="far fa-user-cog"
                         menuPlacement="bottom"

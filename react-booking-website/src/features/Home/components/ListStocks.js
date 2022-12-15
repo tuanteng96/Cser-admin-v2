@@ -29,9 +29,12 @@ function ListStocks({ formikProps }) {
     bookingApi
       .getStock()
       .then(({ data }) => {
+        const StocksNotBook = window?.GlobalConfig?.StocksNotBook || ''
         const newStocks = data?.data?.all
           ? data.data.all
-              .filter(item => item.ParentID !== 0)
+              .filter(
+                item => item.ParentID !== 0 && !StocksNotBook.includes(item.ID)
+              )
               .map(item => ({ ...item, ID: `${item.ID}` }))
           : []
         setListStocks(newStocks)
