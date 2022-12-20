@@ -113,8 +113,7 @@ export default function Home() {
       >
         {formikProps => {
           // errors, touched, handleChange, handleBlur
-          /* const { values, errors, setFieldValue, handleChange, handleBlur } =
-            formikProps */
+          const { values } = formikProps
           window.top.handleReset = () => {
             setKey('booking')
             formikProps.resetForm()
@@ -135,6 +134,7 @@ export default function Home() {
             formikProps.setFieldValue('MobilePhone', obj.MobilePhone)
             formikProps.setFieldValue('FullName', obj.FullName)
             formikProps.setFieldValue('UserServiceIDs', obj.UserServiceIDs)
+            console.log(values)
           }
 
           return (
