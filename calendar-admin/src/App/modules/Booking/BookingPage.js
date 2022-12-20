@@ -12,6 +12,8 @@ import Cookies from "js-cookie";
 
 import moment from "moment";
 import "moment/locale/vi";
+import SelectStocks from "../../../components/Select/SelectStocks/SelectStocks";
+import SelectStaffsService from "../../../components/Select/SelectStaffsService/SelectStaffsService";
 moment.locale("vi");
 
 const StatusArr = [
@@ -61,11 +63,8 @@ function BookingPage() {
     isBtnBooking: false,
     isBtnDelete: false,
   });
-  const { AuthStocks, AuthCrStockID, Book, BookMember } = useSelector(
+  const { AuthCrStockID, Book, BookMember } = useSelector(
     ({ Auth, Booking }) => ({
-      AuthStocks: Auth.Stocks.filter(
-        (item) => item.ParentID !== 0
-      ).map((item) => ({ ...item, value: item.ID, label: item.Title })),
       AuthCrStockID: Auth.CrStockID,
       Book: Booking.Book,
       BookMember: Booking.Member,
@@ -394,16 +393,14 @@ function BookingPage() {
                     timeInputLabel="Thời gian"
                     showTimeSelect
                   />
-                  <Select
+                  <SelectStocks
                     className={`select-control mt-2 ${
                       errors.StockID && touched.StockID
                         ? "is-invalid solid-invalid"
                         : ""
                     }`}
                     classNamePrefix="select"
-                    value={AuthStocks.filter(
-                      (item) => item.ID === values.StockID
-                    )}
+                    value={values.StockID}
                     //isLoading={true}
                     //isDisabled={true}
                     //isClearable
@@ -411,7 +408,6 @@ function BookingPage() {
                     //menuIsOpen={true}
                     name="StockID"
                     placeholder="Chọn cơ sở"
-                    options={AuthStocks}
                     onChange={(option) => {
                       setFieldValue("StockID", option ? option.value : "");
                     }}
@@ -481,8 +477,7 @@ function BookingPage() {
                 </div>
                 <div className="form-group form-group-ezs px-6 pt-3 border-top">
                   <label className="mb-1">Nhân viên thực hiện</label>
-                  <AsyncSelect
-                    key={values.StockID}
+                  <SelectStaffsService
                     className={`select-control ${
                       errors.UserServiceIDs && touched.UserServiceIDs
                         ? "is-invalid solid-invalid"
@@ -505,11 +500,6 @@ function BookingPage() {
                     components={{
                       Option: CustomOptionStaff,
                     }}
-                    cacheOptions
-                    loadOptions={(v, callback) =>
-                      loadOptionsStaff(v, callback, values.StockID)
-                    }
-                    defaultOptions
                     noOptionsMessage={({ inputValue }) =>
                       !inputValue
                         ? "Không có nhân viên"

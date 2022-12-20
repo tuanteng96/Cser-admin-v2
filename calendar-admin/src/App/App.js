@@ -44,17 +44,17 @@ function App({ store, basename }) {
         }}
       >
         {!NameCurrent && (
-          <AuthInit isConfig={true}>
+          <AuthInit>
             <CalendarPage />
           </AuthInit>
         )}
         {NameCurrent === "POPUP" && (
-          <AuthInit isConfig={false}>
+          <AuthInit>
             <BookingPage />
           </AuthInit>
         )}
         {NameCurrent === "CHECKIN" && (
-          <AuthInit isConfig={false}>
+          <AuthInit>
             <CheckInPage />
           </AuthInit>
         )}
