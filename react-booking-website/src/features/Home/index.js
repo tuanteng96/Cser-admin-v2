@@ -45,16 +45,22 @@ export default function Home() {
 
   const onSubmit = (values, { resetForm }) => {
     setLoadingBtn(true)
+    const itemBooking = {
+      ...values
+    }
+    if (itemBooking.ID) {
+      delete itemBooking.ID
+    }
     const newValues = {
       booking: [
         {
-          ...values,
-          BookDate: values.BookDate
-            ? moment(values.BookDate).format('YYYY-MM-DD HH:mm')
+          ...itemBooking,
+          BookDate: itemBooking.BookDate
+            ? moment(itemBooking.BookDate).format('YYYY-MM-DD HH:mm')
             : '',
-          RootIdS: values.RootIdS ? values.RootIdS.join(',') : '',
-          UserServiceIDs: values.UserServiceIDs
-            ? values.UserServiceIDs.value
+          RootIdS: itemBooking.RootIdS ? itemBooking.RootIdS.join(',') : '',
+          UserServiceIDs: itemBooking.UserServiceIDs
+            ? itemBooking.UserServiceIDs.value
             : ''
         }
       ]
@@ -62,11 +68,27 @@ export default function Home() {
     bookingApi
       .postBooking(newValues)
       .then(response => {
-        setLoadingBtn(false)
-        resetForm()
-        window.top?.toastr &&
-          window.top?.toastr.success('Đặt lịch thành công!', { timeOut: 2500 })
-        window.top?.onHideBooking && window.top.onHideBooking()
+        if (values.ID) {
+          window.top?.onDeleteBooking &&
+            window.top?.onDeleteBooking(values.ID, () => {
+              setLoadingBtn(false)
+              resetForm()
+              window.top?.toastr &&
+                window.top?.toastr.success('Thay đổi lịch thành công!', {
+                  timeOut: 2500
+                })
+              window.top?.onRefreshListBook && window.top?.onRefreshListBook()
+              window.top?.onHideBooking && window.top.onHideBooking()
+            })
+        } else {
+          setLoadingBtn(false)
+          resetForm()
+          window.top?.toastr &&
+            window.top?.toastr.success('Đặt lịch thành công!', {
+              timeOut: 2500
+            })
+          window.top?.onHideBooking && window.top.onHideBooking()
+        }
       })
       .catch(error => console.log(error))
   }
@@ -99,6 +121,19 @@ export default function Home() {
 
           window.top.setFieldValue = ServiceID => {
             formikProps.setFieldValue('RootIdS', [ServiceID])
+          }
+
+          window.top.setInitialValue = obj => {
+            formikProps.setFieldValue('ID', obj.ID)
+            formikProps.setFieldValue('AtHome', obj.AtHome)
+            formikProps.setFieldValue('MemberID', obj.MemberID)
+            formikProps.setFieldValue('RootIdS', obj.RootIdS)
+            formikProps.setFieldValue('BookDate', obj.BookDate)
+            formikProps.setFieldValue('Desc', obj.Desc)
+            formikProps.setFieldValue('StockID', obj.StockID)
+            formikProps.setFieldValue('MobilePhone', obj.MobilePhone)
+            formikProps.setFieldValue('FullName', obj.FullName)
+            formikProps.setFieldValue('UserServiceIDs', obj.UserServiceIDs)
           }
 
           return (
