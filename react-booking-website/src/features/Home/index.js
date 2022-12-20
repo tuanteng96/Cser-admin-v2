@@ -134,11 +134,11 @@ export default function Home() {
             formikProps.setFieldValue('MobilePhone', obj.MobilePhone)
             formikProps.setFieldValue('FullName', obj.FullName)
             formikProps.setFieldValue('UserServiceIDs', obj.UserServiceIDs)
-            console.log(values)
           }
 
           return (
             <Form className="h-100">
+              
               <Tab.Container className="h-100" activeKey={key}>
                 <Tab.Pane
                   className="h-100 tab-book__content tab-booking"
