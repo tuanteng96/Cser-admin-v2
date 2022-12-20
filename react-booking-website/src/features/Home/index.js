@@ -87,6 +87,7 @@ export default function Home() {
             window.top?.toastr.success('Đặt lịch thành công!', {
               timeOut: 2500
             })
+          window.top?.onRefreshListBook && window.top?.onRefreshListBook()
           window.top?.onHideBooking && window.top.onHideBooking()
         }
       })
