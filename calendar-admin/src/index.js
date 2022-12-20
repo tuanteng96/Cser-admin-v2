@@ -5,8 +5,12 @@ import App from "./App/App";
 import reportWebVitals from "./reportWebVitals";
 import store from "./redux/store";
 import { SplashScreenProvider } from "./layout/_core/SplashScreen";
+import * as _redux from './redux/index'
+import axiosClient from "./redux/axioClient";
 
 const { PUBLIC_URL } = process.env;
+
+_redux.setupAxios(axiosClient, store);
 
 ReactDOM.render(
   <React.StrictMode>

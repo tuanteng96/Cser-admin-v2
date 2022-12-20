@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Select, { components } from "react-select";
+import { components } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
 import AsyncSelect from "react-select/async";
 import { Dropdown, Modal } from "react-bootstrap";
@@ -12,6 +12,8 @@ import moment from "moment";
 import CalendarCrud from "../../App/modules/Calendar/_redux/CalendarCrud";
 import { toUrlServer } from "../../helpers/AssetsHelpers";
 import ModalCreateMember from "../ModalCreateMember/ModalCreateMember";
+import SelectStaffsService from "../Select/SelectStaffsService/SelectStaffsService";
+import SelectStocks from "../Select/SelectStocks/SelectStocks";
 moment.locale("vi");
 
 ModalCalendar.propTypes = {
@@ -62,7 +64,7 @@ function ModalCalendar({
   onDelete,
 }) {
   const [initialValues, setInitialValues] = useState(initialDefault);
-  const { AuthStocks, AuthCrStockID } = useSelector(({ Auth }) => ({
+  const { AuthCrStockID } = useSelector(({ Auth }) => ({
     AuthStocks: Auth.Stocks.filter(
       (item) => item.ParentID !== 0
     ).map((item) => ({ ...item, value: item.ID, label: item.Title })),
@@ -138,24 +140,8 @@ function ModalCalendar({
   const loadOptionsCustomer = (inputValue, callback) => {
     setTimeout(async () => {
       const { data } = await CalendarCrud.getMembers(inputValue);
-      const dataResult = data.data.map((item) => ({
+      const dataResult = data.map((item) => ({
         ...item,
-        value: item.id,
-        label: item.text,
-        Thumbnail: toUrlServer("/images/user.png"),
-      }));
-      callback(dataResult);
-    }, 300);
-  };
-
-  const loadOptionsStaff = (inputValue, callback, stockID) => {
-    const filters = {
-      key: inputValue,
-      StockID: stockID,
-    };
-    setTimeout(async () => {
-      const { data } = await CalendarCrud.getStaffs(filters);
-      const dataResult = data.data.map((item) => ({
         value: item.id,
         label: item.text,
         Thumbnail: toUrlServer("/images/user.png"),
@@ -168,11 +154,11 @@ function ModalCalendar({
     const filters = {
       Key: inputValue,
       StockID: stockID,
-      MemberID: MemberID?.value,
+      MemberID: MemberID?.value || "",
     };
     setTimeout(async () => {
-      const { data } = await CalendarCrud.getRootServices(filters);
-      const dataResult = data.lst.map((item) => ({
+      const { lst } = await CalendarCrud.getRootServices(filters);
+      const dataResult = lst.map((item) => ({
         value: item.ID,
         label: item.Title,
       }));
@@ -439,16 +425,14 @@ function ModalCalendar({
                       showTimeSelect
                       timeFormat="HH:mm"
                     />
-                    <Select
+                    <SelectStocks
                       className={`select-control mt-2 ${
                         errors.StockID && touched.StockID
                           ? "is-invalid solid-invalid"
                           : ""
                       }`}
                       classNamePrefix="select"
-                      value={AuthStocks.filter(
-                        (item) => item.ID === values.StockID
-                      )}
+                      value={values.StockID}
                       //isLoading={true}
                       //isDisabled={true}
                       //isClearable
@@ -456,7 +440,6 @@ function ModalCalendar({
                       //menuIsOpen={true}
                       name="StockID"
                       placeholder="Chọn cơ sở"
-                      options={AuthStocks}
                       onChange={(option) => {
                         setFieldValue("StockID", option ? option.value : "");
                       }}
@@ -528,8 +511,7 @@ function ModalCalendar({
                     <label className="mb-1 d-none d-md-block">
                       Nhân viên thực hiện
                     </label>
-                    <AsyncSelect
-                      key={values.StockID}
+                    <SelectStaffsService
                       className={`select-control ${
                         errors.UserServiceIDs && touched.UserServiceIDs
                           ? "is-invalid solid-invalid"
@@ -552,11 +534,6 @@ function ModalCalendar({
                       components={{
                         Option: CustomOptionStaff,
                       }}
-                      cacheOptions
-                      loadOptions={(v, callback) =>
-                        loadOptionsStaff(v, callback, values.StockID)
-                      }
-                      defaultOptions
                       noOptionsMessage={({ inputValue }) =>
                         !inputValue
                           ? "Không có nhân viên"

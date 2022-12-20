@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
 import { Modal } from "react-bootstrap";
 import { FieldArray, Form, Formik } from "formik";
 import DatePicker from "react-datepicker";
@@ -11,8 +10,6 @@ import moment from "moment";
 import "moment/locale/vi";
 
 moment.locale("vi");
-
-ModalCalendarLock.propTypes = {};
 
 const CalendarContainer = ({ children }) => {
   const el = document.getElementById("calendar-portal");
@@ -28,7 +25,6 @@ function ModalCalendarLock({
   btnLoadingLock,
   AuthCrStockID,
 }) {
-  console.log(AuthCrStockID);
   return (
     <Modal
       size="md"
@@ -45,11 +41,7 @@ function ModalCalendarLock({
       >
         {(formikProps) => {
           const {
-            errors,
-            touched,
             values,
-            handleChange,
-            handleBlur,
             setFieldValue,
           } = formikProps;
 

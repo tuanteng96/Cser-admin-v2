@@ -107,14 +107,16 @@ function CalendarPage(props) {
   const [StaffOffline, setStaffOffline] = useState([]);
   const [isModalLock, setIsModalLock] = useState(false);
   const { width } = useWindowSize();
+
   const { AuthCrStockID, TimeOpen, TimeClose, StocksList } = useSelector(
     ({ Auth, JsonConfig }) => ({
       AuthCrStockID: Auth.CrStockID,
-      StocksList: Auth.Stocks.filter((x) => x.ParentID !== 0),
+      StocksList: Auth?.Stocks.filter((x) => x.ParentID !== 0),
       TimeOpen: JsonConfig?.APP?.Working?.TimeOpen || "00:00:00",
       TimeClose: JsonConfig?.APP?.Working?.TimeClose || "23:59:00",
     })
   );
+
   const [elmHeight, setElmHeight] = useState(0);
   const [ListLock, setListLock] = useState({
     ListLocks: [],
@@ -162,8 +164,8 @@ function CalendarPage(props) {
   const getListLock = (callback) => {
     CalendarCrud.getConfigName(`giocam`)
       .then(({ data }) => {
-        if (data && data.data && data?.data.length > 0) {
-          const result = JSON.parse(data.data[0].Value);
+        if (data && data.length > 0) {
+          const result = JSON.parse(data[0].Value);
           const newResult =
             result && result.length > 0
               ? result.map((lock) => ({
@@ -191,6 +193,7 @@ function CalendarPage(props) {
                   StockID: o.ID,
                   ListDisable: [],
                 }));
+
           setListLock({
             ListLocks: newResult,
           });
@@ -530,7 +533,7 @@ function CalendarPage(props) {
     };
 
     CalendarCrud.getBooking(newFilters)
-      .then(({ data }) => {
+      .then((data) => {
         setStaffOffline(data?.dayOffs ?? []);
         const dataBooks =
           data.books && Array.isArray(data.books)
@@ -565,7 +568,7 @@ function CalendarPage(props) {
                         : item?.Member?.MobilePhone,
                   },
                   Star: checkStar(item),
-                  isBook: true
+                  isBook: true,
                 }))
                 .filter((item) => item.Status !== "TU_CHOI")
             : [];
@@ -863,9 +866,9 @@ function CalendarPage(props) {
                       extendedProps.MemberCurrent.FullName
                     }</span><span class="d-none d-md-inline"> - ${
                       extendedProps.MemberCurrent?.MobilePhone
-                    }</span></div><span class="${!extendedProps.isBook && "d-none"}">${extendedProps
-                      ?.BookCount?.Done || 0}/${extendedProps?.BookCount
-                      ?.Total || 0}</span></div>
+                    }</span></div><span class="${!extendedProps.isBook &&
+                      "d-none"}">${extendedProps?.BookCount?.Done ||
+                      0}/${extendedProps?.BookCount?.Total || 0}</span></div>
                     <div class="d-flex">
                       <div class="w-35px">${moment(
                         extendedProps.BookDate

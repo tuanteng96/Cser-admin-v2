@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = null;
 
 export const jsonSlice = createSlice({
-    name: 'Auth',
+    name: 'Json',
     initialState,
     reducers: {
         setConfig: (state, { payload }) => {

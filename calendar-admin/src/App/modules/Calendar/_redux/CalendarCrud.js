@@ -1,12 +1,11 @@
-import axios from "axios";
 import axiosClient from "../../../../redux/axioClient";
 
 const GET_MEMBERS_STAFF_URL = "/api/gl/select2";
 const GET_ROOT_SERVICES_URL = "/api/v3/mbook";
 const POST_BOOKING_URL = "/api/v3/mbookadmin?cmd=AdminBooking";
 
-const getMembers = (key) => {
-    return axiosClient.get(`${GET_MEMBERS_STAFF_URL}?cmd=member&q=${key}`);
+const getMembers = (key, CurrentStockID) => {
+    return axiosClient.get(`${GET_MEMBERS_STAFF_URL}?cmd=member&q=${key}&CurrentStockID=${CurrentStockID}`);
 };
 const getStaffs = ({ StockID, key, All }) => {
     return axiosClient.get(`${GET_MEMBERS_STAFF_URL}?cmd=user&roles=DV&crstockid=${StockID}&q=${key}${All ? "&all=1" : ""}`);
@@ -30,11 +29,7 @@ const createMember = (data) => {
     return axiosClient.post("/api/v3/member23?cmd=add", JSON.stringify(data))
 }
 const checkinMember = (data) => {
-    return axiosClient.post("/services/preview.aspx?cmd=checkin", data, {
-        headers: {
-            "Authorization": `Bearer ${window.top?.Info?.token}`,
-        }
-    })
+    return axiosClient.post("/services/preview.aspx?cmd=checkin", data)
 }
 
 const getConfigName = (name) => {

@@ -8,7 +8,7 @@ import CheckinCrud from './CheckinCrud';
 export const CheckIn = createAsyncThunk('/login', async(StockID, thunkAPI) => {
     try {
         const { data } = await CheckinCrud.getListCheckIn(StockID)
-        return data.data
+        return data
     } catch (error) {
         return thunkAPI.rejectWithValue(error)
     }

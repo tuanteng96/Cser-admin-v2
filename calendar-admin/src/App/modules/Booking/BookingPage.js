@@ -119,7 +119,7 @@ function BookingPage() {
     };
     setTimeout(async () => {
       const { data } = await CalendarCrud.getStaffs(filters);
-      const dataResult = data.data.map((item) => ({
+      const dataResult = data.map((item) => ({
         value: item.id,
         label: item.text,
         Thumbnail: toUrlServer("/images/user.png"),
@@ -135,8 +135,8 @@ function BookingPage() {
       MemberID: MemberID?.value,
     };
     setTimeout(async () => {
-      const { data } = await CalendarCrud.getRootServices(filters);
-      const dataResult = data.lst.map((item) => ({
+      const { lst } = await CalendarCrud.getRootServices(filters);
+      const dataResult = lst.map((item) => ({
         value: item.ID,
         label: item.Title,
       }));

@@ -3,17 +3,16 @@ import PropTypes from "prop-types";
 import { components } from "react-select";
 // import DatePicker from "react-datepicker";
 import { Form, Formik, useFormikContext } from "formik";
-import CalendarCrud from "../../App/modules/Calendar/_redux/CalendarCrud";
-import { toUrlServer } from "../../helpers/AssetsHelpers";
-import { useSelector } from "react-redux";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import StatusList from "./StatusList";
 import AdvancedList from "./AdvancedList";
 import { Dropdown } from "react-bootstrap";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { AsyncPaginate } from "react-select-async-paginate";
 import { AppContext } from "../../App/App";
-import Select from "react-select";
+import SelectStocksTelesale from "../Select/SelectStocksTelesale/SelectStocksTelesale";
+import SelectStaffsService from "../Select/SelectStaffsService/SelectStaffsService";
+import SelectMember from "../Select/SelectMember/SelectMember";
+import SelectStaffsTelesale from "../Select/SelectStaffsTelesale/SelectStaffsTelesale";
 
 SidebarCalendar.propTypes = {
   onOpenModal: PropTypes.func,
@@ -32,57 +31,6 @@ const perfectScrollbarOptions = {
   wheelSpeed: 2,
   wheelPropagation: false,
 };
-
-function SelectStocks({ value, ...props }) {
-  const [StocksList, setStocksList] = useState([]);
-
-  useEffect(() => {
-    let PermissionStocks = [];
-    if (
-      window?.top?.Info?.rightsSum?.tele?.hasRight ||
-      window?.top?.Info?.rightsSum?.teleAdv?.hasRight
-    ) {
-      if (window?.top?.Info?.rightsSum?.tele?.stocks) {
-        PermissionStocks = window?.top?.Info?.rightsSum?.tele?.stocks || [];
-      } else {
-        PermissionStocks = "All Stocks";
-      }
-    } else {
-      PermissionStocks = "401 Unauthorized";
-    }
-    let newStocks = window?.top?.Info?.Stocks || [];
-    if (PermissionStocks === "All Stocks") {
-      newStocks = [{ value: "", label: "Tất cả cơ sở" }, ...newStocks];
-    } else {
-      newStocks = newStocks.filter(
-        (o) => PermissionStocks && PermissionStocks.some((x) => o.ID === x.ID)
-      );
-    }
-    setStocksList(() =>
-      newStocks
-        .filter((o) => o.ID !== 778)
-        .map((item) => ({
-          ...item,
-          label: item.Title || item.label,
-          value: item.ID || item.value,
-        }))
-    );
-  }, []);
-
-  return (
-    <Select
-      placeholder="Chọn cơ cở"
-      classNamePrefix="select"
-      options={StocksList || []}
-      className="select-control mb-8px"
-      value={
-        StocksList &&
-        StocksList.filter((item) => Number(value) === Number(item.value))
-      }
-      {...props}
-    />
-  );
-}
 
 const CustomOptionStaff = ({ children, ...props }) => {
   const { Thumbnail, label } = props.data;
@@ -162,7 +110,6 @@ function SidebarCalendar({
   onOpenModalLock,
 }) {
   const [initialValues, setInitialValues] = useState(initialDefault);
-  const { CrStockID } = useSelector((state) => state.Auth);
   const { width } = useWindowSize();
   const { isTelesales } = useContext(AppContext);
 
@@ -171,42 +118,6 @@ function SidebarCalendar({
       setInitialValues(filters);
     }
   }, [filters]);
-
-  const loadOptionsStaff = async (inputValue) => {
-    const filters = {
-      key: inputValue,
-      StockID: CrStockID,
-    };
-    const { data } = await CalendarCrud.getStaffs(filters);
-    const dataResult = data.data.map((item) => ({
-      value: item.id,
-      label: item.text,
-      Thumbnail: toUrlServer("/images/user.png"),
-    }));
-    return {
-      options: dataResult,
-      hasMore: false,
-      additional: {
-        page: 1,
-      },
-    };
-  };
-
-  const loadOptionsCustomer = async (inputValue) => {
-    const { data } = await CalendarCrud.getMembers(inputValue);
-    const dataResult = data.data.map((item) => ({
-      value: item.id,
-      label: item.text,
-      Thumbnail: toUrlServer("/images/user.png"),
-    }));
-    return {
-      options: dataResult,
-      hasMore: false,
-      additional: {
-        page: 1,
-      },
-    };
-  };
 
   return (
     <div className="ezs-calendar__sidebar">
@@ -265,32 +176,14 @@ function SidebarCalendar({
               <PerfectScrollbar
                 options={perfectScrollbarOptions}
                 className="scroll"
-                style={{ position: "relative" }}
+                style={{ position: "relative", touchAction: "none" }}
               >
                 <div className="px-15px">
-                  {/* <div className={`datepicker-inline ${initialView !== "timeGridDay" ? "disabled" : ""} mb-2`}>
-                <DatePicker
-                  selected={values.From && new Date(values.From)}
-                  onChange={(date) => {
-                    if (initialView === "timeGridDay") {
-                      setFieldValue("From", date, false);
-                    } else {
-                      setFieldValue("From", date[0], false);
-                      setFieldValue("To", date[1], false);
-                    }
-                  }}
-                  inline
-                  selectsRange={initialView !== "timeGridDay"}
-                  startDate={values.From && new Date(values.From)}
-                  endDate={values.To && new Date(values.To)}
-                  disabled={true}
-                />
-              </div> */}
                   <div className="form-group form-group-ezs mb-0 mt-12px">
                     {/* <label className="mb-1">Khách hàng</label> */}
                     <div>
                       {isTelesales && (
-                        <SelectStocks
+                        <SelectStocksTelesale
                           noOptionsMessage={() => "không có sơ sở"}
                           classIcon="far fa-map-marker-alt"
                           classNamePrefix="select"
@@ -312,11 +205,39 @@ function SidebarCalendar({
                           }}
                           menuPosition="fixed"
                           onBlur={handleBlur}
+                          menuPortalTarget={document.body}
                         />
                       )}
                       {!isTelesales && (
-                        <AsyncPaginate
+                        <SelectMember
                           classIcon="far fa-user-alt"
+                          menuPlacement="bottom"
+                          isMulti
+                          className="select-control mb-8px"
+                          classNamePrefix="select"
+                          name="MemberID"
+                          value={values.MemberID}
+                          onChange={(option) =>
+                            setFieldValue("MemberID", option, false)
+                          }
+                          isClearable
+                          isSearchable
+                          components={{
+                            Option: CustomOptionStaff,
+                            Control,
+                          }}
+                          placeholder="Khách hàng"
+                          noOptionsMessage={({ inputValue }) =>
+                            !inputValue
+                              ? "Không có khách hàng"
+                              : "Không tìm thấy khách hàng"
+                          }
+                          menuPortalTarget={document.body}
+                        />
+                      )}
+                      {isTelesales ? (
+                        <SelectStaffsTelesale
+                          classIcon="far fa-user-cog"
                           menuPlacement="bottom"
                           isMulti
                           className="select-control mb-8px"
@@ -324,51 +245,51 @@ function SidebarCalendar({
                           isClearable
                           isSearchable
                           //menuIsOpen={true}
-                          name="MemberID"
-                          value={values.MemberID}
+                          name="UserServiceIDs"
+                          value={values.UserServiceIDs}
                           onChange={(option) =>
-                            setFieldValue("MemberID", option, false)
+                            setFieldValue("UserServiceIDs", option, false)
                           }
-                          placeholder="Khách hàng"
+                          placeholder="Nhân viên"
                           components={{
                             Option: CustomOptionStaff,
                             Control,
                           }}
-                          loadOptions={loadOptionsCustomer}
                           noOptionsMessage={({ inputValue }) =>
                             !inputValue
-                              ? "Không có khách hàng"
-                              : "Không tìm thấy khách hàng"
+                              ? "Không có nhân viên"
+                              : "Không tìm thấy nhân viên"
                           }
+                          menuPortalTarget={document.body}
+                        />
+                      ) : (
+                        <SelectStaffsService
+                          classIcon="far fa-user-cog"
+                          menuPlacement="bottom"
+                          isMulti
+                          className="select-control mb-8px"
+                          classNamePrefix="select"
+                          isClearable
+                          isSearchable
+                          //menuIsOpen={true}
+                          name="UserServiceIDs"
+                          value={values.UserServiceIDs}
+                          onChange={(option) =>
+                            setFieldValue("UserServiceIDs", option, false)
+                          }
+                          placeholder="Nhân viên"
+                          components={{
+                            Option: CustomOptionStaff,
+                            Control,
+                          }}
+                          noOptionsMessage={({ inputValue }) =>
+                            !inputValue
+                              ? "Không có nhân viên"
+                              : "Không tìm thấy nhân viên"
+                          }
+                          menuPortalTarget={document.body}
                         />
                       )}
-                      <AsyncPaginate
-                        classIcon="far fa-user-cog"
-                        menuPlacement="bottom"
-                        key={CrStockID}
-                        isMulti
-                        className="select-control mb-8px"
-                        classNamePrefix="select"
-                        isClearable
-                        isSearchable
-                        //menuIsOpen={true}
-                        name="UserServiceIDs"
-                        value={values.UserServiceIDs}
-                        onChange={(option) =>
-                          setFieldValue("UserServiceIDs", option, false)
-                        }
-                        placeholder="Nhân viên"
-                        components={{
-                          Option: CustomOptionStaff,
-                          Control,
-                        }}
-                        loadOptions={loadOptionsStaff}
-                        noOptionsMessage={({ inputValue }) =>
-                          !inputValue
-                            ? "Không có nhân viên"
-                            : "Không tìm thấy nhân viên"
-                        }
-                      />
                     </div>
                   </div>
                   <AdvancedList formikProps={formikProps} />
