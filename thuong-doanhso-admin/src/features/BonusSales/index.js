@@ -87,15 +87,19 @@ const BonusSales = () => {
   const getInfoOrder = (callback) => {
     BonusSaleCrud.getOrderItem({ OrderID })
       .then(({ data }) => {
-        const StaffStock =
-          data?.nhan_vien &&
-          data?.nhan_vien.filter((item) => item.id === CrStockID);
+        const StaffStock = data?.nhan_vien || [];
         const newStaff =
           StaffStock.length > 0
-            ? StaffStock[0].ds.map((item) => ({
+            ? StaffStock.map((item) => ({
                 ...item,
-                value: item.ID,
-                label: item.Fn,
+                label: item.co_so,
+                options: item.ds
+                  ? item.ds.map((user) => ({
+                      ...user,
+                      label: user.Fn,
+                      value: user.ID,
+                    }))
+                  : [],
               }))
             : [];
         const newData = {
