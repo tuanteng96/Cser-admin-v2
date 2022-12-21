@@ -66,20 +66,22 @@ export default function Home() {
         }
       ]
     }
+    if (values.ID) {
+      newValues.deletes = [
+        {
+          ID: values.ID
+        }
+      ]
+    }
     bookingApi
       .postBooking(newValues)
       .then(response => {
         if (values.ID) {
-          window.top?.onDeleteBooking &&
-            window.top?.onDeleteBooking(values.ID, () => {
-              setLoadingBtn(false)
-              resetForm()
-              window.top?.toastr &&
-                window.top?.toastr.success('Thay đổi lịch thành công!', {
-                  timeOut: 2500
-                })
-              window.top?.onRefreshListBook && window.top?.onRefreshListBook()
-              window.top?.onHideBooking && window.top.onHideBooking()
+          setLoadingBtn(false)
+          resetForm()
+          window.top?.toastr &&
+            window.top?.toastr.success('Thay đổi lịch thành công!', {
+              timeOut: 2500
             })
         } else {
           setLoadingBtn(false)
@@ -88,9 +90,9 @@ export default function Home() {
             window.top?.toastr.success('Đặt lịch thành công!', {
               timeOut: 2500
             })
-          window.top?.onRefreshListBook && window.top?.onRefreshListBook()
-          window.top?.onHideBooking && window.top.onHideBooking()
         }
+        window.top?.onRefreshListBook && window.top?.onRefreshListBook()
+        window.top?.onHideBooking && window.top.onHideBooking()
       })
       .catch(error => console.log(error))
   }
