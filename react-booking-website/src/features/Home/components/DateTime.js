@@ -22,7 +22,7 @@ const GroupByCount = (List, Count) => {
   }, [])
 }
 
-function DateTime({ formikProps }) {
+function DateTime({ formikProps, BookSet }) {
   const [key, setKey] = useState('tab-0')
   const [ListChoose, setListChoose] = useState([])
   const [DateChoose, setDateChoose] = useState()
@@ -34,18 +34,48 @@ function DateTime({ formikProps }) {
   }, [])
 
   useEffect(() => {
+    if (BookSet?.value) {
+      if (
+        moment(BookSet?.value).format('DD-MM-YYYY') ===
+        moment().format('DD-MM-YYYY')
+      ) {
+        setKey('tab-0')
+        setDateChoose('')
+      } else if (
+        moment(BookSet?.value).format('DD-MM-YYYY') ===
+        moment().add(1, 'days').format('DD-MM-YYYY')
+      ) {
+        setKey('tab-1')
+        setDateChoose('')
+      } else {
+        setKey('tab-2')
+        setDateChoose(moment(BookSet?.value).toDate())
+      }
+    } else {
+      setDateChoose('')
+      getListChoose()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [BookSet?.value])
+
+  useEffect(() => {
     getListChoose(DateChoose)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [DateChoose, ListLock, values.StockID])
 
   useEffect(() => {
-    if (DateChoose) {
+    if (DateChoose && !BookSet?.value) {
       setFieldValue('BookDate', '', false)
       setErrors({})
       setKey('tab-2')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [DateChoose])
+  }, [DateChoose, BookSet?.value])
+
+  window.IframeTabs = () => {
+    setDateChoose('')
+    setKey('tab-0')
+  }
 
   const getListDisable = () => {
     bookingApi
@@ -186,6 +216,7 @@ function DateTime({ formikProps }) {
               onSelect={_key => {
                 setFieldValue('BookDate', '', false)
                 setErrors({})
+                BookSet.set('')
                 setDateChoose('')
                 setKey(_key)
               }}

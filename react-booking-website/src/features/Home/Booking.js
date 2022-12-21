@@ -15,7 +15,7 @@ const perfectScrollbarOptions = {
   wheelPropagation: false
 }
 
-function Booking({ formikProps, nextStep }) {
+function Booking({ formikProps, nextStep, BookSet }) {
   const { errors, submitForm, setErrors } = formikProps
   const [isSubmiting, setIsSubmiting] = useState(false)
 
@@ -50,7 +50,7 @@ function Booking({ formikProps, nextStep }) {
         className="flex-grow-1 scroll"
       >
         <ListStocks formikProps={formikProps} />
-        <DateTime formikProps={formikProps} />
+        <DateTime formikProps={formikProps} BookSet={BookSet}/>
         {window.GlobalConfig?.Admin?.dat_lich_nhan_vien === 1 && (
           <StaffAtHome formikProps={formikProps} />
         )}

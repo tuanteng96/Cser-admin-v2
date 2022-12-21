@@ -42,6 +42,7 @@ export default function Home() {
   const [key, setKey] = useState('booking')
   const [loadingBtn, setLoadingBtn] = useState(false)
   const [initialValues] = useState(initialValue)
+  const [BookSet, setBookSet] = useState()
 
   const onSubmit = (values, { resetForm }) => {
     setLoadingBtn(true)
@@ -116,7 +117,9 @@ export default function Home() {
           const { values } = formikProps
           window.top.handleReset = () => {
             setKey('booking')
+            setBookSet('')
             formikProps.resetForm()
+            window.IframeTabs && window.IframeTabs()
           }
 
           window.top.setFieldValue = ServiceID => {
@@ -134,17 +137,33 @@ export default function Home() {
             formikProps.setFieldValue('MobilePhone', obj.MobilePhone)
             formikProps.setFieldValue('FullName', obj.FullName)
             formikProps.setFieldValue('UserServiceIDs', obj.UserServiceIDs)
+            setBookSet(obj.BookDate)
           }
-
           return (
             <Form className="h-100">
-              
               <Tab.Container className="h-100" activeKey={key}>
                 <Tab.Pane
                   className="h-100 tab-book__content tab-booking"
                   eventKey="booking"
                 >
-                  <Booking formikProps={formikProps} nextStep={nextStep} />
+                  {/* <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => {
+                      formikProps.setFieldValue(
+                        'BookDate',
+                        '2022-12-21T13:15:00'
+                      )
+                      setBookSet('2022-12-21T13:15:00')
+                    }}
+                  >
+                    Click
+                  </button> */}
+                  <Booking
+                    formikProps={formikProps}
+                    nextStep={nextStep}
+                    BookSet={{ value: BookSet, set: setBookSet }}
+                  />
                 </Tab.Pane>
                 <Tab.Pane
                   className="h-100 tab-book__content tab-confirm"

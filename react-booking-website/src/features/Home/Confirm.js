@@ -211,7 +211,7 @@ function Confirm({ prevStep, formikProps, onSubmit, loadingBtn }) {
             loadingBtn && 'spinner spinner-white spinner-right'
           )}
         >
-          Đặt lịch ngay
+          {values.ID ? 'Thay đổi lịch' : 'Đặt lịch ngay'}
         </button>
       </div>
     </div>
