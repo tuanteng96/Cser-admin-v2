@@ -71,7 +71,7 @@ function AuthInit({ isConfig, children }) {
             },
           },
           token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEwMjAxMDMwMTAyMDIwNDEiLCJuYmYiOjE2NzE1MDc2OTQsImV4cCI6MTY3MjExMjQ5NCwiaWF0IjoxNjcxNTA3Njk0fQ.KvP1zKvrJxA5Xrt3K2LaT6YE2vR5SAdmB72y11KGqx8",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEwMjAxMDMwMTAyMDIxMjQiLCJuYmYiOjE2NzE5NjAwNjYsImV4cCI6MTY3MjU2NDg2NiwiaWF0IjoxNjcxOTYwMDY2fQ.E5kftzo11nK2DT5HB2pvuqRelHIxbhFICy-as9e7f5E",
         };
         window.GlobalConfig = {
           APP: {

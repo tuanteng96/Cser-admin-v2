@@ -491,10 +491,10 @@ function CalendarStaff({
                                 </div>
                                 <div className="flex-1 text-truncate">
                                   -{" "}
-                                  {service.RootMinutes ??
+                                  {service.RootTitles ? service.RootMinutes ??
                                     service?.os?.RootMinutes ??
-                                    60}
-                                  p - {service.RootTitles}
+                                    60 : 30}
+                                  p - {service.RootTitles || 'Không xác định'}
                                 </div>
                               </div>
                             </div>
