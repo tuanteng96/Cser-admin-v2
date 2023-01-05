@@ -1,0 +1,75 @@
+@import '../_init.scss';
+$height-card-header: 70px;
+$width-timesheets-sidebar: 300px;
+$height-title-timesheets-sidebar: 50px;
+$height-row: 70px;
+$width-col: 250px;
+// ----
+$border-color: #F4F4F4;
+// ----
+.card-timesheets {
+    .card-body {
+        height: calc(100% - $height-card-header);
+        padding: 1.5rem 1.75rem;
+    }
+}
+
+.cld-timesheets {
+    &__sidebar {
+        width: $width-timesheets-sidebar;
+        height: 100%;
+        border: 1px solid $border-color;
+        &-title {
+            height: $height-title-timesheets-sidebar;
+            min-height: $height-title-timesheets-sidebar;
+            border-bottom: 1px solid $border-color;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: $font-family-title;
+            text-transform: uppercase;
+            color: #3F4254;
+        }
+        .name {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding: 0 15px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+    }
+    &__body {
+        border-top: 1px solid $border-color;
+        border-right: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
+        &-title {
+            height: $height-title-timesheets-sidebar;
+            min-height: $height-title-timesheets-sidebar;
+            overflow: scroll;
+            border-bottom: 1px solid $border-color;
+            padding-right: var(--width-scrollbar);
+            &::-webkit-scrollbar-track,
+            &::-webkit-scrollbar,
+            &::-webkit-scrollbar-thumb {
+                width: 0;
+                height: 0;
+            }
+        }
+    }
+    .cld-row {
+        height: $height-row;
+        &:not(:last-child) {
+            border-bottom: 1px solid $border-color;
+        }
+    }
+    .cls-col {
+        min-width: $width-col;
+        width: $width-col;
+        &:not(:last-child) {
+            border-right: 1px solid $border-color;
+        }
+    }
+}
