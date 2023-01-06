@@ -19,6 +19,23 @@
             font-size: 22px;
             font-weight: 600;
             line-height: 1.5;
+            color: #222;
+            i {
+                font-size: 16px;
+                margin-left: 8px;
+            }
+        }
+        >.dropdown {
+            display: flex !important;
+        }
+        .btn-none {
+            background-color: transparent !important;
+            height: auto;
+            border: 0;
+            padding: 0;
+            &::after {
+                display: none;
+            }
         }
     }
 }

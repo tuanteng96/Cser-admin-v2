@@ -1,13 +1,35 @@
 .btn {
-  border-radius: 0.225rem;
-  padding: 0.575rem 0.85rem;
-  .btn-check:focus + .btn,
-  &:focus,
-  &:active {
-    box-shadow: none !important;
-  }
-  &.btn-xs {
-    padding: 0.115rem 0.45rem;
-    font-size: 12px;
-  }
+    border-radius: 0.225rem;
+    padding: 0.575rem 0.85rem;
+    .btn-check:focus+.btn,
+    &:focus,
+    &:active {
+        box-shadow: none !important;
+    }
+    &.btn-xs {
+        padding: 0.115rem 0.45rem;
+        font-size: 12px;
+    }
+}
+
+.btn-light-primary {
+    color: #3699FF;
+    background-color: #E1F0FF;
+    border-color: transparent;
+    &:hover {
+        color: #FFFFFF;
+        background-color: #3699FF;
+        border-color: transparent;
+    }
+}
+
+.btn-light-danger {
+    color: #F64E60;
+    background-color: #FFE2E5;
+    border-color: transparent;
+    &:hover {
+        color: #ffffff;
+        background-color: #F64E60;
+        border-color: transparent;
+    }
 }

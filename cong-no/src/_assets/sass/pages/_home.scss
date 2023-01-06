@@ -3,7 +3,7 @@ $height-card-header: 70px;
 $width-timesheets-sidebar: 300px;
 $height-title-timesheets-sidebar: 50px;
 $height-row: 70px;
-$width-col: 250px;
+$width-col: 220px;
 // ----
 $border-color: #F4F4F4;
 // ----
@@ -11,10 +11,14 @@ $border-color: #F4F4F4;
     .card-body {
         height: calc(100% - $height-card-header);
         padding: 1.5rem 1.75rem;
+        display: flex;
+        flex-direction: column;
     }
 }
 
 .cld-timesheets {
+    height: calc(100% - 42px);
+    padding-top: 20px;
     &__sidebar {
         width: $width-timesheets-sidebar;
         height: 100%;
@@ -51,16 +55,35 @@ $border-color: #F4F4F4;
             overflow: scroll;
             border-bottom: 1px solid $border-color;
             padding-right: var(--width-scrollbar);
+            position: relative;
             &::-webkit-scrollbar-track,
             &::-webkit-scrollbar,
             &::-webkit-scrollbar-thumb {
                 width: 0;
                 height: 0;
             }
+            &::before {
+                content: "";
+                position: absolute;
+                width: var(--width-scrollbar);
+                height: 100%;
+                right: 0;
+                top: 0;
+                background: $border-color;
+            }
+            .date {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                color: #3F4254;
+                font-weight: 600;
+            }
         }
     }
     .cld-row {
         height: $height-row;
+        display: flex;
         &:not(:last-child) {
             border-bottom: 1px solid $border-color;
         }
@@ -68,8 +91,43 @@ $border-color: #F4F4F4;
     .cls-col {
         min-width: $width-col;
         width: $width-col;
+        position: relative;
+        z-index: 1;
         &:not(:last-child) {
             border-right: 1px solid $border-color;
+        }
+    }
+    .daygrid-day {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        padding: 0 8px;
+        .event-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &:not(:last-child) {
+                margin-bottom: 5px;
+            }
+            &__label {
+                border-radius: 3px;
+                color: #fff;
+                padding: 0 8px;
+                min-width: 52px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 20px;
+                font-weight: 500;
+                font-family: $font-family-number;
+                cursor: pointer;
+            }
+            &__line {
+                padding: 0 8px;
+                color: #7E8299;
+            }
         }
     }
 }
