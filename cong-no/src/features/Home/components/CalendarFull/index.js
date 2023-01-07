@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
+import { NavLink } from 'react-router-dom'
 
 import moment from 'moment'
 import 'moment/locale/vi'
+
 moment.locale('vi')
 
 const HolidaycheduleLine = ({ index, idx }) => {
@@ -43,7 +45,12 @@ function CalendarFull(props) {
                 .fill()
                 .map((o, index) => (
                   <div className="cld-row" key={index}>
-                    <div className="name">Nguyễn Tuấn {index + 1}</div>
+                    <NavLink
+                      to={`/cham-cong/${index}`}
+                      className="fw-700 text-truncate text-name text-decoration-none text-black name"
+                    >
+                      Nguyễn Tuấn {index + 1}
+                    </NavLink>
                   </div>
                 ))}
             </div>

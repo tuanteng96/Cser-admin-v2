@@ -3,6 +3,7 @@ import { Dropdown } from 'react-bootstrap'
 import CalendarFull from '../../components/CalendarFull'
 import DatePicker from 'react-datepicker'
 import Navbar from '../../components/Navbar'
+import ModalHolidaySchedule from '../../components/Modal/ModalHolidaySchedule'
 
 function Worksheet(props) {
   return (
@@ -60,6 +61,7 @@ function Worksheet(props) {
         </div>
         <CalendarFull />
       </div>
+      <ModalHolidaySchedule show={false} />
     </div>
   )
 }
