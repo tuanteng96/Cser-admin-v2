@@ -1,38 +1,21 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import authApi from 'src/api/auth.api'
-
-export const login = createAsyncThunk('/login', async (data, thunkAPI) => {
-  try {
-    const response = await authApi.login(data)
-    return response
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error)
-  }
-})
+import { createSlice } from '@reduxjs/toolkit'
 
 const Auth = createSlice({
   name: 'auth',
   initialState: {
-    Token: ''
+    Info: null
   },
   reducers: {
-    setToken: (state, action) => {
+    setProfile: (state, { payload }) => {
       return {
         ...state,
-        Token: action.payload
-      }
-    }
-  },
-  extraReducers: {
-    [login.fulfilled]: (state, { payload }) => {
-      return {
-        ...state,
-        Token: payload.data.id
+        Token: payload.token,
+        Info: payload.Info
       }
     }
   }
 })
 
 const { reducer, actions } = Auth
-export const { setToken } = actions
+export const { setProfile } = actions
 export default reducer

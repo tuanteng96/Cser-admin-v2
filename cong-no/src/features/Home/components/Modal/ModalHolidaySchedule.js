@@ -12,7 +12,10 @@ ModalHolidaySchedule.propTypes = {
 }
 
 const initialValues = {
-  StaffID: ''
+  StaffID: '',
+  From: '',
+  To: '',
+  Desc: ''
 }
 
 const CreateSchema = Yup.object().shape({
@@ -69,15 +72,15 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                 </div>
                 <div className="form-group mb-20px">
                   <label className="font-label text-muted mb-5px">
-                    Nhân viên
+                    Thời gian bắt đầu
                   </label>
                   <DatePicker
-                    name="BookDate"
-                    selected={values.BookDate ? new Date(values.BookDate) : ''}
-                    onChange={date => setFieldValue('BookDate', date)}
+                    name="From"
+                    selected={values.From ? new Date(values.From) : ''}
+                    onChange={date => setFieldValue('From', date)}
                     onBlur={handleBlur}
                     className={`form-control ${
-                      errors.BookDate && touched.BookDate
+                      errors.From && touched.From
                         ? 'is-invalid solid-invalid'
                         : ''
                     }`}
@@ -88,6 +91,36 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                     showTimeSelect
                     timeFormat="HH:mm"
                   />
+                </div>
+                <div className="form-group mb-20px">
+                  <label className="font-label text-muted mb-5px">
+                    Thời gian kết thúc
+                  </label>
+                  <DatePicker
+                    name="To"
+                    selected={values.To ? new Date(values.To) : ''}
+                    onChange={date => setFieldValue('To', date)}
+                    onBlur={handleBlur}
+                    className={`form-control ${
+                      errors.To && touched.To ? 'is-invalid solid-invalid' : ''
+                    }`}
+                    shouldCloseOnSelect={false}
+                    dateFormat="dd/MM/yyyy HH:mm"
+                    placeholderText="Chọn thời gian"
+                    timeInputLabel="Thời gian"
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                  />
+                </div>
+                <div className="form-group mb-0">
+                  <label className="font-label text-muted mb-5px">
+                    Ghi chú
+                  </label>
+                  <textarea
+                    className="form-control"
+                    placeholder="Nhập ghi chú"
+                    rows={4}
+                  ></textarea>
                 </div>
               </Modal.Body>
               <Modal.Footer className="justify-content-between">

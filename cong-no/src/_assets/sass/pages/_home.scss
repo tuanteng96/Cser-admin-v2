@@ -19,10 +19,22 @@ $border-color: #F4F4F4;
 .cld-timesheets {
     height: calc(100% - 42px);
     padding-top: 20px;
+    position: relative;
     &__sidebar {
         width: $width-timesheets-sidebar;
         height: 100%;
         border: 1px solid $border-color;
+        padding-bottom: var(--width-scrollbar);
+        position: relative;
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: var(--width-scrollbar);
+            border-top: 1px solid $border-color;
+        }
         &-title {
             height: $height-title-timesheets-sidebar;
             min-height: $height-title-timesheets-sidebar;
@@ -44,6 +56,7 @@ $border-color: #F4F4F4;
             font-weight: 700;
             font-size: 14px;
         }
+        &-list {}
     }
     &__body {
         border-top: 1px solid $border-color;
@@ -67,7 +80,7 @@ $border-color: #F4F4F4;
                 position: absolute;
                 width: var(--width-scrollbar);
                 height: 100%;
-                right: 0;
+                left: 100%;
                 top: 0;
                 background: $border-color;
             }
@@ -111,13 +124,13 @@ $border-color: #F4F4F4;
     align-items: center;
     justify-content: center;
     &:not(:last-child) {
-        margin-bottom: 5px;
+        margin-bottom: 6px;
     }
     &__label {
         border-radius: 3px;
         color: #fff;
         padding: 0 8px;
-        min-width: 52px;
+        min-width: 70px;
         font-size: 12px;
         display: flex;
         align-items: center;
@@ -126,6 +139,7 @@ $border-color: #F4F4F4;
         font-weight: 500;
         font-family: $font-family-number;
         cursor: pointer;
+        letter-spacing: .3px;
     }
     &__line {
         padding: 0 8px;

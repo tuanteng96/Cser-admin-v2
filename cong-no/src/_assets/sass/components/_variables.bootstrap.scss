@@ -272,7 +272,7 @@ $container-padding-x: $grid-gutter-width * 0.5 !default;
 // scss-docs-start border-variables
 $border-width: 1px !default;
 $border-widths: ( 1: 1px, 2: 2px, 3: 3px, 4: 4px, 5: 5px) !default;
-$border-color: $gray-300 !default;
+$border-color: #ebedf3 !default; //$gray-300
 // scss-docs-end border-variables
 // scss-docs-start border-radius-variables
 $border-radius: 0.25rem !default;

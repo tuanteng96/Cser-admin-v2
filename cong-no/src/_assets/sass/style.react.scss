@@ -23,12 +23,14 @@
 './components/nav',
 './components/tooltip',
 './components/checkbox',
-'./components/card';
+'./components/card',
+'./components/overlay';
 // 4: Plugins
 @import './vendors/plugins/perfect-scrollbar',
 './vendors/plugins/datepicker',
 './vendors/plugins/react-select',
 './vendors/plugins/react-apexcharts',
-'./vendors/plugins/sweetalert2';
+'./vendors/plugins/sweetalert2',
+'./vendors/plugins/ant';
 // 5: Layout
 @import './layout/init';
