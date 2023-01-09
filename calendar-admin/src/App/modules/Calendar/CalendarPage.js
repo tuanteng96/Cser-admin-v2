@@ -132,8 +132,8 @@ function CalendarPage(props) {
         All: true,
       });
       const newData =
-        Array.isArray(data.data) && data.data.length > 0
-          ? data.data.map((item) => ({ id: item.id, title: item.text }))
+        Array.isArray(data) && data.length > 0
+          ? data.map((item) => ({ id: item.id, title: item.text }))
           : [];
       setStaffFull(newData);
     }

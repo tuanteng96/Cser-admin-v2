@@ -4,6 +4,7 @@ import { Button, Modal } from 'react-bootstrap'
 import SelectStaffs from 'src/components/Selects/SelectStaffs'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
+import DatePicker from 'react-datepicker'
 
 ModalHolidaySchedule.propTypes = {
   show: PropTypes.bool,
@@ -35,7 +36,8 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
       >
         {formikProps => {
           // errors, touched, handleChange, handleBlur
-          const { values, touched, errors, setFieldValue } = formikProps
+          const { values, touched, errors, setFieldValue, handleBlur } =
+            formikProps
 
           return (
             <Form className="d-flex flex-column h-100">
@@ -63,6 +65,28 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                     value={values.StaffID}
                     isClearable={true}
                     adv={true}
+                  />
+                </div>
+                <div className="form-group mb-20px">
+                  <label className="font-label text-muted mb-5px">
+                    Nhân viên
+                  </label>
+                  <DatePicker
+                    name="BookDate"
+                    selected={values.BookDate ? new Date(values.BookDate) : ''}
+                    onChange={date => setFieldValue('BookDate', date)}
+                    onBlur={handleBlur}
+                    className={`form-control ${
+                      errors.BookDate && touched.BookDate
+                        ? 'is-invalid solid-invalid'
+                        : ''
+                    }`}
+                    shouldCloseOnSelect={false}
+                    dateFormat="dd/MM/yyyy HH:mm"
+                    placeholderText="Chọn thời gian"
+                    timeInputLabel="Thời gian"
+                    showTimeSelect
+                    timeFormat="HH:mm"
                   />
                 </div>
               </Modal.Body>
