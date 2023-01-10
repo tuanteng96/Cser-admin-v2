@@ -9,8 +9,9 @@ const Auth = createSlice({
     setProfile: (state, { payload }) => {
       return {
         ...state,
-        Token: payload.token,
-        Info: payload.Info
+        Token: payload.Token,
+        Info: payload.Info,
+        GlobalConfig: payload.GlobalConfig
       }
     }
   }

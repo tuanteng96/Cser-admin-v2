@@ -69,19 +69,19 @@ function SelectStaffs({ onChange, value, isLoading, adv, ...props }) {
           newData.push(newItem)
         }
       }
-      if (adv) {
-        if (StockAdv !== 'All Stocks') {
-          newData = newData.filter(
-            o => StockAdv && StockAdv.some(x => x.ID === o.groupid)
-          )
-        }
-      } else {
-        if (Stocks !== 'All Stocks') {
-          newData = newData.filter(
-            o => Stocks && Stocks.some(x => x.ID === o.groupid)
-          )
-        }
-      }
+      // if (adv) {
+      //   if (StockAdv !== 'All Stocks') {
+      //     newData = newData.filter(
+      //       o => StockAdv && StockAdv.some(x => x.ID === o.groupid)
+      //     )
+      //   }
+      // } else {
+      //   if (Stocks !== 'All Stocks') {
+      //     newData = newData.filter(
+      //       o => Stocks && Stocks.some(x => x.ID === o.groupid)
+      //     )
+      //   }
+      // }
     }
     setLoading(false)
     return {

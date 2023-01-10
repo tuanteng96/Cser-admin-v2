@@ -1,39 +1,100 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { NavLink } from 'react-router-dom'
-import { OverlayTrigger, Popover } from 'react-bootstrap'
-import { TimePicker } from 'antd'
+import { useSelector } from 'react-redux'
 
 import moment from 'moment'
 import 'moment/locale/vi'
 
 moment.locale('vi')
 
-const HolidaycheduleLine = ({ index, idx }) => {
+const HolidaycheduleLine = ({ member, item, onOpenModalHoliday }) => {
+  const { TimeOpen, TimeClose } = useSelector(({ auth }) => ({
+    TimeOpen: auth?.GlobalConfig?.APP?.Working?.TimeOpen || '00:00:00',
+    TimeClose: auth?.GlobalConfig?.APP?.Working?.TimeClose || '23:59:00'
+  }))
   const [option, setOption] = useState(null)
 
   useEffect(() => {
-    if (
-      (idx === 2 || idx === 5 || idx === 18) &&
-      index % 2 === 0 &&
-      idx % 2 === 0
-    ) {
-      setOption({
-        width: 100
+    if (item.WorkOffs && item.WorkOffs.length > 0) {
+      const { Date } = item
+      const newWorkOff = item.WorkOffs.map(({ GroupInfo, ...work }) => {
+        const { From, To } = GroupInfo
+
+        const isTimeOpen = moment(TimeOpen, 'HH:mm:ss').isAfter(
+          moment(moment(From).format('HH:mm:ss'), 'HH:mm:ss')
+        )
+        const isTimeClose = moment(TimeClose, 'HH:mm:ss').isBefore(
+          moment(moment(To).format('HH:mm:ss'), 'HH:mm:ss')
+        )
+
+        const FromTime = moment(Date).isAfter(moment(From), 'day')
+          ? TimeOpen
+          : isTimeOpen
+          ? TimeOpen
+          : moment(From).format('HH:mm:ss')
+        const ToTime = moment(Date).isBefore(moment(To), 'day')
+          ? TimeClose
+          : isTimeClose
+          ? TimeClose
+          : moment(To).format('HH:mm:ss')
+
+        //========================
+
+        const TotalTime = moment(TimeClose, 'HH:mm:ss').diff(
+          moment(TimeOpen, 'HH:mm:ss'),
+          'seconds'
+        )
+
+        const TotalFrom = moment(FromTime, 'HH:mm:ss').diff(
+          moment(TimeOpen, 'HH:mm:ss'),
+          'seconds'
+        )
+        const TotalFromTo = moment(ToTime, 'HH:mm:ss').diff(
+          moment(FromTime, 'HH:mm:ss'),
+          'seconds'
+        )
+        const width = (TotalFromTo / TotalTime) * 100 + '%'
+        const left = (TotalFrom / TotalTime) * 100 + '%'
+
+        return {
+          ...work,
+          GroupInfo: {
+            ...GroupInfo
+          },
+          style: {
+            width,
+            left,
+            top: 0
+          }
+        }
       })
+      setOption(newWorkOff)
     }
-  }, [index, idx])
+  }, [item, TimeOpen, TimeClose])
 
   if (!option) return null
   return (
-    <div
-      className="bg-stripes position-absolute top-0 left-0 h-100 zindex--1"
-      style={{ width: option.width + '%' }}
-    ></div>
+    <Fragment>
+      {option &&
+        option.map((otp, index) => (
+          <div
+            className="bg-stripes position-absolute top-0 left-0 h-100"
+            style={{ ...otp.style }}
+            key={index}
+            onClick={() =>
+              onOpenModalHoliday({
+                ...otp,
+                Member: member
+              })
+            }
+          ></div>
+        ))}
+    </Fragment>
   )
 }
 
-const DayGridRender = ({ item, member }) => {
+const DayGridRender = ({ item, member, onOpenModalKeep }) => {
   const [HourList, setHourList] = useState([])
 
   useEffect(() => {
@@ -89,57 +150,42 @@ const DayGridRender = ({ item, member }) => {
     <div className="daygrid-day">
       {HourList &&
         HourList.map((hour, index) => (
-          <Fragment key={index}>
-            <OverlayTrigger
-              //rootClose
-              trigger="click"
-              key="top"
-              placement="top"
-              overlay={
-                <Popover id={`popover-positioned-top`}>
-                  <Popover.Header className="fw-600 d-flex justify-content-between py-2 text-uppercase font-title">
-                    <div>Giờ chấm công</div>
-                    <div>Ngày {moment(item.Date).format('DD-MM-YYYY')}</div>
-                  </Popover.Header>
-                  <Popover.Body>
-                    <div>
-                      <TimePicker.RangePicker
-                        getPopupContainer={node =>
-                          document.getElementById('#popover-positioned-top')
-                        }
-                        placeholder={['Bắt đầu', 'Kết thúc']}
-                      />
-                    </div>
-                  </Popover.Body>
-                  <div className="font-weight-bold d-flex justify-content-between py-10px px-3 border-top">
-                    <button type="submit" className="btn btn-success">
-                      Cập nhập
-                    </button>
-                  </div>
-                </Popover>
-              }
-            >
-              <div className="event-main">
-                <div className="event-main__label bg-success">
-                  {hour.From || '--'}
-                </div>
-                <div className="event-main__line">
-                  <i className="fa-regular fa-arrow-right-long"></i>
-                </div>
-                <div className="event-main__label bg-danger">
-                  {hour.To || '--'}
-                </div>
-              </div>
-            </OverlayTrigger>
-          </Fragment>
+          <div
+            className="event-main"
+            key={index}
+            onClick={() =>
+              onOpenModalKeep({
+                HourList: HourList,
+                ...item,
+                Member: {
+                  ID: member.UserID,
+                  FullName: member.FullName
+                }
+              })
+            }
+          >
+            <div className="event-main__label bg-success">
+              {hour.From || '--'}
+            </div>
+            <div className="event-main__line">
+              <i className="fa-regular fa-arrow-right-long"></i>
+            </div>
+            <div className="event-main__label bg-danger">{hour.To || '--'}</div>
+          </div>
         ))}
     </div>
   )
 }
 
-function CalendarFull({ data, loading, CrDate }) {
+function CalendarFull({
+  data,
+  loading,
+  CrDate,
+  onOpenModalKeep,
+  onOpenModalHoliday
+}) {
   return (
-    <ScrollSync onSync={() => document.body.click()}>
+    <ScrollSync>
       <div className="d-flex cld-timesheets overlay">
         <div className="d-flex flex-column cld-timesheets__sidebar">
           <div className="cld-timesheets__sidebar-title">
@@ -189,8 +235,16 @@ function CalendarFull({ data, loading, CrDate }) {
                     {member.Dates &&
                       member.Dates.map((item, index) => (
                         <div className="cls-col" key={index}>
-                          <DayGridRender item={item} member={member} />
-                          <HolidaycheduleLine idx={idx} index={index} />
+                          <DayGridRender
+                            item={item}
+                            member={member}
+                            onOpenModalKeep={onOpenModalKeep}
+                          />
+                          <HolidaycheduleLine
+                            item={item}
+                            member={member}
+                            onOpenModalHoliday={onOpenModalHoliday}
+                          />
                         </div>
                       ))}
                   </div>

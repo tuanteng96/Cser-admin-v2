@@ -1,28 +1,58 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Modal } from 'react-bootstrap'
 import SelectStaffs from 'src/components/Selects/SelectStaffs'
 import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import DatePicker from 'react-datepicker'
+import clsx from 'clsx'
 
 ModalHolidaySchedule.propTypes = {
   show: PropTypes.bool,
   onHide: PropTypes.func
 }
 
-const initialValues = {
-  StaffID: '',
+const initialValue = {
+  UserID: '',
   From: '',
   To: '',
   Desc: ''
 }
 
 const CreateSchema = Yup.object().shape({
-  StaffID: Yup.object().required('Chọn nhân viên.')
+  UserID: Yup.object().required('Chọn nhân viên.'),
+  From: Yup.string().required('Chọn thời gian'),
+  To: Yup.string().required('Chọn thời gian')
 })
 
-function ModalHolidaySchedule({ show, onHide, onSubmit }) {
+function ModalHolidaySchedule({
+  show,
+  onHide,
+  onSubmit,
+  loading,
+  initialModal,
+  onDelete
+}) {
+  const [initialValues, setInitialValues] = useState(initialValue)
+
+  useEffect(() => {
+    if (initialModal) {
+      setInitialValues(prevState => ({
+        ...prevState,
+        GroupTick: initialModal?.GroupTick,
+        ...initialModal,
+        From: initialModal?.GroupInfo?.From,
+        To: initialModal?.GroupInfo?.To,
+        UserID: {
+          label: initialModal?.Member?.FullName,
+          value: initialModal?.UserID
+        }
+      }))
+    } else {
+      setInitialValues(initialValue)
+    }
+  }, [show, initialModal])
+
   return (
     <Modal
       show={show}
@@ -39,14 +69,26 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
       >
         {formikProps => {
           // errors, touched, handleChange, handleBlur
-          const { values, touched, errors, setFieldValue, handleBlur } =
-            formikProps
+          const {
+            values,
+            touched,
+            errors,
+            setFieldValue,
+            handleChange,
+            handleBlur
+          } = formikProps
 
           return (
             <Form className="d-flex flex-column h-100">
               <Modal.Header closeButton>
                 <Modal.Title className="font-title text-uppercase">
-                  Tạo ngày nghỉ
+                  {!initialModal ? (
+                    'Tạo ngày nghỉ'
+                  ) : (
+                    <div className="text-capitalize">
+                      {initialModal.Member.FullName}
+                    </div>
+                  )}
                 </Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -55,17 +97,18 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                     Nhân viên
                   </label>
                   <SelectStaffs
-                    className={`select-control ${
-                      errors.StaffID && touched.StaffID
-                        ? 'is-invalid solid-invalid'
-                        : ''
-                    }`}
+                    className={clsx(
+                      'select-control',
+                      errors.UserID &&
+                        touched.UserID &&
+                        'is-invalid solid-invalid'
+                    )}
                     menuPosition="fixed"
-                    name="StaffID"
+                    name="UserID"
                     onChange={otp => {
-                      setFieldValue('StaffID', otp, false)
+                      setFieldValue('UserID', otp, false)
                     }}
-                    value={values.StaffID}
+                    value={values.UserID}
                     isClearable={true}
                     adv={true}
                   />
@@ -79,17 +122,17 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                     selected={values.From ? new Date(values.From) : ''}
                     onChange={date => setFieldValue('From', date)}
                     onBlur={handleBlur}
-                    className={`form-control ${
-                      errors.From && touched.From
-                        ? 'is-invalid solid-invalid'
-                        : ''
-                    }`}
+                    className={clsx(
+                      'form-control',
+                      errors.From && touched.From && 'is-invalid solid-invalid'
+                    )}
                     shouldCloseOnSelect={false}
                     dateFormat="dd/MM/yyyy HH:mm"
                     placeholderText="Chọn thời gian"
                     timeInputLabel="Thời gian"
                     showTimeSelect
                     timeFormat="HH:mm"
+                    timeIntervals={15}
                   />
                 </div>
                 <div className="form-group mb-20px">
@@ -101,15 +144,17 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                     selected={values.To ? new Date(values.To) : ''}
                     onChange={date => setFieldValue('To', date)}
                     onBlur={handleBlur}
-                    className={`form-control ${
-                      errors.To && touched.To ? 'is-invalid solid-invalid' : ''
-                    }`}
+                    className={clsx(
+                      'form-control',
+                      errors.To && touched.To && 'is-invalid solid-invalid'
+                    )}
                     shouldCloseOnSelect={false}
                     dateFormat="dd/MM/yyyy HH:mm"
                     placeholderText="Chọn thời gian"
                     timeInputLabel="Thời gian"
                     showTimeSelect
                     timeFormat="HH:mm"
+                    timeIntervals={15}
                   />
                 </div>
                 <div className="form-group mb-0">
@@ -120,23 +165,41 @@ function ModalHolidaySchedule({ show, onHide, onSubmit }) {
                     className="form-control"
                     placeholder="Nhập ghi chú"
                     rows={4}
+                    name="Desc"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.Desc}
                   ></textarea>
                 </div>
               </Modal.Body>
               <Modal.Footer className="justify-content-between">
-                <div>
-                  <Button variant="danger" onClick={onHide}>
-                    Xóa lịch
+                <Button type="button" variant="secondary" onClick={onHide}>
+                  Đóng
+                </Button>
+                {initialModal?.GroupTick ? (
+                  <Button
+                    type="button"
+                    className={clsx(
+                      loading && 'spinner spinner-white spinner-right'
+                    )}
+                    variant="danger"
+                    onClick={() => onDelete(initialModal?.GroupTick)}
+                    disabled={loading}
+                  >
+                    Xóa lịch nghỉ
                   </Button>
-                </div>
-                <div>
-                  <Button variant="secondary" onClick={onHide}>
-                    Đóng
-                  </Button>
-                  <Button className="ml-8px" variant="primary" onClick={onHide}>
+                ) : (
+                  <Button
+                    type="submit"
+                    className={clsx(
+                      'ml-8px',
+                      loading && 'spinner spinner-white spinner-right'
+                    )}
+                    disabled={loading}
+                  >
                     Thêm mới
                   </Button>
-                </div>
+                )}
               </Modal.Footer>
             </Form>
           )

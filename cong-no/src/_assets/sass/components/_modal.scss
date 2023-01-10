@@ -51,6 +51,7 @@
     height: 100%;
     float: right;
     width: 100%;
+    transform: translate(50px, 0) !important;
     .modal-content {
         max-height: 100vh;
         height: 100%;
@@ -59,4 +60,8 @@
     @media (max-width: 767px) {
         max-height: calc(100vh);
     }
+}
+
+.modal.show .modal-dialog.modal-content-right {
+    transform: none !important;
 }

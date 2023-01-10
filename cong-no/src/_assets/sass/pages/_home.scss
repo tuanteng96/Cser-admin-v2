@@ -140,10 +140,12 @@ $border-color: #F4F4F4;
         font-family: $font-family-number;
         cursor: pointer;
         letter-spacing: .3px;
+        z-index: 2;
     }
     &__line {
         padding: 0 8px;
         color: #7E8299;
+        z-index: 2;
     }
 }
 

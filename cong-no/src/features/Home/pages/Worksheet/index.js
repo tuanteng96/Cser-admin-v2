@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/vi'
 import worksheetApi from 'src/api/worksheet.api'
+import ModalTimeKeeping from '../../components/Modal/ModalTimeKeeping'
 
 moment.locale('vi')
 
@@ -26,6 +27,16 @@ function Worksheet(props) {
     To: '',
     StockID: '',
     key: ''
+  })
+  const [ModalKeep, setModalKeep] = useState({
+    initialValues: null,
+    show: false,
+    loading: false
+  })
+  const [ModalHoliday, setModalHoliday] = useState({
+    initialValues: null,
+    show: false,
+    loading: false
   })
 
   const typingTimeoutRef = useRef(null)
@@ -63,7 +74,7 @@ function Worksheet(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters])
 
-  const getListWorkSheet = () => {
+  const getListWorkSheet = callback => {
     if (!filters.StockID || !filters.From || !filters.To) return
     !loading && setLoading(true)
     const newObj = {
@@ -77,6 +88,114 @@ function Worksheet(props) {
       .then(({ data }) => {
         setList(data.list)
         setLoading(false)
+        callback && callback()
+      })
+      .catch(error => console.log(error))
+  }
+
+  const onOpenModalKeep = value => {
+    setModalKeep({
+      initialValues: value,
+      show: true
+    })
+  }
+
+  const onHideModalKeep = () => {
+    setModalKeep({
+      initialValues: null,
+      show: false,
+      loading: false
+    })
+  }
+
+  const onOpenModalHoliday = value => {
+    setModalHoliday({
+      initialValues: value,
+      show: true
+    })
+  }
+
+  const onHideModalHoliday = () => {
+    setModalHoliday({
+      initialValues: null,
+      show: false,
+      loading: false
+    })
+  }
+
+  const onSubmitKeep = values => {
+    setModalKeep(prevState => ({
+      ...prevState,
+      loading: true
+    }))
+    const newValues = {
+      list: [
+        {
+          ...values,
+          Date: moment(values.Date).format('DD/MM/YYYY'),
+          Hours: values.Hours.map(hour => ({
+            From: hour && hour[0] ? hour[0].format('HH:mm:ss') : '',
+            To: hour && hour[1] ? hour[1].format('HH:mm:ss') : ''
+          }))
+        }
+      ]
+    }
+    worksheetApi
+      .checkinWorkSheet(newValues)
+      .then(({ data }) => {
+        getListWorkSheet(() => {
+          onHideModalKeep()
+          window.top.toastr &&
+            window.top.toastr.success('Cập nhập thành công !', {
+              timeOut: 1500
+            })
+        })
+      })
+      .catch(error => console.log(error))
+  }
+
+  const onSubmitHoliday = (values, { resetFrom }) => {
+    setModalHoliday(prevState => ({
+      ...prevState,
+      loading: true
+    }))
+    const newValues = {
+      ...values,
+      UserID: values?.UserID ? values?.UserID.value : '',
+      From: values.From
+        ? moment(values.From).format('DD/MM/YYYY HH:mm:ss')
+        : '',
+      To: values.To ? moment(values.To).format('DD/MM/YYYY HH:mm:ss') : ''
+    }
+    worksheetApi
+      .addWorkOff(newValues)
+      .then(({ data }) => {
+        getListWorkSheet(() => {
+          onHideModalHoliday()
+          window.top.toastr &&
+            window.top.toastr.success('Xin nghỉ thành công !', {
+              timeOut: 1500
+            })
+        })
+      })
+      .catch(error => console.log(error))
+  }
+
+  const onDeleteHoliday = GroupTick => {
+    setModalHoliday(prevState => ({
+      ...prevState,
+      loading: true
+    }))
+    worksheetApi
+      .deleteWorkOff({ GroupTick: GroupTick })
+      .then(({ data }) => {
+        getListWorkSheet(() => {
+          onHideModalHoliday()
+          window.top.toastr &&
+            window.top.toastr.success('Xóa lịch nghỉ thành công !', {
+              timeOut: 1500
+            })
+        })
       })
       .catch(error => console.log(error))
   }
@@ -144,7 +263,10 @@ function Worksheet(props) {
             </button>
           </div>
           <div className="d-flex">
-            <button className="btn btn-light-danger fw-600 mr-8px">
+            <button
+              className="btn btn-light-danger fw-600 mr-8px"
+              onClick={onOpenModalHoliday}
+            >
               Tạo ngày nghỉ
             </button>
             <div className="position-relative">
@@ -169,9 +291,29 @@ function Worksheet(props) {
             </div>
           </div>
         </div>
-        <CalendarFull data={List} loading={loading} CrDate={CrDate} />
+        <CalendarFull
+          data={List}
+          loading={loading}
+          CrDate={CrDate}
+          onOpenModalKeep={onOpenModalKeep}
+          onOpenModalHoliday={onOpenModalHoliday}
+        />
       </div>
-      <ModalHolidaySchedule show={false} />
+      <ModalHolidaySchedule
+        show={ModalHoliday.show}
+        onHide={onHideModalHoliday}
+        onSubmit={onSubmitHoliday}
+        onDelete={onDeleteHoliday}
+        loading={ModalHoliday.loading}
+        initialModal={ModalHoliday.initialValues}
+      />
+      <ModalTimeKeeping
+        show={ModalKeep.show}
+        initialModal={ModalKeep.initialValues}
+        onHide={onHideModalKeep}
+        onSubmit={onSubmitKeep}
+        loading={ModalKeep.loading}
+      />
     </div>
   )
 }

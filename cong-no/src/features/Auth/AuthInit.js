@@ -5,7 +5,7 @@ import { LayoutSplashScreen } from 'src/layout/_core/SplashScreen'
 import { setProfile } from './AuthSlice'
 
 function checkInfo(fn) {
-  if (window.top.Info && window.top.token) {
+  if (window.top.Info && window.top.token && window.top.GlobalConfig) {
     fn()
   } else {
     setTimeout(() => {
@@ -80,25 +80,35 @@ function AuthInit(props) {
         }
         window.token =
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEwMjAxMDMwMTAyMDIwMzUiLCJuYmYiOjE2NzE1MDMxOTUsImV4cCI6MTY3MjEwNzk5NSwiaWF0IjoxNjcxNTAzMTk1fQ.Ij7G_NrEKbHKu3YLX2aI9bQJsvuaOzz8OzJWIndUbKo'
+        window.GlobalConfig = {
+          APP: {
+            Working: {
+              TimeClose: '21:00:00',
+              TimeOpen: '10:00:00'
+            }
+          }
+        }
       }
       checkInfo(() => {
         dispatch(
           setProfile({
             Info: window.top.Info,
-            token: window.top.token
+            Token: window.top.token,
+            GlobalConfig: window.top.GlobalConfig
           })
         )
         setShowSplashScreen(false)
       })
     }
 
-    if (!window.top.Info || !window.top.token) {
+    if (!window.top.Info || !window.top.token || !window.top.GlobalConfig) {
       requestUser()
     } else {
       dispatch(
         setProfile({
           Info: window.top.Info,
-          token: window.top.token
+          Token: window.top.token,
+          GlobalConfig: window.top.GlobalConfig
         })
       )
       setShowSplashScreen(false)
