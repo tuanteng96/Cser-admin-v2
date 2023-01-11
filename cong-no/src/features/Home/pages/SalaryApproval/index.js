@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Navbar from '../../components/Navbar'
 import { NumericFormat } from 'react-number-format'
-import DatePicker from 'react-datepicker'
+import DatePicker, { registerLocale } from 'react-datepicker'
+import vi from 'date-fns/locale/vi'
+import { useSelector } from 'react-redux'
+import Select from 'react-select'
+
+registerLocale('vi', vi)
 
 const InputFiles = () => {
   return (
@@ -14,20 +19,98 @@ const InputFiles = () => {
 }
 
 function SalaryApproval(props) {
+  const { Stocks, CrStockID } = useSelector(({ auth }) => ({
+    Stocks: auth?.Info?.Stocks || [],
+    CrStockID: auth?.Info?.CrStockID
+  }))
+  const [StocksList, setStocksList] = useState([])
+  const [CrDate, setCrDate] = useState(new Date())
+  const [loading, setLoading] = useState(false)
+  const [filters, setFilters] = useState({
+    From: '',
+    To: '',
+    StockID: '',
+    key: ''
+  })
+
+  const typingTimeoutRef = useRef(null)
+
+  useEffect(() => {
+    const newStocks = Stocks.filter(stock => stock.ParentID !== 0).map(
+      stock => ({
+        ...stock,
+        value: stock.ID,
+        label: stock.Title
+      })
+    )
+    if (newStocks.length > 0) {
+      if (!CrStockID) {
+        setFilters(prevState => ({
+          ...prevState,
+          StockID: newStocks[0]
+        }))
+      } else {
+        setFilters(prevState => ({
+          ...prevState,
+          StockID: newStocks.filter(o => o.ID === CrStockID)[0]
+        }))
+      }
+    }
+    setStocksList(newStocks)
+  }, [Stocks, CrStockID])
+
   return (
     <div className="card h-100">
       <div className="card-header">
         <h3 className="text-uppercase">Duyệt lương</h3>
         <div className="d-flex align-items-center justify-content-center">
+          <div className="position-relative">
+            <input
+              className="form-control form-control-solid w-250px"
+              type="text"
+              placeholder="Nhập tên nhân viên"
+              onChange={evt => {
+                setLoading(true)
+                if (typingTimeoutRef.current) {
+                  clearTimeout(typingTimeoutRef.current)
+                }
+                typingTimeoutRef.current = setTimeout(() => {
+                  setFilters(prevState => ({
+                    ...prevState,
+                    Key: evt.target.value
+                  }))
+                }, 800)
+              }}
+            />
+            <i className="fa-regular fa-magnifying-glass position-absolute w-30px h-100 top-0 right-0 d-flex align-items-center pointer-events-none font-size-md text-muted"></i>
+          </div>
+          <div className="w-250px mx-15px">
+            <Select
+              options={StocksList}
+              className="select-control select-control-solid"
+              classNamePrefix="select"
+              placeholder="Chọn cơ sở"
+              value={filters.StockID}
+              onChange={otp =>
+                setFilters(prevState => ({
+                  ...prevState,
+                  StockID: otp
+                }))
+              }
+            />
+          </div>
           <div className="mr-8px position-relative">
             <DatePicker
-              selected={new Date()}
-              onChange={date => console.log(date)}
+              locale="vi"
               className="form-control form-control-solid fw-500"
               dateFormat={'MM/yyyy'}
+              showMonthYearPicker
+              selected={CrDate}
+              onChange={date => setCrDate(date)}
             />
             <i className="fa-regular fa-calendar-range position-absolute w-25px h-100 top-0 right-0 d-flex align-items-center pointer-events-none font-size-md text-muted"></i>
           </div>
+          <div className="h-40px w-1px border-right mx-15px"></div>
           <Navbar />
         </div>
       </div>

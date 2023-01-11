@@ -79,14 +79,17 @@ function ModalHolidaySchedule({
           } = formikProps
 
           return (
-            <Form className="d-flex flex-column h-100">
+            <Form className="d-flex flex-column h-100" autoComplete="off">
               <Modal.Header closeButton>
                 <Modal.Title className="font-title text-uppercase">
                   {!initialModal ? (
                     'Tạo ngày nghỉ'
                   ) : (
-                    <div className="text-capitalize">
-                      {initialModal.Member.FullName}
+                    <div className="d-flex align-items-baseline">
+                      Lịch nghỉ
+                      <div className="text-capitalize font-size-sm font-base fw-600 pl-5px">
+                        {initialModal.Member.FullName}
+                      </div>
                     </div>
                   )}
                 </Modal.Title>
@@ -133,6 +136,7 @@ function ModalHolidaySchedule({
                     showTimeSelect
                     timeFormat="HH:mm"
                     timeIntervals={15}
+                    autoComplete="off"
                   />
                 </div>
                 <div className="form-group mb-20px">
@@ -155,6 +159,7 @@ function ModalHolidaySchedule({
                     showTimeSelect
                     timeFormat="HH:mm"
                     timeIntervals={15}
+                    autoComplete="off"
                   />
                 </div>
                 <div className="form-group mb-0">

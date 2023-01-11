@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 import moment from 'moment'
 import 'moment/locale/vi'
+import clsx from 'clsx'
 
 moment.locale('vi')
 
@@ -70,6 +71,8 @@ const HolidaycheduleLine = ({ member, item, onOpenModalHoliday }) => {
         }
       })
       setOption(newWorkOff)
+    } else {
+      setOption(null)
     }
   }, [item, TimeOpen, TimeClose])
 
@@ -79,7 +82,7 @@ const HolidaycheduleLine = ({ member, item, onOpenModalHoliday }) => {
       {option &&
         option.map((otp, index) => (
           <div
-            className="bg-stripes position-absolute top-0 left-0 h-100"
+            className="bg-stripes position-absolute top-0 left-0 h-100 zindex-2"
             style={{ ...otp.style }}
             key={index}
             onClick={() =>
@@ -96,74 +99,40 @@ const HolidaycheduleLine = ({ member, item, onOpenModalHoliday }) => {
 
 const DayGridRender = ({ item, member, onOpenModalKeep }) => {
   const [HourList, setHourList] = useState([])
+  const [isEvent, setIsEvent] = useState(false)
 
   useEffect(() => {
     if (item.UserWorks && item.UserWorks.length > 0) {
-      if (
-        item.UserWorks[0].HourList &&
-        item.UserWorks[0].HourList.HourList === 1
-      ) {
-        setHourList([
-          ...item.UserWorks.HourList,
-          {
-            From: '',
-            To: ''
-          }
-        ])
-      }
-      if (
-        item.UserWorks[0].HourList &&
-        item.UserWorks[0].HourList.length === 2
-      ) {
-        setHourList(item.UserWorks[0].HourList)
-      }
-      if (
-        item.UserWorks[0].HourList &&
-        item.UserWorks[0].HourList.length === 0
-      ) {
-        setHourList([
-          {
-            From: '',
-            To: ''
-          },
-          {
-            From: '',
-            To: ''
-          }
-        ])
-      }
+      setHourList(item.UserWorks[0].HourList)
     } else {
-      setHourList([
-        {
-          From: '',
-          To: ''
-        },
-        {
-          From: '',
-          To: ''
-        }
-      ])
+      setHourList([])
+    }
+  }, [item])
+
+  useEffect(() => {
+    if (item) {
+      setIsEvent(moment().isAfter(item.Date))
     }
   }, [item])
 
   return (
-    <div className="daygrid-day">
+    <div
+      className={clsx('daygrid-day', !isEvent && 'no-event')}
+      onClick={() =>
+        isEvent &&
+        onOpenModalKeep({
+          HourList: HourList,
+          ...item,
+          Member: {
+            ID: member.UserID,
+            FullName: member.FullName
+          }
+        })
+      }
+    >
       {HourList &&
         HourList.map((hour, index) => (
-          <div
-            className="event-main"
-            key={index}
-            onClick={() =>
-              onOpenModalKeep({
-                HourList: HourList,
-                ...item,
-                Member: {
-                  ID: member.UserID,
-                  FullName: member.FullName
-                }
-              })
-            }
-          >
+          <div className="event-main" key={index}>
             <div className="event-main__label bg-success">
               {hour.From || '--'}
             </div>
@@ -213,7 +182,18 @@ function CalendarFull({
               {Array(7)
                 .fill()
                 .map((o, index) => (
-                  <div key={index} className="cls-col">
+                  <div
+                    key={index}
+                    className={clsx(
+                      'cls-col',
+                      moment(moment().format('DD-MM-YYYY')).isSame(
+                        moment(CrDate)
+                          .clone()
+                          .weekday(index)
+                          .format('DD-MM-YYYY')
+                      ) && 'current-day'
+                    )}
+                  >
                     <div className="date">
                       <span className="text-capitalize">
                         {moment(CrDate).clone().weekday(index).format('dddd')}
@@ -234,7 +214,15 @@ function CalendarFull({
                   <div className="cld-row" key={idx}>
                     {member.Dates &&
                       member.Dates.map((item, index) => (
-                        <div className="cls-col" key={index}>
+                        <div
+                          className={clsx(
+                            'cls-col',
+                            moment(moment().format('DD-MM-YYYY')).isSame(
+                              moment(item.Date).format('DD-MM-YYYY')
+                            ) && 'current-day'
+                          )}
+                          key={index}
+                        >
                           <DayGridRender
                             item={item}
                             member={member}
@@ -253,9 +241,10 @@ function CalendarFull({
           </ScrollSyncPane>
         </div>
         <div
-          className={`overlay-layer bg-dark-o-10 top-20px zindex-1001 ${
-            loading ? 'overlay-block' : ''
-          }`}
+          className={clsx(
+            'overlay-layer bg-dark-o-10 top-0 zindex-1001 top-20px',
+            loading && 'overlay-block'
+          )}
         >
           <div className="spinner spinner-primary"></div>
         </div>

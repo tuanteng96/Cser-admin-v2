@@ -30,6 +30,19 @@ const initialValue = {
 
 const CreateSchema = Yup.object().shape({})
 
+const getHourList = HourList => {
+  let newHourList = []
+  if (!HourList || HourList.length === 0) {
+    newHourList = [['', '']]
+  } else {
+    newHourList = HourList.map(item => [
+      item.From ? moment(item.From, 'HH:mm:ss') : '',
+      item.To ? moment(item.To, 'HH:mm:ss') : ''
+    ])
+  }
+  return newHourList
+}
+
 function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
   const [initialValues, setInitialValues] = useState(initialValue)
 
@@ -39,12 +52,7 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
         ...prevState,
         Date: initialModal?.Date,
         UserID: initialModal?.Member?.ID,
-        Hours:
-          initialModal?.HourList &&
-          initialModal?.HourList.map(item => [
-            item.From ? moment(item.From, 'HH:mm:ss') : '',
-            item.To ? moment(item.To, 'HH:mm:ss') : ''
-          ]),
+        Hours: getHourList(initialModal?.HourList),
         Desc:
           initialModal?.UserWorks && initialModal?.UserWorks.length > 0
             ? initialModal?.UserWorks[0].Desc
@@ -113,23 +121,48 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                         {values.Hours &&
                           values.Hours.map((hour, index) => (
                             <div
-                              className="form-group px-20px py-5px"
+                              className="form-group px-20px py-3px"
                               key={index}
                             >
-                              <TimePicker.RangePicker
-                                locale={{
-                                  ...locale,
-                                  lang: {
-                                    ...locale.lang,
-                                    ok: 'Lưu giờ'
-                                  }
-                                }}
-                                placeholder={['Bắt đầu', 'Kết thúc']}
-                                onChange={(value, dateString) => {
-                                  setFieldValue(`Hours[${index}]`, value)
-                                }}
-                                value={hour}
-                              />
+                              <div className="d-flex TimePicker-button">
+                                <div className="flex-1">
+                                  <TimePicker.RangePicker
+                                    locale={{
+                                      ...locale,
+                                      lang: {
+                                        ...locale.lang,
+                                        ok: 'Lưu giờ'
+                                      }
+                                    }}
+                                    placeholder={['Bắt đầu', 'Kết thúc']}
+                                    onChange={(value, dateString) => {
+                                      setFieldValue(`Hours[${index}]`, value)
+                                    }}
+                                    value={hour}
+                                  />
+                                </div>
+                                {values.Hours.length - 1 === index && (
+                                  <button
+                                    type="button"
+                                    className="btn w-35px"
+                                    onClick={() =>
+                                      arrayHelpers.push(index, ['', ''])
+                                    }
+                                  >
+                                    <i className="fa-regular fa-plus text-success"></i>
+                                  </button>
+                                )}
+                                {values.Hours.length > 1 &&
+                                  values.Hours.length - 1 !== index && (
+                                    <button
+                                      type="button"
+                                      className="btn w-35px"
+                                      onClick={() => arrayHelpers.remove(index)}
+                                    >
+                                      <i className="fa-regular fa-xmark text-danger"></i>
+                                    </button>
+                                  )}
+                              </div>
                             </div>
                           ))}
                       </Fragment>

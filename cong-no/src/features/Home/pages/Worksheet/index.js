@@ -5,12 +5,11 @@ import DatePicker from 'react-datepicker'
 import Navbar from '../../components/Navbar'
 import ModalHolidaySchedule from '../../components/Modal/ModalHolidaySchedule'
 import { useSelector } from 'react-redux'
-
-import moment from 'moment'
-import 'moment/locale/vi'
 import worksheetApi from 'src/api/worksheet.api'
 import ModalTimeKeeping from '../../components/Modal/ModalTimeKeeping'
 
+import moment from 'moment'
+import 'moment/locale/vi'
 moment.locale('vi')
 
 function Worksheet(props) {
@@ -136,7 +135,7 @@ function Worksheet(props) {
           Hours: values.Hours.map(hour => ({
             From: hour && hour[0] ? hour[0].format('HH:mm:ss') : '',
             To: hour && hour[1] ? hour[1].format('HH:mm:ss') : ''
-          }))
+          })).filter(hour => hour.From && hour.To)
         }
       ]
     }
@@ -246,7 +245,7 @@ function Worksheet(props) {
               <i className="fa-regular fa-calendar-range position-absolute w-25px h-100 top-0 right-0 d-flex align-items-center pointer-events-none font-size-md text-muted"></i>
             </div>
             <button
-              className="btn btn-light w-35px"
+              className="btn btn-light w-35px border"
               onClick={() =>
                 setCrDate(moment(CrDate).subtract(1, 'weeks').toDate())
               }
@@ -255,7 +254,7 @@ function Worksheet(props) {
               <i className="fa-regular fa-angle-left text-muted"></i>
             </button>
             <button
-              className="btn btn-light ml-5px w-35px"
+              className="btn btn-light ml-5px w-35px border"
               onClick={() => setCrDate(moment(CrDate).add(1, 'weeks').toDate())}
               disabled={loading}
             >
@@ -265,7 +264,7 @@ function Worksheet(props) {
           <div className="d-flex">
             <button
               className="btn btn-light-danger fw-600 mr-8px"
-              onClick={onOpenModalHoliday}
+              onClick={() => onOpenModalHoliday()}
             >
               Tạo ngày nghỉ
             </button>
