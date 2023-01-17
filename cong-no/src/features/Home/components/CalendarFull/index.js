@@ -1,11 +1,12 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import clsx from 'clsx'
+import useWindowSize from 'src/hooks/useWindowSize'
 
 import moment from 'moment'
 import 'moment/locale/vi'
-import clsx from 'clsx'
 
 moment.locale('vi')
 
@@ -153,15 +154,36 @@ function CalendarFull({
   onOpenModalKeep,
   onOpenModalHoliday
 }) {
+  const elmScroll = useRef(null)
+  const [isScroll, setIsScroll] = useState(false)
+  const size = useWindowSize()
+
+  useEffect(() => {
+    if (elmScroll.current) {
+      const { node } = elmScroll.current
+      var WidthParent = node.clientWidth
+      var WidthChild = 0
+      if (node.childNodes && node.childNodes.length > 0) {
+        WidthChild = node.childNodes[0].clientWidth
+      }
+      setIsScroll(WidthChild > WidthParent)
+    }
+  }, [elmScroll, data, size])
+
   return (
     <ScrollSync>
-      <div className="d-flex cld-timesheets overlay">
+      <div
+        className={clsx(
+          'd-flex cld-timesheets overlay',
+          isScroll && 'in-scroll'
+        )}
+      >
         <div className="d-flex flex-column cld-timesheets__sidebar">
-          <div className="cld-timesheets__sidebar-title">
+          <div className="cld-timesheets__sidebar-title bg--member">
             Danh sách nhân viên
           </div>
           <ScrollSyncPane>
-            <div className="cld-timesheets__sidebar-list overflow-auto flex-grow-1">
+            <div className="cld-timesheets__sidebar-list overflow-auto flex-grow-1 bg--member">
               {data &&
                 data.map((member, index) => (
                   <div className="cld-row" key={index}>
@@ -179,39 +201,44 @@ function CalendarFull({
         <div className="flex-1 h-100 overflow-auto d-flex flex-column cld-timesheets__body">
           <ScrollSyncPane>
             <div className="d-flex cld-timesheets__body-title">
-              {Array(7)
-                .fill()
-                .map((o, index) => (
-                  <div
-                    key={index}
-                    className={clsx(
-                      'cls-col',
-                      moment(moment().format('DD-MM-YYYY')).isSame(
-                        moment(CrDate)
-                          .clone()
-                          .weekday(index)
-                          .format('DD-MM-YYYY')
-                      ) && 'current-day'
-                    )}
-                  >
-                    <div className="date">
-                      <span className="text-capitalize">
-                        {moment(CrDate).clone().weekday(index).format('dddd')}
-                      </span>
-                      , Ngày
-                      <span className="pl-3px">
-                        {moment(CrDate).clone().weekday(index).format('DD/MM')}
-                      </span>
+              <div className="d-flex timesheet-width-row">
+                {Array(7)
+                  .fill()
+                  .map((o, index) => (
+                    <div
+                      key={index}
+                      className={clsx(
+                        'cls-col',
+                        moment(moment().format('DD-MM-YYYY')).isSame(
+                          moment(CrDate)
+                            .clone()
+                            .weekday(index)
+                            .format('DD-MM-YYYY')
+                        ) && 'current-day'
+                      )}
+                    >
+                      <div className="date">
+                        <span className="text-capitalize">
+                          {moment(CrDate).clone().weekday(index).format('dddd')}
+                        </span>
+                        , Ngày
+                        <span className="pl-3px">
+                          {moment(CrDate)
+                            .clone()
+                            .weekday(index)
+                            .format('DD/MM')}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+              </div>
             </div>
           </ScrollSyncPane>
-          <ScrollSyncPane>
+          <ScrollSyncPane ref={elmScroll}>
             <div className="overflow-auto flex-grow-1">
               {data &&
                 data.map((member, idx) => (
-                  <div className="cld-row" key={idx}>
+                  <div className="cld-row timesheet-width-row" key={idx}>
                     {member.Dates &&
                       member.Dates.map((item, index) => (
                         <div

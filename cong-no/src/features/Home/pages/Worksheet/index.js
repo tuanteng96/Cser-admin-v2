@@ -235,13 +235,16 @@ function Worksheet(props) {
       <div className="card-body">
         <div className="d-flex justify-content-between">
           <div className="d-flex">
-            <div className="mr-8px position-relative">
+            <div className="mr-8px position-relative date-range">
               <DatePicker
                 selected={CrDate}
                 onChange={date => setCrDate(date)}
-                className="form-control"
+                className="form-control w-250px"
                 dateFormat={'dd/MM/yyyy'}
               />
+              <div className="date-current fw-500">
+                {filters.From} - {filters.To}
+              </div>
               <i className="fa-regular fa-calendar-range position-absolute w-25px h-100 top-0 right-0 d-flex align-items-center pointer-events-none font-size-md text-muted"></i>
             </div>
             <button

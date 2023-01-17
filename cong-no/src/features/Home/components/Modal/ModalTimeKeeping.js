@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FieldArray, Form, Formik } from 'formik'
 import * as Yup from 'yup'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Dropdown, Modal } from 'react-bootstrap'
 import { TimePicker } from 'antd'
 import { NumericFormat } from 'react-number-format'
 import locale from 'antd/es/date-picker/locale/de_DE'
@@ -41,6 +41,42 @@ const getHourList = HourList => {
     ])
   }
   return newHourList
+}
+
+const DropdownOvertime = ({ title, onChange }) => {
+  const [List, setList] = useState([
+    {
+      label: '30 phút',
+      value: 0.5
+    },
+    {
+      label: '1 giờ',
+      value: 1
+    },
+    {
+      label: '1 giờ 30 phút',
+      value: 1.5
+    }
+  ])
+  if (!List || List.length === 0) return null
+  return (
+    <Dropdown>
+      <Dropdown.Toggle
+        id="dropdown-autoclose-true"
+        className="h-auto btn-xs btn-success py-0 px-5px"
+      >
+        {title}
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        {List &&
+          List.map((item, index) => (
+            <Dropdown.Item href="#" key={index} onClick={() => onChange(item)}>
+              {item.label}
+            </Dropdown.Item>
+          ))}
+      </Dropdown.Menu>
+    </Dropdown>
+  )
 }
 
 function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
@@ -139,6 +175,7 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                                       setFieldValue(`Hours[${index}]`, value)
                                     }}
                                     value={hour}
+                                    allowEmpty={[true, true]}
                                   />
                                 </div>
                                 {values.Hours.length - 1 === index && (
@@ -188,13 +225,19 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                   />
                 </div>
                 <div className="form-group mb-20px px-20px">
-                  <label className="font-label text-muted mb-5px">
-                    Tăng ca
-                  </label>
+                  <div className="d-flex justify-content-between align-items-center mb-6px">
+                    <label className="font-label text-muted mb-0">
+                      Công tăng ca
+                    </label>
+                    <DropdownOvertime
+                      title="Chọn thời gian"
+                      onChange={val => setFieldValue('WorkQty1', val.value)}
+                    />
+                  </div>
                   <NumericFormat
                     className="form-control form-control-solid"
                     type="text"
-                    placeholder="Thời gian tăng ca"
+                    placeholder="Nhập công tăng ca"
                     name="WorkQty1"
                     value={values.WorkQty1}
                     onValueChange={val =>
@@ -208,13 +251,19 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                   />
                 </div>
                 <div className="form-group mb-20px px-20px">
-                  <label className="font-label text-muted mb-5px">
-                    Thiếu giờ
-                  </label>
+                  <div className="d-flex justify-content-between align-items-center mb-6px">
+                    <label className="font-label text-muted mb-0">
+                      Công thiếu giờ
+                    </label>
+                    <DropdownOvertime
+                      title="Chọn thời gian"
+                      onChange={val => setFieldValue('WorkQty2', val.value)}
+                    />
+                  </div>
                   <NumericFormat
                     className="form-control form-control-solid"
                     type="text"
-                    placeholder="Thời gian thiếu"
+                    placeholder="Nhập công thiếu"
                     name="WorkQty2"
                     value={values.WorkQty2}
                     onValueChange={val =>

@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Home from 'src/features/Home'
 import AuthInit from 'src/features/Auth/AuthInit'
 import Worksheet from 'src/features/Home/pages/Worksheet'
@@ -21,6 +21,10 @@ function App({ store }) {
             </Route>
             <Route path="duyet-luong" element={<SalaryApproval />}></Route>
           </Route>
+          {/* <Route
+            path="/Admin/Userwork/index.html"
+            element={<Navigate to="/" replace />}
+          /> */}
         </Routes>
       </AuthInit>
     </Provider>

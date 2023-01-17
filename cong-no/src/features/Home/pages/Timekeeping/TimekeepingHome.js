@@ -301,6 +301,7 @@ function TimekeepingHome(props) {
                                                   )
                                                 }}
                                                 value={field.value}
+                                                allowEmpty={[true, true]}
                                               />
                                             )}
                                           </FastField>

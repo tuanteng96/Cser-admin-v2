@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { DevHelpers } from 'src/helpers/DevHelpers'
+import useWindowSize from 'src/hooks/useWindowSize'
 import { LayoutSplashScreen } from 'src/layout/_core/SplashScreen'
 import { setProfile } from './AuthSlice'
 
@@ -18,6 +19,7 @@ function AuthInit(props) {
   const [showSplashScreen, setShowSplashScreen] = useState(true)
   const dispatch = useDispatch()
   // We should request user by authToken before rendering the application
+  const size = useWindowSize()
 
   useEffect(() => {
     const outer = document.createElement('div')
@@ -36,7 +38,7 @@ function AuthInit(props) {
       '--width-scrollbar',
       scrollbarWidth + 'px'
     )
-  }, [])
+  }, [size])
 
   useEffect(() => {
     async function requestUser() {

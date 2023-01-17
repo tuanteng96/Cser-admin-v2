@@ -3,10 +3,20 @@ $height-card-header: 70px;
 $width-timesheets-sidebar: 300px;
 $height-title-timesheets-sidebar: 50px;
 $height-row: 70px;
-$width-col: 200px;
+$width-col: 250px;
+$count-col: 7;
 // ----
 $border-color: #F4F4F4;
 // ----
+.bg--member {
+    background: #fdfdfd;
+}
+
+.timesheet-width-row {
+    min-width: calc($width-col * $count-col);
+    width: 100%;
+}
+
 .card-timesheets {
     .card-body {
         height: calc(100% - $height-card-header);
@@ -56,11 +66,30 @@ $border-color: #F4F4F4;
             font-weight: 700;
             font-size: 14px;
         }
+        &-list {
+            &::-webkit-scrollbar-track,
+            &::-webkit-scrollbar,
+            &::-webkit-scrollbar-thumb {
+                width: 0;
+                height: 0;
+            }
+        }
     }
     &__body {
         border-top: 1px solid $border-color;
         border-right: 1px solid $border-color;
         border-bottom: 1px solid $border-color;
+        position: relative;
+        &::before {
+            content: "";
+            position: absolute;
+            width: var(--width-scrollbar);
+            height: $height-title-timesheets-sidebar;
+            right: 0;
+            top: 0;
+            background: $border-color;
+            z-index: 2;
+        }
         &-title {
             height: $height-title-timesheets-sidebar;
             min-height: $height-title-timesheets-sidebar;
@@ -73,15 +102,6 @@ $border-color: #F4F4F4;
             &::-webkit-scrollbar-thumb {
                 width: 0;
                 height: 0;
-            }
-            &::before {
-                content: "";
-                position: absolute;
-                width: var(--width-scrollbar);
-                height: 100%;
-                left: 100%;
-                top: 0;
-                background: $border-color;
             }
             .date {
                 display: flex;
@@ -121,6 +141,15 @@ $border-color: #F4F4F4;
         padding: 0 8px;
         &.no-event {
             cursor: no-drop;
+        }
+    }
+}
+
+.cld-timesheets:not(.in-scroll) {
+    .cld-timesheets__sidebar {
+        padding-bottom: 0;
+        &::after {
+            display: none;
         }
     }
 }
