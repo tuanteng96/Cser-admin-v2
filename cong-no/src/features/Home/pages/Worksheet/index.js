@@ -13,9 +13,10 @@ import 'moment/locale/vi'
 moment.locale('vi')
 
 function Worksheet(props) {
-  const { Stocks, CrStockID } = useSelector(({ auth }) => ({
+  const { Stocks, CrStockID, rightsSum } = useSelector(({ auth }) => ({
     Stocks: auth?.Info?.Stocks || [],
-    CrStockID: auth?.Info?.CrStockID
+    CrStockID: auth?.Info?.CrStockID,
+    rightsSum: auth?.Info?.rightsSum?.cong_ca
   }))
   const [List, setList] = useState([])
   const [StocksList, setStocksList] = useState([])
@@ -41,22 +42,31 @@ function Worksheet(props) {
   const typingTimeoutRef = useRef(null)
 
   useEffect(() => {
-    const newStocks = Stocks.filter(stock => stock.ParentID !== 0)
-    if (newStocks.length > 0) {
-      if (!CrStockID) {
-        setFilters(prevState => ({
-          ...prevState,
-          StockID: newStocks[0]
-        }))
+    let newStocks = Stocks.filter(stock => stock.ParentID !== 0)
+    if (rightsSum?.hasRight) {
+      if (rightsSum?.IsAllStock) {
+        newStocks = [{ ID: '', Title: 'Tất cả cơ sở' }, ...newStocks]
       } else {
-        setFilters(prevState => ({
-          ...prevState,
-          StockID: newStocks.filter(o => o.ID === CrStockID)[0]
-        }))
+        newStocks = newStocks.filter(
+          o => rightsSum.stocks && rightsSum.stocks.some(x => x.ID === o.ID)
+        )
+      }
+      if (newStocks.length > 0) {
+        if (!CrStockID) {
+          setFilters(prevState => ({
+            ...prevState,
+            StockID: newStocks[0]
+          }))
+        } else {
+          setFilters(prevState => ({
+            ...prevState,
+            StockID: newStocks.filter(o => o.ID === CrStockID)[0]
+          }))
+        }
       }
     }
     setStocksList(newStocks)
-  }, [Stocks, CrStockID])
+  }, [Stocks, CrStockID, rightsSum])
 
   useEffect(() => {
     setFilters(prevState => ({
@@ -135,7 +145,7 @@ function Worksheet(props) {
           Hours: values.Hours.map(hour => ({
             From: hour && hour[0] ? hour[0].format('HH:mm:ss') : '',
             To: hour && hour[1] ? hour[1].format('HH:mm:ss') : ''
-          })).filter(hour => hour.From && hour.To)
+          })).filter(hour => hour.From)
         }
       ]
     }

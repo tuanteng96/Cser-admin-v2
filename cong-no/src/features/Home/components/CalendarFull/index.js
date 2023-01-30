@@ -83,7 +83,7 @@ const HolidaycheduleLine = ({ member, item, onOpenModalHoliday }) => {
       {option &&
         option.map((otp, index) => (
           <div
-            className="bg-stripes position-absolute top-0 left-0 h-100 zindex-2"
+            className="bg-stripes position-absolute h-100 zindex-2"
             style={{ ...otp.style }}
             key={index}
             onClick={() =>
@@ -183,7 +183,7 @@ function CalendarFull({
             Danh sách nhân viên
           </div>
           <ScrollSyncPane>
-            <div className="cld-timesheets__sidebar-list overflow-auto flex-grow-1 bg--member">
+            <div className="cld-timesheets__sidebar-list overflow-scroll flex-grow-1 bg--member">
               {data &&
                 data.map((member, index) => (
                   <div className="cld-row" key={index}>
@@ -209,12 +209,11 @@ function CalendarFull({
                       key={index}
                       className={clsx(
                         'cls-col',
-                        moment(moment().format('DD-MM-YYYY')).isSame(
+                        moment().format('DD-MM-YYYY') ===
                           moment(CrDate)
                             .clone()
                             .weekday(index)
-                            .format('DD-MM-YYYY')
-                        ) && 'current-day'
+                            .format('DD-MM-YYYY') && 'current-day'
                       )}
                     >
                       <div className="date">
@@ -235,7 +234,7 @@ function CalendarFull({
             </div>
           </ScrollSyncPane>
           <ScrollSyncPane ref={elmScroll}>
-            <div className="overflow-auto flex-grow-1">
+            <div className="overflow-scroll flex-grow-1 position-relative">
               {data &&
                 data.map((member, idx) => (
                   <div className="cld-row timesheet-width-row" key={idx}>
@@ -244,9 +243,8 @@ function CalendarFull({
                         <div
                           className={clsx(
                             'cls-col',
-                            moment(moment().format('DD-MM-YYYY')).isSame(
-                              moment(item.Date).format('DD-MM-YYYY')
-                            ) && 'current-day'
+                            moment(item.Date).format('DD-MM-YYYY') ===
+                              moment().format('DD-MM-YYYY') && 'current-day'
                           )}
                           key={index}
                         >

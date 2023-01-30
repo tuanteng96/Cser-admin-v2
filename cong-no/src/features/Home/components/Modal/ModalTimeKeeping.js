@@ -7,6 +7,7 @@ import { TimePicker } from 'antd'
 import { NumericFormat } from 'react-number-format'
 import locale from 'antd/es/date-picker/locale/de_DE'
 import { clsx } from 'clsx'
+import moreApi from 'src/api/more.api'
 
 import moment from 'moment'
 import 'moment/locale/vi'
@@ -23,7 +24,7 @@ const initialValue = {
   Date: '',
   Hours: [],
   Desc: '',
-  WorkQty: '',
+  WorkQty: 1,
   WorkQty1: '',
   WorkQty2: ''
 }
@@ -43,21 +44,28 @@ const getHourList = HourList => {
   return newHourList
 }
 
-const DropdownOvertime = ({ title, onChange }) => {
-  const [List, setList] = useState([
-    {
-      label: '30 phút',
-      value: 0.5
-    },
-    {
-      label: '1 giờ',
-      value: 1
-    },
-    {
-      label: '1 giờ 30 phút',
-      value: 1.5
+const DropdownOvertime = ({ title, onChange, name, value }) => {
+  const [List, setList] = useState([])
+
+  useEffect(() => {
+    var nameConfig = 'cauhinhcong'
+    if (name === 'TRU') {
+      nameConfig = 'cauhinhtru'
     }
-  ])
+    getList(nameConfig)
+  }, [name])
+
+  const getList = name => {
+    moreApi
+      .getNameConfig(name)
+      .then(({ data }) => {
+        if (data && data.data && data.data[0].Value) {
+          setList(JSON.parse(data.data[0].Value))
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
   if (!List || List.length === 0) return null
   return (
     <Dropdown>
@@ -70,7 +78,14 @@ const DropdownOvertime = ({ title, onChange }) => {
       <Dropdown.Menu>
         {List &&
           List.map((item, index) => (
-            <Dropdown.Item href="#" key={index} onClick={() => onChange(item)}>
+            <Dropdown.Item
+              className={clsx(
+                Number(value) === Number(item.value) && 'bg-primary text-white'
+              )}
+              href="#"
+              key={index}
+              onClick={() => onChange(item)}
+            >
               {item.label}
             </Dropdown.Item>
           ))}
@@ -96,7 +111,7 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
         WorkQty:
           initialModal?.UserWorks && initialModal?.UserWorks.length > 0
             ? initialModal?.UserWorks[0].WorkQty
-            : '',
+            : 1,
         WorkQty1:
           initialModal?.UserWorks && initialModal?.UserWorks.length > 0
             ? initialModal?.UserWorks[0].WorkQty1
@@ -175,7 +190,8 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                                       setFieldValue(`Hours[${index}]`, value)
                                     }}
                                     value={hour}
-                                    allowEmpty={[true, true]}
+                                    allowEmpty={[true, false]}
+                                    order={false}
                                   />
                                 </div>
                                 {values.Hours.length - 1 === index && (
@@ -232,6 +248,8 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                     <DropdownOvertime
                       title="Chọn thời gian"
                       onChange={val => setFieldValue('WorkQty1', val.value)}
+                      name="CONG"
+                      value={values.WorkQty1}
                     />
                   </div>
                   <NumericFormat
@@ -258,6 +276,8 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                     <DropdownOvertime
                       title="Chọn thời gian"
                       onChange={val => setFieldValue('WorkQty2', val.value)}
+                      name="TRU"
+                      value={values.WorkQty2}
                     />
                   </div>
                   <NumericFormat

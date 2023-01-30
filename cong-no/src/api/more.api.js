@@ -23,6 +23,9 @@ const moreApi = {
     return http.get(
       `/api/v3/mbook?cmd=getroot&memberid=${MemberID}&ps=15&pi=1&key=${Key}=&stockid=${StockID}`
     )
+  },
+  getNameConfig: name => {
+    return http.get(`/api/v3/config?cmd=getnames&names=${name}&ignore_root=1`)
   }
 }
 export default moreApi

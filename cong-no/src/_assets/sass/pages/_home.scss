@@ -130,7 +130,7 @@ $border-color: #F4F4F4;
             border-right: 1px solid $border-color;
         }
         &.current-day {
-            background: #FBFBFB;
+            background: #FFFDF3;
         }
     }
     .daygrid-day {
@@ -215,7 +215,7 @@ $border-color: #F4F4F4;
             border-left: 1px solid $border-color;
         }
         &.col-checkinout {
-            flex: 0 0 200px;
+            flex: 0 0 215px;
         }
         &.col-input {
             flex: 0 0 250px;

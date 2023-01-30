@@ -19,9 +19,10 @@ const InputFiles = () => {
 }
 
 function SalaryApproval(props) {
-  const { Stocks, CrStockID } = useSelector(({ auth }) => ({
+  const { Stocks, CrStockID, rightsSum } = useSelector(({ auth }) => ({
     Stocks: auth?.Info?.Stocks || [],
-    CrStockID: auth?.Info?.CrStockID
+    CrStockID: auth?.Info?.CrStockID,
+    rightsSum: auth?.Info?.rightsSum?.cong_ca
   }))
   const [StocksList, setStocksList] = useState([])
   const [CrDate, setCrDate] = useState(new Date())
@@ -36,28 +37,35 @@ function SalaryApproval(props) {
   const typingTimeoutRef = useRef(null)
 
   useEffect(() => {
-    const newStocks = Stocks.filter(stock => stock.ParentID !== 0).map(
-      stock => ({
-        ...stock,
-        value: stock.ID,
-        label: stock.Title
-      })
-    )
-    if (newStocks.length > 0) {
-      if (!CrStockID) {
-        setFilters(prevState => ({
-          ...prevState,
-          StockID: newStocks[0]
-        }))
+    let newStocks = Stocks.filter(stock => stock.ParentID !== 0).map(stock => ({
+      ...stock,
+      value: stock.ID,
+      label: stock.Title
+    }))
+    if (rightsSum?.hasRight) {
+      if (rightsSum?.IsAllStock) {
+        newStocks = [{ value: '', label: 'Tất cả cơ sở' }, ...newStocks]
       } else {
-        setFilters(prevState => ({
-          ...prevState,
-          StockID: newStocks.filter(o => o.ID === CrStockID)[0]
-        }))
+        newStocks = newStocks.filter(
+          o => rightsSum.stocks && rightsSum.stocks.some(x => x.ID === o.ID)
+        )
+      }
+      if (newStocks.length > 0) {
+        if (!CrStockID) {
+          setFilters(prevState => ({
+            ...prevState,
+            StockID: newStocks[0]
+          }))
+        } else {
+          setFilters(prevState => ({
+            ...prevState,
+            StockID: newStocks.filter(o => o.ID === CrStockID)[0]
+          }))
+        }
       }
     }
     setStocksList(newStocks)
-  }, [Stocks, CrStockID])
+  }, [Stocks, CrStockID, rightsSum])
 
   return (
     <div className="card h-100">

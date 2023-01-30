@@ -68,14 +68,12 @@ function AuthInit(props) {
           ],
           CrStockID: 8975, //8975
           rightsSum: {
-            tele: {
+            cong_ca: {
               hasRight: true,
-              stocks: [{ ID: 8975, Title: 'Cser Hà Nội' }],
-              IsAllStock: false
-            },
-            teleAdv: {
-              hasRight: true,
-              stocks: [{ ID: 10053, Title: 'Cser Hồ Chí Minh' }],
+              stocks: [
+                { ID: 8975, Title: 'Cser Hà Nội' },
+                { ID: 10053, Title: 'Cser Hồ Chí Minh' }
+              ],
               IsAllStock: false
             }
           }

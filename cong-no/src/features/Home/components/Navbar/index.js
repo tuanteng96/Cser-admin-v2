@@ -12,14 +12,14 @@ function Navbar(props) {
       >
         Công ca
       </NavLink>
-      <NavLink
+      {/* <NavLink
         className={({ isActive }) =>
           `btn mr-8px fw-600 ${isActive ? 'btn-primary' : 'btn-light-primary'}`
         }
         to="/cham-cong"
       >
         Chấm công
-      </NavLink>
+      </NavLink> */}
       <NavLink
         className={({ isActive }) =>
           `btn mr-8px fw-600 ${isActive ? 'btn-primary' : 'btn-light-primary'}`

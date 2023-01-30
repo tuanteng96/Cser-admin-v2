@@ -407,6 +407,9 @@
                                     background: #e1f0ff !important;
                                     color: #3699ff !important;
                                 }
+                                &.react-datepicker__time-list-item--disabled {
+                                    opacity: .3;
+                                }
                                 &:hover {
                                     background: #f3f6f9;
                                 }

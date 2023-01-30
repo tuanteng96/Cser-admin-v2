@@ -29,6 +29,13 @@ $config in $config-line-text {
 }
 
 //
+@for $opacity from 0 through 10 {
+    .line-height-#{$opacity} {
+        line-height: $opacity !important;
+    }
+}
+
+//
 .text-muted2 {
     color: #b5b5c3;
 }

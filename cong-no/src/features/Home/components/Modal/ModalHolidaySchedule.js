@@ -6,6 +6,12 @@ import { Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import DatePicker from 'react-datepicker'
 import clsx from 'clsx'
+import { useSelector } from 'react-redux'
+
+import moment from 'moment'
+import 'moment/locale/vi'
+
+moment.locale('vi')
 
 ModalHolidaySchedule.propTypes = {
   show: PropTypes.bool,
@@ -35,6 +41,11 @@ function ModalHolidaySchedule({
 }) {
   const [initialValues, setInitialValues] = useState(initialValue)
 
+  const { TimeOpen, TimeClose } = useSelector(({ auth }) => ({
+    TimeOpen: auth?.GlobalConfig?.APP?.Working?.TimeOpen || '00:00:00',
+    TimeClose: auth?.GlobalConfig?.APP?.Working?.TimeClose || '23:59:00'
+  }))
+
   useEffect(() => {
     if (initialModal) {
       setInitialValues(prevState => ({
@@ -49,9 +60,34 @@ function ModalHolidaySchedule({
         }
       }))
     } else {
-      setInitialValues(initialValue)
+      let TimeFrom = moment(TimeOpen, 'HH:mm')
+      let TimeTo = moment(TimeClose, 'HH:mm')
+
+      setInitialValues(prevState => ({
+        ...prevState,
+        From: moment().set({
+          hour: TimeFrom.get('hour'),
+          minute: TimeFrom.get('minute'),
+          second: TimeFrom.get('second')
+        }),
+        To: moment().set({
+          hour: TimeTo.get('hour'),
+          minute: TimeTo.get('minute'),
+          second: TimeTo.get('second')
+        })
+      }))
     }
-  }, [show, initialModal])
+  }, [show, initialModal, TimeOpen, TimeClose])
+
+  const filterPassedTime = time => {
+    var beginningTime = moment(time, 'HH:mm:ss')
+    var startTime = moment(TimeOpen, 'HH:mm:ss')
+    var endTime = moment(TimeClose, 'HH:mm:ss')
+    return (
+      beginningTime.isSameOrAfter(startTime) &&
+      beginningTime.isSameOrBefore(endTime)
+    )
+  }
 
   return (
     <Modal
@@ -137,6 +173,7 @@ function ModalHolidaySchedule({
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     autoComplete="off"
+                    filterTime={filterPassedTime}
                   />
                 </div>
                 <div className="form-group mb-20px">
@@ -158,8 +195,9 @@ function ModalHolidaySchedule({
                     timeInputLabel="Thời gian"
                     showTimeSelect
                     timeFormat="HH:mm"
-                    timeIntervals={15}
+                    timeIntervals={5}
                     autoComplete="off"
+                    filterTime={filterPassedTime}
                   />
                 </div>
                 <div className="form-group mb-0">
