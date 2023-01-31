@@ -128,16 +128,16 @@ function SalaryApproval(props) {
     worksheetApi
       .getAllSalaryApproval(newObj)
       .then(({ data }) => {
-        // setInitialValues(prevState => ({
-        //   ...prevState,
-        //   list: data
-        //     ? data.map(o => ({
-        //         ...o,
-        //         Desc: o.Desc || '',
-        //         Mon: moment(filters.Mon).format('MM/YYYY')
-        //       }))
-        //     : []
-        // }))
+        setInitialValues(prevState => ({
+          ...prevState,
+          list: data
+            ? data.map(o => ({
+                ...o,
+                Desc: o.Desc || '',
+                Mon: moment(filters.Mon).format('MM/YYYY')
+              }))
+            : []
+        }))
         setLoading(false)
         callback && callback()
       })
