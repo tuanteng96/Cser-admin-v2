@@ -12,9 +12,10 @@ const isVisible = (Type) => {
 };
 
 const BonusSales = () => {
-  const { OrderID, CrStockID } = useSelector(({ Auth }) => ({
+  const { OrderID, CrStockID, UserID } = useSelector(({ Auth }) => ({
     OrderID: Auth.OrderID,
     CrStockID: Auth.CrStockID,
+    UserID: Auth?.User?.ID,
   }));
   const [OrderInfo, setOrderInfo] = useState({});
   const [Type, setType] = useState([
@@ -42,7 +43,7 @@ const BonusSales = () => {
       Title: "Nâng cao",
       Visible: false,
       IsActive: false,
-      Hide: false,
+      Hide: window.top?.GlobalConfig?.Admin?.thuong_ds_nang_cao && UserID !== 1,
       className: "btn btn-primary",
     },
     {

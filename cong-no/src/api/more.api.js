@@ -26,6 +26,9 @@ const moreApi = {
   },
   getNameConfig: name => {
     return http.get(`/api/v3/config?cmd=getnames&names=${name}&ignore_root=1`)
+  },
+  uploadFile: (data, name) => {
+    return http.post(`/api/v3/file?cmd=upload&rawName=${name || ''}`, data)
   }
 }
 export default moreApi

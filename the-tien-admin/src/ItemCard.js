@@ -123,30 +123,59 @@ export default function ItemCard({ item, getMoneyCard, index }) {
               </div>
             )}
         </td>
-        <td data-action="true" className="text-center">
-          <div className="moneycard-btn">
-            <button
-              type="button"
-              className={`mb-5px btn btn-sm btn-${
-                item.trang_thai === "Khóa" ? "success" : "danger"
-              }`}
-              onClick={() => changeCard(item)}
-              disabled={btnLoading}
-            >
-              {btnLoading && "Đang thực hiên"}{" "}
-              {!btnLoading && (
-                <>{item.trang_thai === "Khóa" ? "Kích hoạt" : "Khóa thẻ"}</>
-              )}
-            </button>
-            <button
-              type="button"
-              className="btn btn-sm btn-primary"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? "Đóng lịch sử" : "Lịch sử"}
-            </button>
-          </div>
-        </td>
+        {window.top?.GlobalConfig?.Admin?.the_tien_nang_cao ? (
+          window.top?.Info?.User?.ID === 1 && (
+            <td data-action="true" className="text-center">
+              <div className="moneycard-btn">
+                <button
+                  type="button"
+                  className={`mb-5px btn btn-sm btn-${
+                    item.trang_thai === "Khóa" ? "success" : "danger"
+                  }`}
+                  onClick={() => changeCard(item)}
+                  disabled={btnLoading}
+                >
+                  {btnLoading && "Đang thực hiên"}{" "}
+                  {!btnLoading && (
+                    <>{item.trang_thai === "Khóa" ? "Kích hoạt" : "Khóa thẻ"}</>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-primary"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  {isOpen ? "Đóng lịch sử" : "Lịch sử"}
+                </button>
+              </div>
+            </td>
+          )
+        ) : (
+          <td data-action="true" className="text-center">
+            <div className="moneycard-btn">
+              <button
+                type="button"
+                className={`mb-5px btn btn-sm btn-${
+                  item.trang_thai === "Khóa" ? "success" : "danger"
+                }`}
+                onClick={() => changeCard(item)}
+                disabled={btnLoading}
+              >
+                {btnLoading && "Đang thực hiên"}{" "}
+                {!btnLoading && (
+                  <>{item.trang_thai === "Khóa" ? "Kích hoạt" : "Khóa thẻ"}</>
+                )}
+              </button>
+              <button
+                type="button"
+                className="btn btn-sm btn-primary"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {isOpen ? "Đóng lịch sử" : "Lịch sử"}
+              </button>
+            </div>
+          </td>
+        )}
       </tr>
       {isOpen && (
         <tr>

@@ -72,7 +72,10 @@ function TimekeepingMember(props) {
       <div className="card-header">
         <h3 className="text-uppercase">
           <div className="d-flex align-items-baseline">
-            <div className="d-flex cursor-pointer" onClick={() => navigate(-1)}>
+            <div
+              className="d-flex cursor-pointer"
+              onClick={() => navigate('/')}
+            >
               <div className="w-20px">
                 <i className="fa-regular fa-chevron-left ml-0 vertical-align-middle text-muted"></i>
               </div>
@@ -127,13 +130,13 @@ function TimekeepingMember(props) {
                     <Fragment>
                       {item.UserWorks[0].HourList.map((hour, idx) => (
                         <div className="event-main" key={idx}>
-                          <div className="event-main__label bg-success">
+                          <div className="event-main__label bg-success h-20px">
                             {hour.From}
                           </div>
                           <div className="event-main__line">
                             <i className="fa-regular fa-arrow-right-long"></i>
                           </div>
-                          <div className="event-main__label bg-danger">
+                          <div className="event-main__label bg-danger h-20px">
                             {hour.To}
                           </div>
                         </div>

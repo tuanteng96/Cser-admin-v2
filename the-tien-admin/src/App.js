@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import axiosClient from './axios/axiosClient';
-import { getMember } from './helpers/GlobalHelpers';
-import ItemCard from './ItemCard';
+import React, { useEffect, useState } from "react";
+import axiosClient from "./axios/axiosClient";
+import { getMember } from "./helpers/GlobalHelpers";
+import ItemCard from "./ItemCard";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -9,12 +9,15 @@ function App() {
   const { Member } = getMember();
 
   const getMoneyCard = (callback) => {
-    axiosClient.get(`/api/v3/moneycard?cmd=get&memberid=${Member.ID}`).then(({ data }) => {
-      setListMoneyCard(data.data);
-      setLoading(false);
-      callback && callback();
-    }).catch(err => console.log(err));
-  }
+    axiosClient
+      .get(`/api/v3/moneycard?cmd=get&memberid=${Member.ID}`)
+      .then(({ data }) => {
+        setListMoneyCard(data.data);
+        setLoading(false);
+        callback && callback();
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -43,7 +46,13 @@ function App() {
                         <th scope="col">Giá trị</th>
                         <th scope="col">Giá trị chi tiêu</th>
                         <th scope="col">Còn lại</th>
-                        <th className="text-center">#</th>
+                        {window.top?.GlobalConfig?.Admin?.the_tien_nang_cao ? (
+                          window.top?.Info?.User?.ID === 1 && (
+                            <th className="text-center">#</th>
+                          )
+                        ) : (
+                          <th className="text-center">#</th>
+                        )}
                       </tr>
                     </thead>
                     <tbody>

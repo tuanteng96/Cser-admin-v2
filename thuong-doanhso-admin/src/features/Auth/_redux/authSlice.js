@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const OrderInfo = window.top.OrderBonus23Info || {
-  OrderID: 42256,
+  OrderID: 42379,
 };
 const CrStockID = window.top?.Info?.CrStockID || 8975;
 const Info = window.top?.Info || {
@@ -28,6 +28,9 @@ const Info = window.top?.Info || {
       stocks: [{ ID: 8975, Title: "Cser Hà Nội" }],
       IsAllStock: false,
     },
+  },
+  User: {
+    ID: 1,
   },
 };
 

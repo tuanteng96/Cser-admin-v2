@@ -30,7 +30,7 @@ function TimekeepingHome(props) {
     StockID: '',
     key: ''
   })
-  const [initialValues, setTnitialValues] = useState({ list: [] })
+  const [initialValues, setInitialValues] = useState({ list: [] })
 
   const typingTimeoutRef = useRef(null)
 
@@ -84,7 +84,7 @@ function TimekeepingHome(props) {
       .getAllWorkSheet(newObj)
       .then(({ data }) => {
         if (data.list) {
-          setTnitialValues(prevState => ({
+          setInitialValues(prevState => ({
             ...prevState,
             list: data.list.map(item => {
               let newObj = {

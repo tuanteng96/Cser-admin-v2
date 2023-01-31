@@ -12,6 +12,12 @@ const worksheetApi = {
   },
   deleteWorkOff: data => {
     return http.post('/api/v3/userwork23@workoffs-delete', JSON.stringify(data))
+  },
+  getAllSalaryApproval: data => {
+    return http.post('/api/v3/userwork23@UserMonthList', JSON.stringify(data))
+  },
+  addSalaryApproval: data => {
+    return http.post('/api/v3/userwork23@UserMonth', JSON.stringify(data))
   }
 }
 export default worksheetApi
