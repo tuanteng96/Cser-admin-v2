@@ -5,10 +5,13 @@ import NumberFormat from "react-number-format";
 import { Formik, FieldArray, Form } from "formik";
 import PropTypes from "prop-types";
 import { TypeStaff } from "../../../Json/Json";
+import { useSelector } from "react-redux";
 
 function Equally({ OrderInfo, onSubmit, loading }) {
   const [initialValues, setInitialValues] = useState({ equally: [] });
-
+  const { UserID } = useSelector(({ Auth }) => ({
+    UserID: Auth?.User?.ID,
+  }));
   const getValueType = (item, Type) => {
     return Type.value === "KY_THUAT_VIEN"
       ? item.BonusSale2
@@ -17,7 +20,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
 
   const onToAdd = (values, { resetForm }) => {
     const { ToAdd, Type } = values;
-    
+
     if (ToAdd.length > 0) {
       const newArr =
         OrderInfo && OrderInfo.oiItems && OrderInfo.oiItems.length > 0
@@ -30,7 +33,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                   item.gia_tri_thanh_toan > 0
                     ? Math.round((user.Value * getValueType(item, Type)) / 100)
                     : null,
-              })).filter((item) => item.Value),
+              })),
               Doanh_So: ToAdd.map((user) => ({
                 Product: item,
                 Staff: user,
@@ -38,7 +41,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                   item.gia_tri_doanh_so > 0
                     ? Math.round((user.Value * item.gia_tri_doanh_so) / 100)
                     : null,
-              })).filter((item) => item.Value),
+              })),
             }))
           : [];
       setInitialValues({ equally: newArr });
@@ -85,9 +88,12 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                                 option[option.length - 1].loai_hoa_hong
                             );
                             if (indexType > -1) {
-                              setFieldValue(`Type`, TypeStaff[indexType], false);
-                            }
-                            else {
+                              setFieldValue(
+                                `Type`,
+                                TypeStaff[indexType],
+                                false
+                              );
+                            } else {
                               setFieldValue(`Type`, TypeStaff[0], false);
                             }
                           }
@@ -236,6 +242,10 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                                         );
                                       }}
                                       onBlur={handleBlur}
+                                      disabled={
+                                        window.top?.GlobalConfig?.Admin
+                                          ?.thuong_ds_nang_cao && UserID !== 1
+                                      }
                                     />
                                   </div>
                                 ))
@@ -272,6 +282,10 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                                         );
                                       }}
                                       onBlur={handleBlur}
+                                      disabled={
+                                        window.top?.GlobalConfig?.Admin
+                                          ?.thuong_ds_nang_cao && UserID !== 1
+                                      }
                                     />
                                   </div>
                                 ))

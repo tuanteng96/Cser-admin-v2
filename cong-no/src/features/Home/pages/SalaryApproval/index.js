@@ -86,7 +86,7 @@ function SalaryApproval(props) {
     }))
     if (rightsSum?.hasRight) {
       if (rightsSum?.IsAllStock) {
-        newStocks = [{ value: '', label: 'Tất cả cơ sở' }, ...newStocks]
+        //newStocks = [{ value: '', label: 'Tất cả cơ sở' }, ...newStocks]
       } else {
         newStocks = newStocks.filter(
           o => rightsSum.stocks && rightsSum.stocks.some(x => x.ID === o.ID)
@@ -115,11 +115,12 @@ function SalaryApproval(props) {
   }, [filters])
 
   const getListSalary = (isLoading = true, callback) => {
+    if (!filters.StockID) return
     isLoading && setLoading(true)
-    setInitialValues(prevState => ({
-      ...prevState,
-      list: []
-    }))
+    // setInitialValues(prevState => ({
+    //   ...prevState,
+    //   list: []
+    // }))
     const newObj = {
       ...filters,
       Mon: moment(filters.Mon).format('MM/YYYY'),
@@ -195,7 +196,7 @@ function SalaryApproval(props) {
                     />
                     <i className="fa-regular fa-magnifying-glass position-absolute w-30px h-100 top-0 right-0 d-flex align-items-center pointer-events-none font-size-md text-muted"></i>
                   </div>
-                  <div className="w-250px mx-15px">
+                  <div className="w-225px mx-15px">
                     <Select
                       options={StocksList}
                       className="select-control select-control-solid"
@@ -210,7 +211,7 @@ function SalaryApproval(props) {
                       }
                     />
                   </div>
-                  <div className="mr-8px position-relative">
+                  <div className="mr-8px position-relative max-w-150px">
                     <DatePicker
                       locale="vi"
                       className="form-control form-control-solid fw-500"
@@ -241,16 +242,22 @@ function SalaryApproval(props) {
                 <FieldArray
                   name="list"
                   render={arrayHelpers => (
-                    <Fragment>
+                    <div className='timekeeping-table'>
                       {values.list &&
                         values.list.map((item, index) => (
-                          <div className="timekeeping-item" key={index}>
+                          <div
+                            className={clsx(
+                              'timekeeping-item',
+                              item.IsSet && 'bg-success'
+                            )}
+                            key={index}
+                          >
                             <div className="timekeeping-col col-name">
                               <div className="fw-700 text-truncate">
                                 {item.FullName}
                               </div>
                             </div>
-                            <div className="timekeeping-col col-input">
+                            <div className="timekeeping-col">
                               <label className="name-control">Tổng công</label>
                               <FastField name={`list[${index}].WorkQty`}>
                                 {({ field, form }) => (
@@ -273,7 +280,7 @@ function SalaryApproval(props) {
                                 )}
                               </FastField>
                             </div>
-                            <div className="timekeeping-col col-input">
+                            <div className="timekeeping-col">
                               <label className="name-control">
                                 Lương theo công
                               </label>
@@ -303,7 +310,7 @@ function SalaryApproval(props) {
                                 )}
                               </FastField>
                             </div>
-                            <div className="timekeeping-col col-input">
+                            <div className="timekeeping-col">
                               <label className="name-control">Tổng tiền</label>
                               <FastField name={`list[${index}].WorkSalary`}>
                                 {({ field, form }) => (
@@ -364,9 +371,26 @@ function SalaryApproval(props) {
                                 )}
                               </FastField>
                             </div>
+                            <div className="timekeeping-col align-items-center col-checkbox">
+                              <FastField name={`list[${index}].IsSet`}>
+                                {({ field }) => (
+                                  <label className="checkbox d-flex flex-column align-items-center">
+                                    <input
+                                      type="checkbox"
+                                      {...field}
+                                      checked={field.value}
+                                    />
+                                    <span className="name-control">
+                                      Duyệt lương
+                                    </span>
+                                    <span className="checkbox-icon"></span>
+                                  </label>
+                                )}
+                              </FastField>
+                            </div>
                           </div>
                         ))}
-                    </Fragment>
+                    </div>
                   )}
                 />
                 <div

@@ -178,12 +178,12 @@ const BonusSales = () => {
           Value: item.Value,
           ReceiverUserID: item.Staff?.ID,
           SubSourceID: item.Product?.ID,
-        })),
+        })).filter((o) => o.Value !== null),
         them_doanh_so: Doanh_So.map((item) => ({
           Value: item.Value,
           ReceiverUserID: item.Staff?.ID,
           OrderItemID: item.Product?.ID,
-        })),
+        })).filter((o) => o.Value !== null),
       },
     };
     BonusSaleCrud.postOrderItem(dataSubmit)
@@ -225,12 +225,12 @@ const BonusSales = () => {
           Value: item.Value,
           ReceiverUserID: item.Staff?.ID,
           SubSourceID: item.Product?.ID,
-        })),
+        })).filter((o) => o.Value !== null),
         them_doanh_so: Doanh_So.map((item) => ({
           Value: item.Value,
           ReceiverUserID: item.Staff?.ID,
           OrderItemID: item.Product?.ID,
-        })),
+        })).filter((o) => o.Value !== null),
       },
     };
     BonusSaleCrud.postOrderItem(dataSubmit)
@@ -276,12 +276,12 @@ const BonusSales = () => {
           Value: item.Value,
           ReceiverUserID: item.User?.ID,
           SubSourceID: item.SubSourceID,
-        })),
+        })).filter((o) => o.Value !== null),
         them_doanh_so: Doanh_So.map((item) => ({
           Value: item.Value,
           ReceiverUserID: item.User?.ID,
           OrderItemID: item.OrderItemID,
-        })),
+        })).filter((o) => o.Value !== null),
       },
     };
     BonusSaleCrud.postOrderItem(dataSubmit)
@@ -321,14 +321,16 @@ const BonusSales = () => {
         Value: item.Value,
         ReceiverUserID: item.Staff?.ID,
         SubSourceID: item.Product?.ID,
-      }));
+      }))
+      .filter((o) => o.Value !== null);
     const Doanh_so = newData
       .filter((item) => item.Type.value === "doanh_so")
       .map((item) => ({
         Value: item.Value,
         ReceiverUserID: item.Staff?.ID,
         OrderItemID: item.Product?.ID,
-      }));
+      }))
+      .filter((o) => o.Value !== null);
     const dataSubmit = {
       OrderID: OrderID,
       save: {
@@ -376,13 +378,13 @@ const BonusSales = () => {
           Value: item.Value,
           ReceiverUserID: item.User?.ID,
           SubSourceID: item.SubSourceID,
-        })),
+        })).filter((o) => o.Value !== null),
         doanh_so: Doanh_So.map((item) => ({
           ID: item.ID || 0,
           Value: item.Value,
           ReceiverUserID: item.User?.ID,
           OrderItemID: item.OrderItemID,
-        })),
+        })).filter((o) => o.Value !== null),
       },
     };
     BonusSaleCrud.postOrderItem(dataSubmit)

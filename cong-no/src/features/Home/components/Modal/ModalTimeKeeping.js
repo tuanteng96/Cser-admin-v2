@@ -29,7 +29,11 @@ const initialValue = {
   WorkQty2: ''
 }
 
-const CreateSchema = Yup.object().shape({})
+const CreateSchema = Yup.object().shape({
+  Hours: Yup.array().test('oneOfRequired', function (item) {
+    return item[0].filter(o => !o).length !== 2
+  })
+})
 
 const getHourList = HourList => {
   let newHourList = []
@@ -143,8 +147,17 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
       >
         {formikProps => {
           // errors, touched, handleChange, handleBlur
-          const { values, setFieldValue, handleChange, handleBlur } =
-            formikProps
+          const {
+            values,
+            setFieldValue,
+            handleChange,
+            handleBlur,
+            errors,
+            touched
+          } = formikProps
+          console.log(errors)
+          console.log(values)
+
           return (
             <Form className="d-flex flex-column h-100">
               <Modal.Header closeButton>
@@ -175,7 +188,15 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                               className="form-group px-20px py-3px"
                               key={index}
                             >
-                              <div className="d-flex TimePicker-button">
+                              <div
+                                className={clsx(
+                                  'd-flex TimePicker-button',
+                                  index === 0 &&
+                                    errors.Hours &&
+                                    touched.Hours &&
+                                    'is-invalid'
+                                )}
+                              >
                                 <div className="flex-1">
                                   <TimePicker.RangePicker
                                     locale={{
@@ -190,7 +211,7 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                                       setFieldValue(`Hours[${index}]`, value)
                                     }}
                                     value={hour}
-                                    allowEmpty={[true, false]}
+                                    allowEmpty={[true, true]}
                                     order={false}
                                   />
                                 </div>

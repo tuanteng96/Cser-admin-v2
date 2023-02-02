@@ -123,10 +123,10 @@ export default function ItemCard({ item, getMoneyCard, index }) {
               </div>
             )}
         </td>
-        {window.top?.GlobalConfig?.Admin?.the_tien_nang_cao ? (
-          window.top?.Info?.User?.ID === 1 && (
-            <td data-action="true" className="text-center">
-              <div className="moneycard-btn">
+        <td data-action="true" className="text-center">
+          <div className="moneycard-btn">
+            {window.top?.GlobalConfig?.Admin?.the_tien_nang_cao ? (
+              window.top?.Info?.User?.ID === 1 && (
                 <button
                   type="button"
                   className={`mb-5px btn btn-sm btn-${
@@ -140,19 +140,8 @@ export default function ItemCard({ item, getMoneyCard, index }) {
                     <>{item.trang_thai === "Khóa" ? "Kích hoạt" : "Khóa thẻ"}</>
                   )}
                 </button>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-primary"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  {isOpen ? "Đóng lịch sử" : "Lịch sử"}
-                </button>
-              </div>
-            </td>
-          )
-        ) : (
-          <td data-action="true" className="text-center">
-            <div className="moneycard-btn">
+              )
+            ) : (
               <button
                 type="button"
                 className={`mb-5px btn btn-sm btn-${
@@ -166,16 +155,16 @@ export default function ItemCard({ item, getMoneyCard, index }) {
                   <>{item.trang_thai === "Khóa" ? "Kích hoạt" : "Khóa thẻ"}</>
                 )}
               </button>
-              <button
-                type="button"
-                className="btn btn-sm btn-primary"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                {isOpen ? "Đóng lịch sử" : "Lịch sử"}
-              </button>
-            </div>
-          </td>
-        )}
+            )}
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? "Đóng lịch sử" : "Lịch sử"}
+            </button>
+          </div>
+        </td>
       </tr>
       {isOpen && (
         <tr>

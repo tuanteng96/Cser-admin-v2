@@ -105,79 +105,81 @@ function TimekeepingMember(props) {
         </div>
       </div>
       <div className="card-body overflow-auto p-0 overlay">
-        {List &&
-          List.map((item, index) => (
-            <div
-              className={clsx(
-                'timekeeping-item',
-                !moment().isSameOrAfter(item.Date) && 'opacity-40'
-              )}
-              key={index}
-            >
-              <div className="timekeeping-col col-name">
-                <div className="fw-700 text-truncate">
-                  Ngày
-                  <span className="pl-5px">
-                    {moment(item.Date).format('DD-MM-YYYY')}
-                  </span>
+        <div className="timekeeping-table">
+          {List &&
+            List.map((item, index) => (
+              <div
+                className={clsx(
+                  'timekeeping-item',
+                  !moment().isSameOrAfter(item.Date) && 'opacity-40'
+                )}
+                key={index}
+              >
+                <div className="timekeeping-col col-name">
+                  <div className="fw-700 text-truncate">
+                    Ngày
+                    <span className="pl-5px">
+                      {moment(item.Date).format('DD-MM-YYYY')}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="timekeeping-col col-checkinout">
-                {item.UserWorks &&
-                  item.UserWorks.length > 0 &&
-                  item.UserWorks[0].HourList &&
-                  item.UserWorks[0].HourList.length > 0 && (
-                    <Fragment>
-                      {item.UserWorks[0].HourList.map((hour, idx) => (
-                        <div className="event-main" key={idx}>
-                          <div className="event-main__label bg-success h-20px">
-                            {hour.From}
+                <div className="timekeeping-col col-checkinout">
+                  {item.UserWorks &&
+                    item.UserWorks.length > 0 &&
+                    item.UserWorks[0].HourList &&
+                    item.UserWorks[0].HourList.length > 0 && (
+                      <Fragment>
+                        {item.UserWorks[0].HourList.map((hour, idx) => (
+                          <div className="event-main" key={idx}>
+                            <div className="event-main__label bg-success h-20px">
+                              {hour.From}
+                            </div>
+                            <div className="event-main__line">
+                              <i className="fa-regular fa-arrow-right-long"></i>
+                            </div>
+                            <div className="event-main__label bg-danger h-20px">
+                              {hour.To}
+                            </div>
                           </div>
-                          <div className="event-main__line">
-                            <i className="fa-regular fa-arrow-right-long"></i>
-                          </div>
-                          <div className="event-main__label bg-danger h-20px">
-                            {hour.To}
-                          </div>
-                        </div>
-                      ))}
-                    </Fragment>
-                  )}
-              </div>
-              <div className="timekeeping-col col-input">
-                <label className="name-control">Công</label>
-                <div className="fw-600">
-                  {item.UserWorks && item.UserWorks.length > 0
-                    ? item.UserWorks[0].WorkQty
-                    : 0}
+                        ))}
+                      </Fragment>
+                    )}
+                </div>
+                <div className="timekeeping-col">
+                  <label className="name-control">Công</label>
+                  <div className="fw-600">
+                    {item.UserWorks && item.UserWorks.length > 0
+                      ? item.UserWorks[0].WorkQty || 0
+                      : 0}
+                  </div>
+                </div>
+                <div className="timekeeping-col">
+                  <label className="name-control">Tăng ca</label>
+                  <div className="fw-600">
+                    {item.UserWorks && item.UserWorks.length > 0
+                      ? item.UserWorks[0].WorkQty1 || 0
+                      : 0}
+                  </div>
+                </div>
+                <div className="timekeeping-col">
+                  <label className="name-control">Thiếu giờ</label>
+                  <div className="fw-600">
+                    {item.UserWorks && item.UserWorks.length > 0
+                      ? item.UserWorks[0].WorkQty2 || 0
+                      : 0}
+                  </div>
+                </div>
+                <div className="timekeeping-col">
+                  <label className="name-control">Ghi chú thêm</label>
+                  <div className="fw-600">
+                    {item.UserWorks && item.UserWorks.length > 0
+                      ? item.UserWorks[0].Desc || 'Không'
+                      : 'Không'}
+                  </div>
                 </div>
               </div>
-              <div className="timekeeping-col col-input">
-                <label className="name-control">Tăng ca</label>
-                <div className="fw-600">
-                  {item.UserWorks && item.UserWorks.length > 0
-                    ? item.UserWorks[0].WorkQty1
-                    : 0}
-                </div>
-              </div>
-              <div className="timekeeping-col col-input">
-                <label className="name-control">Thiếu giờ</label>
-                <div className="fw-600">
-                  {item.UserWorks && item.UserWorks.length > 0
-                    ? item.UserWorks[0].WorkQty2
-                    : 0}
-                </div>
-              </div>
-              <div className="timekeeping-col">
-                <label className="name-control">Ghi chú thêm</label>
-                <div className="fw-600">
-                  {item.UserWorks && item.UserWorks.length > 0
-                    ? item.UserWorks[0].Desc
-                    : 'Không'}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+        </div>
         <div
           className={clsx(
             'overlay-layer bg-dark-o-10 top-0 zindex-1001 top-0',
@@ -187,11 +189,11 @@ function TimekeepingMember(props) {
           <div className="spinner spinner-primary"></div>
         </div>
       </div>
-      <div className="card-footer d-flex px-0">
-        <div className="timekeeping-item">
-          <div className="timekeeping-col col-name"></div>
-          <div className="timekeeping-col col-checkinout border-0"></div>
-          <div className="timekeeping-col col-input">
+      <div className="card-footer d-flex flex-column px-0 overflow-hidden">
+        <div className="d-flex h-100">
+          <div className="py-0 w-280px"></div>
+          <div className="py-0 w-215px"></div>
+          <div className="px-20px flex-grow-1 d-flex flex-column justify-content-center">
             <div className="name-control mb-5px">Tổng công</div>
             {loading ? (
               <div>Đang tải ...</div>
@@ -201,7 +203,7 @@ function TimekeepingMember(props) {
               </div>
             )}
           </div>
-          <div className="timekeeping-col col-input">
+          <div className="px-20px flex-grow-1 d-flex flex-column justify-content-center border-left h-100">
             <div className="name-control mb-5px">Tổng tăng ca</div>
             {loading ? (
               <div>Đang tải ...</div>
@@ -211,7 +213,7 @@ function TimekeepingMember(props) {
               </div>
             )}
           </div>
-          <div className="timekeeping-col col-input">
+          <div className="px-20px flex-grow-1 d-flex flex-column justify-content-center border-left h-100">
             <div className="name-control mb-5px">Tổng thiếu giờ</div>
             {loading ? (
               <div>Đang tải ...</div>
@@ -221,7 +223,7 @@ function TimekeepingMember(props) {
               </div>
             )}
           </div>
-          <div className="timekeeping-col col-input">
+          <div className="px-20px flex-grow-1 d-flex flex-column justify-content-center border-left h-100">
             <div className="name-control mb-5px">Tổng Công</div>
             {loading ? (
               <div>Đang tải ...</div>

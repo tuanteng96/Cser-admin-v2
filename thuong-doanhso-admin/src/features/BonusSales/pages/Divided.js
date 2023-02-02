@@ -5,8 +5,12 @@ import NumberFormat from "react-number-format";
 import { Formik, FieldArray, Form } from "formik";
 import PropTypes from "prop-types";
 import { TypeStaff } from "../../../Json/Json";
+import { useSelector } from "react-redux";
 
 function Divided({ OrderInfo, onSubmit, loading }) {
+  const { UserID } = useSelector(({ Auth }) => ({
+    UserID: Auth?.User?.ID,
+  }));
   const [initialValuesAdd, setInitialValuesAdd] = useState({ ToAdd: [] });
   const [initialValues, setInitialValues] = useState({ divided: [] });
   useEffect(() => {
@@ -40,14 +44,14 @@ function Divided({ OrderInfo, onSubmit, loading }) {
                 ? item.Product.BonusSale2
                 : item.Product.gia_tri_thanh_toan,
           },
-        ].filter((item) => item.Value),
+        ],
         Doanh_So: [
           {
             Product: item.Product,
             Staff: item.Staff,
             Value: item.Product.gia_tri_doanh_so,
           },
-        ].filter((item) => item.Value),
+        ],
       }));
       setInitialValues({ divided: newArr });
       resetForm();
@@ -209,6 +213,10 @@ function Divided({ OrderInfo, onSubmit, loading }) {
                                         );
                                       }}
                                       onBlur={handleBlur}
+                                      disabled={
+                                        window.top?.GlobalConfig?.Admin
+                                          ?.thuong_ds_nang_cao && UserID !== 1
+                                      }
                                     />
                                   </div>
                                 ))
@@ -245,6 +253,10 @@ function Divided({ OrderInfo, onSubmit, loading }) {
                                         );
                                       }}
                                       onBlur={handleBlur}
+                                      disabled={
+                                        window.top?.GlobalConfig?.Admin
+                                          ?.thuong_ds_nang_cao && UserID !== 1
+                                      }
                                     />
                                   </div>
                                 ))
