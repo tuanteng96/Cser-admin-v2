@@ -9,6 +9,7 @@ import worksheetApi from 'src/api/worksheet.api'
 import { FastField, FieldArray, Form, Formik } from 'formik'
 import clsx from 'clsx'
 import moreApi from 'src/api/more.api'
+import uuid from 'react-uuid'
 
 import moment from 'moment'
 import 'moment/locale/vi'
@@ -135,7 +136,8 @@ function SalaryApproval(props) {
             ? data.map(o => ({
                 ...o,
                 Desc: o.Desc || '',
-                Mon: moment(filters.Mon).format('MM/YYYY')
+                Mon: moment(filters.Mon).format('MM/YYYY'),
+                Uuid: uuid()
               }))
             : []
         }))
@@ -170,6 +172,7 @@ function SalaryApproval(props) {
       {formikProps => {
         // errors, touched, handleChange, handleBlur
         const { values } = formikProps
+        console.log(values)
         return (
           <Form className="h-100" autoComplete="off">
             <div className="card h-100">
@@ -242,7 +245,7 @@ function SalaryApproval(props) {
                 <FieldArray
                   name="list"
                   render={arrayHelpers => (
-                    <div className='timekeeping-table'>
+                    <div className="timekeeping-table">
                       {values.list &&
                         values.list.map((item, index) => (
                           <div

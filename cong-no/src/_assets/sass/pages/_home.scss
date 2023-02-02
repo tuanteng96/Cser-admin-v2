@@ -146,15 +146,14 @@ $border-color: #f4f4f4;
     }
 }
 
-.cld-timesheets:not(.in-scroll) {
-    .cld-timesheets__sidebar {
-        padding-bottom: 0;
-        &::after {
-            display: none;
-        }
-    }
-}
-
+// .cld-timesheets:not(.in-scroll) {
+//     .cld-timesheets__sidebar {
+//         padding-bottom: 0;
+//         &::after {
+//             display: none;
+//         }
+//     }
+// }
 .event-main {
     display: flex;
     align-items: center;
