@@ -1,10 +1,11 @@
 import axios from 'axios'
 import queryString from 'query-string'
+import { DevHelpers } from 'src/helpers/DevHelpers'
 
 const http = axios.create({
-  baseURL: window.top.DOMAIN
-    ? window.top.DOMAIN
-    : process.env.REACT_APP_API_URL,
+  baseURL: DevHelpers.isDevelopment()
+    ? process.env.REACT_APP_API_URL
+    : window.top.DOMAIN || '',
   headers: {
     'content-type': 'text/plain'
   },
