@@ -7,6 +7,12 @@ const worksheetApi = {
   checkinWorkSheet: data => {
     return http.post('/api/v3/userwork23@sysCheckin', JSON.stringify(data))
   },
+  deleteWorkSheet: data => {
+    return http.post(
+      '/api/v3/userwork23@sysCheckinDelete',
+      JSON.stringify(data)
+    )
+  },
   addWorkOff: data => {
     return http.post('/api/v3/userwork23@workoffs', JSON.stringify(data))
   },

@@ -31,7 +31,7 @@ const initialValue = {
 
 const CreateSchema = Yup.object().shape({
   Hours: Yup.array().test('oneOfRequired', function (item) {
-    return item[0].filter(o => !o).length !== 2
+    return item[0] && item[0].filter(o => !o).length !== 2
   })
 })
 
@@ -98,7 +98,15 @@ const DropdownOvertime = ({ title, onChange, name, value }) => {
   )
 }
 
-function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
+function ModalTimeKeeping({
+  show,
+  initialModal,
+  onHide,
+  onSubmit,
+  onDelete,
+  loading,
+  loadingDelete
+}) {
   const [initialValues, setInitialValues] = useState(initialValue)
 
   useEffect(() => {
@@ -155,8 +163,6 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
             errors,
             touched
           } = formikProps
-          console.log(errors)
-          console.log(values)
 
           return (
             <Form className="d-flex flex-column h-100">
@@ -333,9 +339,25 @@ function ModalTimeKeeping({ show, initialModal, onHide, onSubmit, loading }) {
                 </div>
               </Modal.Body>
               <Modal.Footer className="justify-content-between">
-                <Button type="button" variant="secondary" onClick={onHide}>
-                  Đóng
-                </Button>
+                <div>
+                  <Button type="button" variant="secondary" onClick={onHide}>
+                    Đóng
+                  </Button>
+                  {initialModal && initialModal?.UserWorks.length > 0 && (
+                    <Button
+                      className={clsx(
+                        'ml-6px',
+                        loadingDelete && 'spinner spinner-white spinner-right'
+                      )}
+                      type="button"
+                      variant="danger"
+                      onClick={() => onDelete(initialModal)}
+                      disabled={loadingDelete}
+                    >
+                      Hủy
+                    </Button>
+                  )}
+                </div>
                 <Button
                   type="submit"
                   className={clsx(

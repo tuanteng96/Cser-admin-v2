@@ -31,7 +31,8 @@ function Worksheet(props) {
   const [ModalKeep, setModalKeep] = useState({
     initialValues: null,
     show: false,
-    loading: false
+    loading: false,
+    delete: false
   })
   const [ModalHoliday, setModalHoliday] = useState({
     initialValues: null,
@@ -103,17 +104,19 @@ function Worksheet(props) {
   }
 
   const onOpenModalKeep = value => {
-    setModalKeep({
+    setModalKeep(prevState => ({
+      ...prevState,
       initialValues: value,
       show: true
-    })
+    }))
   }
 
   const onHideModalKeep = () => {
     setModalKeep({
       initialValues: null,
       show: false,
-      loading: false
+      loading: false,
+      delete: false
     })
   }
 
@@ -202,6 +205,33 @@ function Worksheet(props) {
           onHideModalHoliday()
           window.top.toastr &&
             window.top.toastr.success('Xóa lịch nghỉ thành công !', {
+              timeOut: 1500
+            })
+        })
+      })
+      .catch(error => console.log(error))
+  }
+
+  const onDeleteKeep = values => {
+    setModalKeep(prevState => ({
+      ...prevState,
+      delete: true
+    }))
+    const newValues = {
+      list: [
+        {
+          Date: moment(values.Date).format('DD/MM/YYYY'),
+          UserID: values?.Member?.ID
+        }
+      ]
+    }
+    worksheetApi
+      .deleteWorkSheet(newValues)
+      .then(({ data }) => {
+        getListWorkSheet(() => {
+          onHideModalKeep()
+          window.top.toastr &&
+            window.top.toastr.success('Hủy thành công !', {
               timeOut: 1500
             })
         })
@@ -324,7 +354,9 @@ function Worksheet(props) {
         initialModal={ModalKeep.initialValues}
         onHide={onHideModalKeep}
         onSubmit={onSubmitKeep}
+        onDelete={onDeleteKeep}
         loading={ModalKeep.loading}
+        loadingDelete={ModalKeep.delete}
       />
     </div>
   )
