@@ -32,6 +32,7 @@ function SelectStocks({ value, allStock, ...props }) {
   }));
 
   useEffect(() => {
+    setStocksList([]);
     let newStocks = [...Stocks];
     if (!posHasRight) {
       newStocks = [];
@@ -53,7 +54,8 @@ function SelectStocks({ value, allStock, ...props }) {
           value: item.ID || item.value,
         }))
     );
-  }, [posHasRight, posIsAllStocks, posPermissionStocks, Stocks]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [posHasRight, posIsAllStocks, posPermissionStocks]);
 
   return (
     <Select

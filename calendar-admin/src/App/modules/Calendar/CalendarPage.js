@@ -308,8 +308,8 @@ function CalendarPage(props) {
           },
         };
         const newMember = await CalendarCrud.createMember(objCreate);
-        if (newMember.data.error) {
-          toast.error(newMember.data.error, {
+        if (newMember?.error) {
+          toast.error(newMember?.error || JSON.stringify(newMember), {
             position: toast.POSITION.TOP_RIGHT,
             autoClose: 1500,
           });
@@ -319,7 +319,7 @@ function CalendarPage(props) {
           }));
           return;
         }
-        objBooking.MemberID = newMember?.data?.member?.ID || 0;
+        objBooking.MemberID = newMember?.member?.ID || 0;
       }
 
       const dataPost = {
@@ -348,6 +348,7 @@ function CalendarPage(props) {
         onHideModal();
       });
     } catch (error) {
+      console.log(error);
       setBtnLoading((prevState) => ({
         ...prevState,
         isBtnBooking: false,
