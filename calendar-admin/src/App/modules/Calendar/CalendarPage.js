@@ -388,7 +388,7 @@ function CalendarPage(props) {
           };
           const newMember = await CalendarCrud.createMember(objCreate);
           if (newMember.error) {
-            toast.error(newMember.data.error, {
+            toast.error(newMember.error, {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 1500,
             });
@@ -398,7 +398,7 @@ function CalendarPage(props) {
             }));
             return;
           }
-          objBooking.MemberID = newMember?.data?.member?.ID;
+          objBooking.MemberID = newMember?.member?.ID;
         } else {
           objBooking.MemberID = values?.IsMemberCurrent?.MemberPhone.ID;
         }
