@@ -387,7 +387,7 @@ function CalendarPage(props) {
             },
           };
           const newMember = await CalendarCrud.createMember(objCreate);
-          if (newMember.data.error) {
+          if (newMember.error) {
             toast.error(newMember.data.error, {
               position: toast.POSITION.TOP_RIGHT,
               autoClose: 1500,
