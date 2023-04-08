@@ -280,7 +280,9 @@ function CalendarPage(props) {
     const objBooking = {
       ...values,
       MemberID: values.MemberID.value,
-      RootIdS: values.RootIdS ? values.RootIdS.map((item) => item.value).toString() : '',
+      RootIdS: values.RootIdS
+        ? values.RootIdS.map((item) => item.value).toString()
+        : "",
       UserServiceIDs:
         values.UserServiceIDs && values.UserServiceIDs.length > 0
           ? values.UserServiceIDs.map((item) => item.value).toString()
@@ -874,9 +876,13 @@ function CalendarPage(props) {
                       <div class="w-35px">${moment(
                         extendedProps.BookDate
                       ).format("HH:mm")} </div>
-                      <div class="flex-1 text-truncate pl-5px"> - ${extendedProps.RootTitles ? extendedProps.RootMinutes ??
-                        extendedProps?.os?.RootMinutes ??
-                        60 : 30}p - ${extendedProps.RootTitles || 'Không xác định'}</div>
+                      <div class="flex-1 text-truncate pl-5px"> - ${
+                        extendedProps.RootTitles
+                          ? extendedProps.RootMinutes ??
+                            extendedProps?.os?.RootMinutes ??
+                            60
+                          : 30
+                      }p - ${extendedProps.RootTitles || "Không xác định"}</div>
                     </div>
                   </div>`;
                   } else {
@@ -889,11 +895,14 @@ function CalendarPage(props) {
                       extendedProps.MemberCurrent.FullName
                     }</span><span class="d-none d-md-inline"> - ${
                       extendedProps.MemberCurrent?.MobilePhone
-                    }</span><span> - ${extendedProps.RootTitles ? extendedProps.RootMinutes ??
-                      extendedProps?.os?.RootMinutes ??
-                      60 : 30}p - ${
-                      extendedProps.RootTitles || 'Không xác định'
-                    }</span> <span class="${!extendedProps.isBook &&
+                    }</span><span> - ${
+                      extendedProps.RootTitles
+                        ? extendedProps.RootMinutes ??
+                          extendedProps?.os?.RootMinutes ??
+                          60
+                        : 30
+                    }p - ${extendedProps.RootTitles ||
+                      "Không xác định"}</span> <span class="${!extendedProps.isBook &&
                       "d-none"}">- ${extendedProps?.BookCount?.Done ||
                       0}/${extendedProps?.BookCount?.Total || 0}</span></div>
                   </div>`;
@@ -1029,3 +1038,4 @@ function CalendarPage(props) {
 }
 
 export default CalendarPage;
+

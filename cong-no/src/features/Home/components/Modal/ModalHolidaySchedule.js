@@ -173,7 +173,7 @@ function ModalHolidaySchedule({
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     autoComplete="off"
-                    filterTime={filterPassedTime}
+                    //filterTime={filterPassedTime}
                   />
                 </div>
                 <div className="form-group mb-20px">

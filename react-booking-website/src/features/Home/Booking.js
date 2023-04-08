@@ -50,7 +50,7 @@ function Booking({ formikProps, nextStep, BookSet }) {
         className="flex-grow-1 scroll"
       >
         <ListStocks formikProps={formikProps} />
-        <DateTime formikProps={formikProps} BookSet={BookSet}/>
+        <DateTime formikProps={formikProps} BookSet={BookSet} />
         {window.GlobalConfig?.Admin?.dat_lich_nhan_vien === 1 && (
           <StaffAtHome formikProps={formikProps} />
         )}

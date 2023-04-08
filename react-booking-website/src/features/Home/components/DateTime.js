@@ -96,6 +96,7 @@ function DateTime({ formikProps, BookSet }) {
       const indexLock = ListLock.findIndex(
         item => Number(item.StockID) === Number(values.StockID)
       )
+
       if (indexLock > -1) {
         ListDisable = ListLock[indexLock].ListDisable
       }
@@ -116,7 +117,7 @@ function DateTime({ formikProps, BookSet }) {
         if (ListDisable && ListDisable.length > 0) {
           const indexDayOf = ListDisable.findIndex(
             x =>
-              moment(x.Date).format('DD/MM/YYYY') ===
+              moment(x.Date, 'DD/MM/YYYY').format('DD/MM/YYYY') ===
               moment(datetime).format('DD/MM/YYYY')
           )
           if (indexDayOf > -1) {
@@ -125,16 +126,14 @@ function DateTime({ formikProps, BookSet }) {
               ListDisable[indexDayOf].TimeClose.length > 0
             ) {
               isDayOff = ListDisable[indexDayOf].TimeClose.some(time => {
-                const DateStartDayOf = moment(ListDisable[indexDayOf].Date).set(
-                  {
-                    hour: time.Start.split(':')[0],
-                    minute: time.Start.split(':')[1]
-                  }
+                const DateStartDayOf = moment(
+                  ListDisable[indexDayOf].Date + time.Start,
+                  'DD/MM/YYYY HH:mm'
                 )
-                const DateEndDayOf = moment(ListDisable[indexDayOf].Date).set({
-                  hour: time.End.split(':')[0],
-                  minute: time.End.split(':')[1]
-                })
+                const DateEndDayOf = moment(
+                  ListDisable[indexDayOf].Date + time.End,
+                  'DD/MM/YYYY HH:mm'
+                )
                 let isStart =
                   moment(datetime, 'HH:mm').isSameOrAfter(
                     moment(DateStartDayOf, 'HH:mm')
