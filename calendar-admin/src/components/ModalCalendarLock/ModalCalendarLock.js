@@ -40,10 +40,7 @@ function ModalCalendarLock({
         enableReinitialize
       >
         {(formikProps) => {
-          const {
-            values,
-            setFieldValue,
-          } = formikProps;
+          const { values, setFieldValue } = formikProps;
 
           return (
             <Form className="h-100 d-flex flex-column">
@@ -94,7 +91,10 @@ function ModalCalendarLock({
                                                 className="form-control font-size-sm"
                                                 selected={
                                                   item.Date
-                                                    ? new Date(item.Date)
+                                                    ? moment(
+                                                        item.Date,
+                                                        "DD/MM/YYYY"
+                                                      ).toDate()
                                                     : ""
                                                 }
                                                 onChange={(date) => {

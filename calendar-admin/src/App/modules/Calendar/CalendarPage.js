@@ -214,18 +214,26 @@ function CalendarPage(props) {
               lock.ListDisable && lock.ListDisable.length > 0
                 ? lock.ListDisable.filter((item) => item.Date).map((item) => ({
                     ...item,
-                    Date: moment(item.Date).format("MM/DD/YYYY"),
+                    Date: moment(item.Date).format("DD/MM/YYYY"),
                     TimeClose:
                       item.TimeClose && item.TimeClose.length > 0
-                        ? item.TimeClose.filter(
-                            (time) => time.Start && time.End
-                          )
-                        : [],
+                        ? item.TimeClose.map((time) => ({
+                            Start: time.Start
+                              ? time.Start
+                              : item.TimeClose.length === 1
+                              ? "00:00"
+                              : null,
+                            End: time.End
+                              ? time.End
+                              : item.TimeClose.length === 1
+                              ? "23:59"
+                              : null,
+                          })).filter((time) => time.Start && time.End)
+                        : [{ Start: "00:00", End: "23:59" }],
                   }))
                 : [],
           }))
         : [];
-
     CalendarCrud.saveConfigName("giocam", newListLock)
       .then((response) => {
         getListLock(() => {
@@ -1038,4 +1046,3 @@ function CalendarPage(props) {
 }
 
 export default CalendarPage;
-
