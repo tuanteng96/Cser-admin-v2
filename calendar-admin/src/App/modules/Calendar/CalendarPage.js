@@ -173,10 +173,14 @@ function CalendarPage(props) {
                   ListDisable:
                     lock.ListDisable && lock.ListDisable.length > 0
                       ? lock.ListDisable.filter((item) =>
-                          moment().isSameOrBefore(item.Date, "day")
+                          moment().isSameOrBefore(
+                            moment(item.Date, "DD/MM/YYYY"),
+                            "day"
+                          )
                         )
                           .map((item) => ({
                             ...item,
+                            Date: moment(item.Date, "DD/MM/YYYY").toDate(),
                             TimeClose:
                               item.TimeClose && item.TimeClose.length > 0
                                 ? item.TimeClose
@@ -193,7 +197,6 @@ function CalendarPage(props) {
                   StockID: o.ID,
                   ListDisable: [],
                 }));
-
           setListLock({
             ListLocks: newResult,
           });
@@ -204,8 +207,7 @@ function CalendarPage(props) {
   };
 
   const onSubmitLock = ({ ListLocks }) => {
-    //setBtnLoadingLock(true);
-
+    setBtnLoadingLock(true);
     const newListLock =
       ListLocks && ListLocks.length > 0
         ? ListLocks.map((lock) => ({
