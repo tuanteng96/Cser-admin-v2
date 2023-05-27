@@ -71,7 +71,7 @@ function AuthInit({ isConfig, children }) {
             },
           },
           token:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEwMzExNDEwMzE2MCIsIm5iZiI6MTY4MzY4MDA2MSwiZXhwIjoxNjg0Mjg0ODYxLCJpYXQiOjE2ODM2ODAwNjF9.zInJctIbyz0CPULwWrcg5gubMf48Btaz7kIHLiHytrI",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBdXRoMlR5cGUiOiJVc2VyRW50IiwiSUQiOiIxIiwiVG9rZW5JZCI6IjEwMzExNDEwMzM3MSIsIm5iZiI6MTY4NTE1MjQzNSwiZXhwIjoxNjg1NzU3MjM1LCJpYXQiOjE2ODUxNTI0MzV9.n75tWCFnLLG2C_PaTdwrVv875yx-x0Xhj6pqD5aBUD4",
         };
         window.GlobalConfig = {
           APP: {
@@ -79,6 +79,11 @@ function AuthInit({ isConfig, children }) {
               TimeClose: "21:00:00",
               TimeOpen: "10:00:00",
             },
+          },
+          Admin: {
+            kpiFinish: "Khách đến làm dịch vụ",
+            kpiCancel: "Khách hủy",
+            kpiCancelFinish: "Khách không đến",
           },
         };
       }

@@ -121,9 +121,33 @@ function CalendarPage(props) {
   const [ListLock, setListLock] = useState({
     ListLocks: [],
   });
+  const [lstTeles, setLstTeles] = useState([]);
   const [btnLoadingLock, setBtnLoadingLock] = useState(false);
   const calendarRef = useRef("");
   const { isTelesales } = useContext(AppContext);
+
+  useEffect(() => {
+    async function getLstTeles() {
+      const { data } = await CalendarCrud.getConfigName("tagkh");
+      if (data && data.length > 0) {
+        const result = JSON.parse(data[0].Value);
+        const newResult = result.map((item) => ({
+          value: item.Title,
+          label: item.Title,
+          options:
+            item.Children &&
+            item.Children.map((o) => ({
+              value: o.Title,
+              label: o.Title,
+            })),
+        }));
+        setLstTeles(newResult);
+      }
+    }
+
+    getLstTeles();
+  }, []);
+
   //Get Staff Full
   useEffect(() => {
     async function getStaffFull() {
@@ -337,10 +361,50 @@ function CalendarPage(props) {
       const dataPost = {
         booking: [objBooking],
       };
+
       await CalendarCrud.postBooking(dataPost, {
         CurrentStockID,
         u_id_z4aDf2,
       });
+
+      if (values.Status === "KHACH_KHONG_DEN") {
+        const hasTags =
+          lstTeles &&
+          lstTeles.some(
+            (x) =>
+              x.options &&
+              x.options.some(
+                (s) =>
+                  window?.GlobalConfig?.Admin?.kpiCancelFinish &&
+                  s.value === window?.GlobalConfig?.Admin?.kpiCancelFinish
+              )
+          );
+        const hasTagsSelected =
+          !values.TeleTags ||
+          !values.TeleTags.includes(
+            window?.GlobalConfig?.Admin?.kpiCancelFinish
+          );
+
+        if (
+          window?.GlobalConfig?.Admin?.kpiCancelFinish &&
+          values?.CreateBy === "tele" &&
+          hasTagsSelected &&
+          hasTags
+        ) {
+          let newData = {
+            items: [
+              {
+                MemberID: values?.MemberID?.value,
+                TeleTags:
+                  values.TeleTags +
+                  "," +
+                  window?.top?.GlobalConfig?.Admin?.kpiCancelFinish,
+              },
+            ],
+          };
+          await CalendarCrud.editTagsMember(newData);
+        }
+      }
 
       window.top.bodyEvent &&
         window.top.bodyEvent("ui_changed", {
@@ -429,6 +493,42 @@ function CalendarPage(props) {
         CurrentStockID,
         u_id_z4aDf2,
       });
+
+      const hasTags =
+        lstTeles &&
+        lstTeles.some(
+          (x) =>
+            x.options &&
+            x.options.some(
+              (s) =>
+                window?.GlobalConfig?.Admin?.kpiFinish &&
+                s.value === window?.GlobalConfig?.Admin?.kpiFinish
+            )
+        );
+      const hasTagsSelected =
+        !values.TeleTags ||
+        !values.TeleTags.includes(window?.GlobalConfig?.Admin?.kpiFinish);
+
+      if (
+        window?.GlobalConfig?.Admin?.kpiFinish &&
+        values?.CreateBy === "tele" &&
+        hasTagsSelected &&
+        hasTags
+      ) {
+        let newData = {
+          items: [
+            {
+              MemberID: values?.MemberID?.value,
+              TeleTags:
+                values.TeleTags +
+                "," +
+                window?.top?.GlobalConfig?.Admin?.kpiFinish,
+            },
+          ],
+        };
+        await CalendarCrud.editTagsMember(newData);
+      }
+
       window.top.bodyEvent &&
         window.top.bodyEvent("ui_changed", {
           name: "cld_thuc_hien_lich",
@@ -482,6 +582,37 @@ function CalendarPage(props) {
         CurrentStockID,
         u_id_z4aDf2,
       });
+      const hasTags =
+        lstTeles &&
+        lstTeles.some(
+          (x) =>
+            x.options &&
+            x.options.some(
+              (s) =>
+                window?.GlobalConfig?.Admin?.kpiCancel &&
+                s.value === window?.GlobalConfig?.Admin?.kpiCancel
+            )
+        );
+      const hasTagsSelected =
+        !values.TeleTags ||
+        !values.TeleTags.includes(window?.GlobalConfig?.Admin?.kpiCancel);
+      if (
+        window?.GlobalConfig?.Admin?.kpiCancel &&
+        values?.CreateBy === "tele" &&
+        hasTagsSelected &&
+        hasTags
+      ) {
+        let newData = {
+          items: [
+            {
+              MemberID: values?.MemberID?.value,
+              TeleTags:
+                values.TeleTags + "," + window?.GlobalConfig?.Admin?.kpiCancel,
+            },
+          ],
+        };
+        await CalendarCrud.editTagsMember(newData);
+      }
       window.top.bodyEvent &&
         window.top.bodyEvent("ui_changed", {
           name: "cld_huy_lich",

@@ -94,7 +94,7 @@ function BookingPage() {
           value: item.ID,
           label: item.FullName,
         })),
-        AtHome: Book.AtHome,
+        AtHome: Book.AtHome
       }));
     } else {
       setInitialValues((prevState) => ({

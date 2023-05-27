@@ -63,6 +63,7 @@ function ModalCalendar({
   initialValue,
   onDelete,
 }) {
+  //console.log(initialValue)
   const [initialValues, setInitialValues] = useState(initialDefault);
   const { AuthCrStockID } = useSelector(({ Auth }) => ({
     AuthStocks: Auth.Stocks.filter(
@@ -107,6 +108,8 @@ function ModalCalendar({
           })),
           AtHome: initialValue.AtHome,
           IsMemberCurrent: getIsMember(initialValue),
+          CreateBy: initialValue?.CreateBy || "",
+          TeleTags: initialValue?.Member?.TeleTags || "",
         }));
       } else {
         setInitialValues((prevState) => ({
