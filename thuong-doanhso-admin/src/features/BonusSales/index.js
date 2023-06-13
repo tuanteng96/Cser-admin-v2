@@ -167,10 +167,24 @@ const BonusSales = () => {
       [],
       equally && equally.length > 0 ? equally.map((item) => item.Hoa_Hong) : []
     );
-    const Doanh_So = [].concat.apply(
-      [],
-      equally && equally.length > 0 ? equally.map((item) => item.Doanh_So) : []
-    );
+    let Doanh_So = [];
+    if (window.top?.GlobalConfig?.Admin?.thuong_ds_theo_loai) {
+      Doanh_So = [].concat
+        .apply(
+          [],
+          equally && equally.length > 0
+            ? equally.map((item) => item.Doanh_So)
+            : []
+        )
+        .map((x) => ({ ...x, Type: x.Type ? x.Type.value : "" }));
+    } else {
+      Doanh_So = [].concat.apply(
+        [],
+        equally && equally.length > 0
+          ? equally.map((item) => item.Doanh_So)
+          : []
+      );
+    }
     const dataSubmit = {
       OrderID: OrderID,
       save: {

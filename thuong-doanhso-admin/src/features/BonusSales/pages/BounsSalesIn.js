@@ -7,6 +7,7 @@ import NumberFormat from "react-number-format";
 import moment from "moment";
 import AutoSubmit from "../components/AutoSubmit";
 import { useSelector } from "react-redux";
+
 moment.locale(); // vi
 
 function BounsSalesIn({ OrderInfo, onSubmit }) {
@@ -43,7 +44,7 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
       }));
     }
   }, [OrderInfo]);
-
+  
   return (
     <Formik
       enableReinitialize
@@ -144,7 +145,8 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
                                       : !sub.chinh_sua
                                   }
                                 />
-                                {window.top?.GlobalConfig?.Admin?.thuong_ds_nang_cao
+                                {window.top?.GlobalConfig?.Admin
+                                  ?.thuong_ds_nang_cao
                                   ? UserID === 1 && (
                                       <div
                                         className="text-danger w-30px text-end cursor-pointer"
@@ -212,7 +214,8 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
                                       : !sub.chinh_sua
                                   }
                                 />
-                                {window.top?.GlobalConfig?.Admin?.thuong_ds_nang_cao
+                                {window.top?.GlobalConfig?.Admin
+                                  ?.thuong_ds_nang_cao
                                   ? UserID === 1 && (
                                       <div
                                         className="text-danger w-30px text-end cursor-pointer"
