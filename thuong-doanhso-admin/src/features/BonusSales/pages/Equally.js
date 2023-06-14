@@ -6,21 +6,10 @@ import { Formik, FieldArray, Form } from "formik";
 import PropTypes from "prop-types";
 import { TypeStaff } from "../../../Json/Json";
 import { useSelector } from "react-redux";
-
-const getListType = () => {
-  const data = [];
-  for (let i = 1; i <= 10; i++) {
-    data.push({
-      label: "Loại " + i,
-      value: i,
-    });
-  }
-  return data;
-};
+import SelectType from "../components/SelectType";
 
 function Equally({ OrderInfo, onSubmit, loading }) {
   const [initialValues, setInitialValues] = useState({ equally: [] });
-  const [TypeList] = useState(getListType());
   const { UserID } = useSelector(({ Auth }) => ({
     UserID: Auth?.User?.ID,
   }));
@@ -53,7 +42,9 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                   item.gia_tri_doanh_so > 0
                     ? Math.round((user.Value * item.gia_tri_doanh_so) / 100)
                     : null,
-                Type: "",
+                Type: item?.KpiType
+                  ? { value: item?.KpiType, label: "Loại " + item?.KpiType }
+                  : "",
               })),
             }))
           : [];
@@ -300,30 +291,18 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                                           ?.thuong_ds_nang_cao && UserID !== 1
                                       }
                                     />
-                                    {window.top?.GlobalConfig?.Admin
-                                      ?.thuong_ds_theo_loai && (
-                                      <Select
-                                        classNamePrefix="select"
-                                        className={`select-control ml-10px w-200px`}
-                                        name={`equally[${index}].Doanh_So[${idx}].Type`}
-                                        options={TypeList}
-                                        value={sub.Type}
-                                        placeholder="Chọn loại"
-                                        noOptionsMessage={() =>
-                                          "Không có lựa chọn"
-                                        }
-                                        onChange={(option) => {
-                                          setFieldValue(
-                                            `equally[${index}].Doanh_So[${idx}].Type`,
-                                            option,
-                                            false
-                                          );
-                                        }}
-                                        isSearchable
-                                        isClearable
-                                        menuPosition="fixed"
-                                      />
-                                    )}
+                                    <SelectType
+                                      name={`equally[${index}].Doanh_So[${idx}].Type`}
+                                      value={sub.Type}
+                                      placeholder="Chọn loại"
+                                      onChange={(option) => {
+                                        setFieldValue(
+                                          `equally[${index}].Doanh_So[${idx}].Type`,
+                                          option,
+                                          false
+                                        );
+                                      }}
+                                    />
                                   </div>
                                 ))
                               }

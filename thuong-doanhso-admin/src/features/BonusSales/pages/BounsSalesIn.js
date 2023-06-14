@@ -7,6 +7,7 @@ import NumberFormat from "react-number-format";
 import moment from "moment";
 import AutoSubmit from "../components/AutoSubmit";
 import { useSelector } from "react-redux";
+import SelectType from "../components/SelectType";
 
 moment.locale(); // vi
 
@@ -27,9 +28,12 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
               const Hoa_hong_arr = hoa_hong.filter(
                 (item) => item.SubSourceID === product.ID
               );
-              const Doanh_so_arr = doanh_so.filter(
-                (item) => item.OrderItemID === product.ID
-              );
+              const Doanh_so_arr = doanh_so
+                .filter((item) => item.OrderItemID === product.ID)
+                .map((x) => ({
+                  ...x,
+                  Type: { label: "Loại " + x.KpiType, value: x.KpiType },
+                }));
 
               return {
                 Product: product,
@@ -44,7 +48,7 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
       }));
     }
   }, [OrderInfo]);
-  
+
   return (
     <Formik
       enableReinitialize
@@ -208,6 +212,24 @@ function BounsSalesIn({ OrderInfo, onSubmit }) {
                                   }}
                                   onBlur={handleBlur}
                                   disabled={
+                                    window.top?.GlobalConfig?.Admin
+                                      ?.thuong_ds_nang_cao
+                                      ? UserID !== 1
+                                      : !sub.chinh_sua
+                                  }
+                                />
+                                <SelectType
+                                  name={`BounsSalesIn[${index}].Doanh_So[${idx}].Type`}
+                                  value={sub.Type}
+                                  placeholder="Chọn loại"
+                                  onChange={(option) => {
+                                    setFieldValue(
+                                      `BounsSalesIn[${index}].Doanh_So[${idx}].Type`,
+                                      option,
+                                      false
+                                    );
+                                  }}
+                                  isDisabled={
                                     window.top?.GlobalConfig?.Admin
                                       ?.thuong_ds_nang_cao
                                       ? UserID !== 1

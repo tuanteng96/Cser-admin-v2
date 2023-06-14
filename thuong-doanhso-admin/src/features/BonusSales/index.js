@@ -197,6 +197,7 @@ const BonusSales = () => {
           Value: item.Value,
           ReceiverUserID: item.Staff?.ID,
           OrderItemID: item.Product?.ID,
+          KpiType: item.Type,
         })).filter((o) => o.Value !== null),
       },
     };
@@ -398,6 +399,7 @@ const BonusSales = () => {
           Value: item.Value,
           ReceiverUserID: item.User?.ID,
           OrderItemID: item.OrderItemID,
+          KpiType: item.Type ? item.Type.value : "",
         })).filter((o) => o.Value !== null),
       },
     };
