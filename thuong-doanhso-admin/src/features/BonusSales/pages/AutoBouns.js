@@ -5,6 +5,7 @@ import { formatVND } from "../../../helpers/FormatHelpers";
 import { Formik, FieldArray, Form } from "formik";
 import NumberFormat from "react-number-format";
 import moment from "moment";
+import SelectType from "../components/SelectType";
 moment.locale(); // vi
 
 function AutoBouns({ OrderInfo, onSubmit, loading }) {
@@ -30,17 +31,23 @@ function AutoBouns({ OrderInfo, onSubmit, loading }) {
                   return r;
                 }, []);
 
-              console.log(Hoa_hong_arr);
-
               const T_Hoa_hong_arr = Hoa_hong_arr.map(
                 (item) => item.Value
               ).reduce((prev, curr) => prev + curr, 0);
               const Doanh_so_arr = doanh_so
                 .filter((item) => item.OrderItemID === product.ID)
-                .reduce((r, { Value, User, OrderItemID, ID }) => {
+                .reduce((r, { Value, User, OrderItemID, ID, KpiType }) => {
                   var temp = r.find((o) => o.User.ID === User.ID);
                   if (!temp) {
-                    r.push({ Value, User, OrderItemID, ID });
+                    r.push({
+                      Value,
+                      User,
+                      OrderItemID,
+                      ID,
+                      Type: KpiType
+                        ? { label: "Loại " + KpiType, value: KpiType }
+                        : "",
+                    });
                   } else {
                     temp.Value += Value;
                   }
@@ -65,7 +72,9 @@ function AutoBouns({ OrderInfo, onSubmit, loading }) {
                 Value: Math.round(
                   product.gia_tri_doanh_so * (item.Value / T_Doanh_so_arr)
                 ),
+                Type: item.Type,
               }));
+
               return {
                 Product: product,
                 Hoa_Hong: [...new_Hoa_hong],
@@ -201,6 +210,18 @@ function AutoBouns({ OrderInfo, onSubmit, loading }) {
                                     );
                                   }}
                                   onBlur={handleBlur}
+                                />
+                                <SelectType
+                                  name={`AutoBouns[${index}].Doanh_So[${idx}].Type`}
+                                  value={sub.Type}
+                                  placeholder="Chọn loại"
+                                  onChange={(option) => {
+                                    setFieldValue(
+                                      `AutoBouns[${index}].Doanh_So[${idx}].Type`,
+                                      option,
+                                      false
+                                    );
+                                  }}
                                 />
                                 <div
                                   className="text-danger w-30px text-end cursor-pointer"
