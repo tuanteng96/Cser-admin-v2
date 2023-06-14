@@ -1,12 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-window.top.GlobalConfig = {
-  Admin: {
-    thuong_ds_theo_loai:  true,
-  },
-};
-
 const OrderInfo = window.top.OrderBonus23Info || {
   OrderID: 42814,
 };
