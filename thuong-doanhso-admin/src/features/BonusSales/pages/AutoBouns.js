@@ -106,7 +106,17 @@ function AutoBouns({ OrderInfo, onSubmit, loading }) {
                 <tr>
                   <th className="min-w-200px w-30">Sản phẩm</th>
                   <th className="min-w-300px text-center w-35">Hoa hồng</th>
-                  <th className="min-w-300px text-center w-35">Doanh số</th>
+                  <th
+                    className="text-center w-35"
+                    style={{
+                      minWidth: window.top?.GlobalConfig?.Admin
+                        ?.thuong_ds_theo_loai
+                        ? "450px"
+                        : "300px",
+                    }}
+                  >
+                    Doanh số
+                  </th>
                 </tr>
               </thead>
               <tbody>

@@ -197,7 +197,7 @@ function Equally({ OrderInfo, onSubmit, loading }) {
             {(formikProps) => {
               const { values, handleBlur, setFieldValue } = formikProps;
               return (
-                <Form>
+                <Form className="overflow-auto">
                   <Table bordered responsive>
                     <thead>
                       <tr>
@@ -205,7 +205,15 @@ function Equally({ OrderInfo, onSubmit, loading }) {
                         <th className="text-center min-w-250px w-40">
                           Hoa hồng
                         </th>
-                        <th className="text-center min-w-250px w-40">
+                        <th
+                          className="text-center w-40"
+                          style={{
+                            minWidth: window.top?.GlobalConfig?.Admin
+                              ?.thuong_ds_theo_loai
+                              ? "450px"
+                              : "250px",
+                          }}
+                        >
                           Doanh số
                         </th>
                       </tr>

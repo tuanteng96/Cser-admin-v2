@@ -1,14 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
-window.top.GlobalConfig = {
-  Admin: {
-    thuong_ds_theo_loai:  true,
-  },
-};
-
 const OrderInfo = window.top.OrderBonus23Info || {
-  OrderID: 42819,
+  OrderID: 42827,
 };
 const CrStockID = window.top?.Info?.CrStockID || 8975;
 const Info = window.top?.Info || {
