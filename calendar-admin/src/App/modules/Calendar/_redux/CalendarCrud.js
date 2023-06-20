@@ -72,7 +72,7 @@ const saveConfigName = (name, data) => {
 };
 
 const editTagsMember = (data) => {
-  return axiosClient.post("/api/v3/tele23@edit_tags", JSON.stringify(data));
+  return axiosClient.post("/api/v3/pagetele24@savemember", JSON.stringify(data));
 };
 
 const CalendarCrud = {
