@@ -368,39 +368,14 @@ function CalendarPage(props) {
       });
 
       if (values.Status === "KHACH_KHONG_DEN") {
-        const hasTags =
-          lstTeles &&
-          lstTeles.some(
-            (x) =>
-              x.options &&
-              x.options.some(
-                (s) =>
-                  window?.GlobalConfig?.Admin?.kpiCancelFinish &&
-                  s.value === window?.GlobalConfig?.Admin?.kpiCancelFinish
-              )
-          );
-        const hasTagsSelected =
-          !values.TeleTags ||
-          !values.TeleTags.includes(
-            window?.GlobalConfig?.Admin?.kpiCancelFinish
-          );
-
-        if (
-          window?.GlobalConfig?.Admin?.kpiCancelFinish &&
-          values?.CreateBy === "tele" &&
-          hasTagsSelected &&
-          hasTags
-        ) {
+        if (window?.GlobalConfig?.Admin?.kpiCancelFinish && values?.CreateBy) {
           let newData = {
-            items: [
+            update: [
               {
-                MemberID: values?.MemberID?.value,
-                TeleTags:
-                  values.TeleTags +
-                  "," +
-                  window?.top?.GlobalConfig?.Admin?.kpiCancelFinish,
+                MemberID: values?.CreateBy,
+                Status: window?.top?.GlobalConfig?.Admin?.kpiCancelFinish,
               },
-            ],
+            ]
           };
           await CalendarCrud.editTagsMember(newData);
         }
@@ -494,35 +469,12 @@ function CalendarPage(props) {
         u_id_z4aDf2,
       });
 
-      const hasTags =
-        lstTeles &&
-        lstTeles.some(
-          (x) =>
-            x.options &&
-            x.options.some(
-              (s) =>
-                window?.GlobalConfig?.Admin?.kpiFinish &&
-                s.value === window?.GlobalConfig?.Admin?.kpiFinish
-            )
-        );
-      const hasTagsSelected =
-        !values.TeleTags ||
-        !values.TeleTags.includes(window?.GlobalConfig?.Admin?.kpiFinish);
-
-      if (
-        window?.GlobalConfig?.Admin?.kpiFinish &&
-        values?.CreateBy === "tele" &&
-        hasTagsSelected &&
-        hasTags
-      ) {
+      if (window?.GlobalConfig?.Admin?.kpiFinish && values?.CreateBy) {
         let newData = {
-          items: [
+          update: [
             {
-              MemberID: values?.MemberID?.value,
-              TeleTags:
-                values.TeleTags +
-                "," +
-                window?.top?.GlobalConfig?.Admin?.kpiFinish,
+              MemberID: values?.CreateBy,
+              Status: window?.top?.GlobalConfig?.Admin?.kpiFinish,
             },
           ],
         };
@@ -582,37 +534,19 @@ function CalendarPage(props) {
         CurrentStockID,
         u_id_z4aDf2,
       });
-      const hasTags =
-        lstTeles &&
-        lstTeles.some(
-          (x) =>
-            x.options &&
-            x.options.some(
-              (s) =>
-                window?.GlobalConfig?.Admin?.kpiCancel &&
-                s.value === window?.GlobalConfig?.Admin?.kpiCancel
-            )
-        );
-      const hasTagsSelected =
-        !values.TeleTags ||
-        !values.TeleTags.includes(window?.GlobalConfig?.Admin?.kpiCancel);
-      if (
-        window?.GlobalConfig?.Admin?.kpiCancel &&
-        values?.CreateBy === "tele" &&
-        hasTagsSelected &&
-        hasTags
-      ) {
+
+      if (window?.GlobalConfig?.Admin?.kpiCancel && values?.CreateBy) {
         let newData = {
-          items: [
+          update: [
             {
-              MemberID: values?.MemberID?.value,
-              TeleTags:
-                values.TeleTags + "," + window?.GlobalConfig?.Admin?.kpiCancel,
+              MemberID: values?.CreateBy,
+              Status: window?.top?.GlobalConfig?.Admin?.kpiCancel,
             },
           ],
         };
         await CalendarCrud.editTagsMember(newData);
       }
+      
       window.top.bodyEvent &&
         window.top.bodyEvent("ui_changed", {
           name: "cld_huy_lich",
