@@ -13,6 +13,7 @@ import SelectStocksTelesale from "../Select/SelectStocksTelesale/SelectStocksTel
 import SelectStaffsService from "../Select/SelectStaffsService/SelectStaffsService";
 import SelectMember from "../Select/SelectMember/SelectMember";
 import SelectStaffsTelesale from "../Select/SelectStaffsTelesale/SelectStaffsTelesale";
+import { WrenchScrewdriverIcon } from "@heroicons/react/24/solid";
 
 SidebarCalendar.propTypes = {
   onOpenModal: PropTypes.func,
@@ -185,7 +186,7 @@ function SidebarCalendar({
                       {isTelesales && (
                         <SelectStocksTelesale
                           noOptionsMessage={() => "không có sơ sở"}
-                          classIcon="far fa-map-marker-alt"
+                          //classIcon="far fa-map-marker-alt"
                           classNamePrefix="select"
                           value={values.StockID}
                           components={{
@@ -210,7 +211,7 @@ function SidebarCalendar({
                       )}
                       {!isTelesales && (
                         <SelectMember
-                          classIcon="far fa-user-alt"
+                          //classIcon="far fa-user-alt"
                           menuPlacement="bottom"
                           isMulti
                           className="select-control mb-8px"
@@ -237,7 +238,7 @@ function SidebarCalendar({
                       )}
                       {isTelesales ? (
                         <SelectStaffsTelesale
-                          classIcon="far fa-user-cog"
+                          //classIcon="far fa-user-cog"
                           menuPlacement="bottom"
                           isMulti
                           className="select-control mb-8px"
@@ -264,7 +265,7 @@ function SidebarCalendar({
                         />
                       ) : (
                         <SelectStaffsService
-                          classIcon="far fa-user-cog"
+                          //classIcon="far fa-user-cog"
                           menuPlacement="bottom"
                           isMulti
                           className="select-control mb-8px"
@@ -299,8 +300,8 @@ function SidebarCalendar({
                       className="font-size-xs font-weight-bold mt-15px text-primary text-decoration-underline cursor-pointer"
                       onClick={onOpenModalLock}
                     >
-                      <i className="fas fa-tools font-size-xs pr-8px"></i>Cài
-                      đặt khóa lịch
+                      <WrenchScrewdriverIcon className="w-15px mr-8px" />
+                      Cài đặt khóa lịch
                     </div>
                   )}
                 </div>

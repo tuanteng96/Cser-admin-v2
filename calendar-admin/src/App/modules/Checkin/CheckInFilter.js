@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import { Form, Formik, useFormikContext } from "formik";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
 const ValueChangeListener = () => {
   const { submitForm, values } = useFormikContext();
@@ -38,7 +39,12 @@ function CheckInFilter({ onSubmit, initialValues }) {
                   value={values.Key}
                   name="Key"
                 />
-                <i className="far fa-search font-size-sm position-absolute top-12px left-12px"></i>
+                <MagnifyingGlassIcon
+                  style={{
+                    fill: "#b5b5c3",
+                  }}
+                  className="w-20px position-absolute top-12px left-10px"
+                />
               </div>
               <div className="w-180px pl-12px">
                 <Select

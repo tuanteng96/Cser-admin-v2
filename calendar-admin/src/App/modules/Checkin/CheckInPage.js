@@ -10,6 +10,7 @@ import { isDevCode } from "../../../helpers/DevHelpers";
 
 import moment from "moment";
 import "moment/locale/vi";
+import { ArrowRightIcon, CurrencyDollarIcon, XMarkIcon } from "@heroicons/react/24/solid";
 moment.locale("vi");
 
 const perfectScrollbarOptions = {
@@ -36,7 +37,7 @@ function CheckInPage(props) {
       CrStockID: Auth.CrStockID,
     })
   );
-  const [initialValues,] = useState({ Key: "", Type: "" });
+  const [initialValues] = useState({ Key: "", Type: "" });
 
   const dispatch = useDispatch();
 
@@ -77,7 +78,12 @@ function CheckInPage(props) {
               window.top.ShowCheckInDiv(false)
             }
           >
-            <i className="ki ki-close icon-xs text-muted font-size-md"></i>
+            <XMarkIcon
+              className="w-20px"
+              style={{
+                fill: "#b5b5c3",
+              }}
+            />
           </div>
         </div>
         <div className="py-12px px-15px">
@@ -167,7 +173,7 @@ function CheckInPage(props) {
                             window.top.ShowCheckInDiv(false);
                         }}
                       >
-                        <i className="far fa-comment-alt-dollar font-size-16px position-absolute top-12px"></i>
+                        <CurrencyDollarIcon className="w-20px" />
                       </button>
                     ) : (
                       ""
@@ -181,7 +187,7 @@ function CheckInPage(props) {
                           window.top.ShowCheckInDiv(false);
                       }}
                     >
-                      <i className="far fa-arrow-right font-size-15px position-absolute top-13px"></i>
+                      <ArrowRightIcon className="w-20px" />
                     </button>
                   </div>
                 </div>

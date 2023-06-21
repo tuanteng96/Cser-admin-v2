@@ -62,7 +62,7 @@ function AdvancedList({ formikProps }) {
       {isOpen && (
         <div className="pb-8px">
           <Select
-            classIcon="far fa-user-check"
+            // classIcon="far fa-user-check"
             className="select-control mb-8px"
             classNamePrefix="select"
             isLoading={false}
@@ -79,7 +79,7 @@ function AdvancedList({ formikProps }) {
             }}
           />
           <Select
-            classIcon="far fa-filter"
+            // classIcon="far fa-filter"
             className="select-control mb-8px"
             classNamePrefix="select"
             isLoading={false}
@@ -96,7 +96,7 @@ function AdvancedList({ formikProps }) {
             }}
           />
           <Select
-            classIcon="far fa-ballot-check"
+            // classIcon="far fa-ballot-check"
             className="select-control"
             classNamePrefix="select"
             isLoading={false}

@@ -8,6 +8,7 @@ import { TimePicker } from "antd";
 import "antd/dist/antd.css";
 import moment from "moment";
 import "moment/locale/vi";
+import { PlusIcon, TrashIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
 moment.locale("vi");
 
@@ -111,7 +112,7 @@ function ModalCalendarLock({
                                               />
                                               <button
                                                 type="button"
-                                                className="btn btn-light-success btn-sm ml-5px"
+                                                className="btn btn-light-success btn-sm ml-5px px-8px"
                                                 onClick={() =>
                                                   ListDisableHelpers.push({
                                                     Date: "",
@@ -124,18 +125,18 @@ function ModalCalendarLock({
                                                   })
                                                 }
                                               >
-                                                <i className="fal fa-plus pr-0 font-size-xs"></i>
+                                                <PlusIcon className="w-18px" />
                                               </button>
                                               <button
                                                 type="button"
-                                                className="btn btn-light-danger btn-sm ml-5px"
+                                                className="btn btn-light-danger btn-sm ml-5px px-8px"
                                                 onClick={() =>
                                                   ListDisableHelpers.remove(
                                                     index
                                                   )
                                                 }
                                               >
-                                                <i className="far fa-trash-alt pr-0 font-size-xs"></i>
+                                                <XMarkIcon className="w-18px" />
                                               </button>
                                             </div>
 
@@ -209,7 +210,7 @@ function ModalCalendarLock({
                                                             />
                                                             <button
                                                               type="button"
-                                                              className="btn btn-light-success btn-sm ml-5px"
+                                                              className="btn btn-light-success btn-sm ml-5px px-8px"
                                                               onClick={() =>
                                                                 TimeCloseHelpers.push(
                                                                   idx,
@@ -220,18 +221,18 @@ function ModalCalendarLock({
                                                                 )
                                                               }
                                                             >
-                                                              <i className="fal fa-plus pr-0 font-size-xs"></i>
+                                                              <PlusIcon className="w-18px" />
                                                             </button>
                                                             <button
                                                               type="button"
-                                                              className="btn btn-light-danger btn-sm ml-5px"
+                                                              className="btn btn-light-danger btn-sm ml-5px px-8px"
                                                               onClick={() =>
                                                                 TimeCloseHelpers.remove(
                                                                   idx
                                                                 )
                                                               }
                                                             >
-                                                              <i className="far fa-trash-alt pr-0 font-size-xs"></i>
+                                                              <XMarkIcon className="w-18px" />
                                                             </button>
                                                           </div>
                                                         </div>

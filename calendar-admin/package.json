@@ -12,6 +12,7 @@
         "@fullcalendar/resource-timegrid": "^5.10.1",
         "@fullcalendar/resource-timeline": "^5.10.1",
         "@fullcalendar/timegrid": "^5.10.0",
+        "@heroicons/react": "^2.0.18",
         "@reduxjs/toolkit": "^1.7.1",
         "@testing-library/jest-dom": "^5.16.1",
         "@testing-library/react": "^12.1.2",
